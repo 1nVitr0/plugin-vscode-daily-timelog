@@ -1,0 +1,12 @@
+{
+	"fileTypes": [
+    ".daylog.yaml"
+  ],
+  "name": "DayLog YAML Extension",
+  "patterns": [
+    {
+      "include": "source.yaml"
+    }
+  ],
+  "scopeName": "source.yaml.daylog"
+}
