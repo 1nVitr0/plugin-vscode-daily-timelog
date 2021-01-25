@@ -1,0 +1,26 @@
+{
+	"editor.insertSpaces": false,
+	"tslint.enable": true,
+	"typescript.tsc.autoDetect": "off",
+	"typescript.preferences.quoteStyle": "single",
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": true
+	},
+	"workbench.colorCustomizations": {
+		"activityBar.activeBackground": "#426600",
+		"activityBar.activeBorder": "#002940",
+		"activityBar.background": "#426600",
+		"activityBar.foreground": "#e7e7e7",
+		"activityBar.inactiveForeground": "#e7e7e799",
+		"activityBarBadge.background": "#002940",
+		"activityBarBadge.foreground": "#e7e7e7",
+		"statusBar.background": "#213300",
+		"statusBar.foreground": "#e7e7e7",
+		"statusBarItem.hoverBackground": "#426600",
+		"titleBar.activeBackground": "#426600",
+		"titleBar.activeForeground": "#e7e7e7",
+		"titleBar.inactiveBackground": "#42660099",
+		"titleBar.inactiveForeground": "#e7e7e799"
+	},
+	"peacock.color": "#426600"
+}
