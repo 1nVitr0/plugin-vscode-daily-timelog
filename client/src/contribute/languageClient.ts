@@ -5,7 +5,7 @@ import { TransportKind, LanguageClient, ServerOptions } from 'vscode-languagecli
 
 export default function contributeLanguageClient(context: ExtensionContext): LanguageClient {
   let serverModule = context.asAbsolutePath(join('server', 'out', 'server.js'));
-  let debugOptions = { execArgv: ['--nolazy', '--inspect=6009'] };
+  let debugOptions = { execArgv: ['--nolazy', '--inspect=6010'] };
 
   let serverOptions: ServerOptions = {
     run: { module: serverModule, transport: TransportKind.ipc },
