@@ -1,4 +1,9 @@
-import { CompletionItem, CompletionItemKind, TextDocumentPositionParams } from 'vscode-languageserver';
+import {
+  CompletionItem,
+  CompletionItemKind,
+  InsertReplaceEdit,
+  TextDocumentPositionParams,
+} from 'vscode-languageserver';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { CST, parseDocument } from 'yaml';
 import { Node, Pair, Scalar } from 'yaml/types';
@@ -6,6 +11,7 @@ import { Type, YAMLError } from 'yaml/util';
 import { SimpleYamlKey, SimpleYamlNode, SimpleYamlType, SimpleYamlValue, YamlNode } from '../types';
 import TextDocumentService from './TextDocumentService';
 import moment from 'moment';
+import { formatTime } from '../../../shared/out';
 
 function inRange(node: Node | CST.Node, offset: number, ignoreRange = false): boolean {
   const cstNode = 'cstNode' in node ? node.cstNode : node;
@@ -33,24 +39,40 @@ export default class CompletionService extends TextDocumentService<TextDocument>
     const error = CompletionService.getError(parsed.errors, offset);
 
     if (node) {
-      if (node.type === SimpleYamlType.Key) return this.completeKey(node as SimpleYamlKey);
-      if (node.type === SimpleYamlType.Value) return this.completeValue(node as SimpleYamlValue);
+      if (node.type === SimpleYamlType.Key) return this.completeKey(node as SimpleYamlKey, textDocumentPosition);
+      if (node.type === SimpleYamlType.Value) return this.completeValue(node as SimpleYamlValue, textDocumentPosition);
     }
 
     return [];
   }
 
-  public getTimeCompletion() {
+  public getTimeCompletion(range?: CST.Range | null, offset = 0): CompletionItem[] {
+    const kind = CompletionItemKind.Property;
+    const replaceRange = { start: range?.origStart || range?.start, end: range?.origEnd || range?.end };
+    const insertRange = { start: offset, end: range?.origEnd || range?.end };
     const currentTime = moment();
     currentTime.seconds(0).milliseconds(0);
 
-    const nearestTime = 0;
-    return '10:00';
+    const items: CompletionItem[] = [];
+    const nearestTime = moment();
+    for (let i = 0; i < 10; i++) {
+      nearestTime.add(15, 'm');
+      const label = formatTime(nearestTime);
+      items.push({
+        kind,
+        label,
+        data: i,
+        textEdit: InsertReplaceEdit.create(label, insertRange, replaceRange),
+      });
+    }
+
+    return items;
   }
 
-  protected completeKey(node: SimpleYamlKey): CompletionItem[] {
-    const { value, type } = node.node;
+  protected completeKey(node: SimpleYamlKey, textDocumentPosition: TextDocumentPositionParams): CompletionItem[] {
+    const { value, type, cstNode } = node.node;
 
+    if (type == Type.QUOTE_SINGLE) return this.getTimeCompletion(cstNode?.range, offset);
     const kind = CompletionItemKind.Property;
     const label = CompletionService.quote(`${node.context.join(' => ')}  | ${value}`, type);
     const data = 1;
@@ -58,7 +80,7 @@ export default class CompletionService extends TextDocumentService<TextDocument>
     return [{ label, kind, data }];
   }
 
-  protected completeValue(node: SimpleYamlValue): CompletionItem[] {
+  protected completeValue(node: SimpleYamlValue, textDocumentPosition: TextDocumentPositionParams): CompletionItem[] {
     const { value, type } = node.node;
 
     const kind = CompletionItemKind.Value;
