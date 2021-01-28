@@ -9,12 +9,8 @@
     "strict": true,
     "outDir": "out",
     "rootDir": "src",
-    "baseUrl": "./",
-    "composite": true,
-    "paths": {
-      "@shared/*": ["../shared/out/*"]
-    }
+    "composite": true
   },
-  "exclude": ["node_modules", ".vscode-test", "out", "../shared/src"],
+  "exclude": ["node_modules", ".vscode-test", "out"],
   "references": [{ "path": "../shared" }]
 }

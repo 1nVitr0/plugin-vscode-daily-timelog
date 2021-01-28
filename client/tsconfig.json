@@ -5,14 +5,14 @@
     "lib": ["ES2019"],
     "outDir": "out",
     "rootDir": "src",
-    "baseUrl": "./",
+    "baseUrl": "../",
     "esModuleInterop": true,
     "sourceMap": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "composite": true,
     "paths": {
-      "@shared/*": ["../shared/out/*"]
+      "@shared/*": ["shared/out/*"]
     }
   },
   "exclude": ["node_modules", ".vscode-test", "../shared/src", "out"],
