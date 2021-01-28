@@ -16,5 +16,8 @@
 		"vscode-languageserver-textdocument": "^1.0.1",
 		"yaml": "^1.10.0"
 	},
-	"scripts": {}
+	"scripts": {},
+	"_moduleAliases": {
+    "@shared": "../sdhared/out"
+  }
 }

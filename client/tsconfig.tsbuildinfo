@@ -26,6 +26,11 @@
         "signature": "5f4e733ced4e129482ae2186aae29fde948ab7182844c3a5a51dd346182c7b06",
         "affectsGlobalScope": false
       },
+      "../node_modules/typescript/lib/lib.es2019.d.ts": {
+        "version": "e6b724280c694a9f588847f754198fb96c43d805f065c3a5b28bbc9594541c84",
+        "signature": "e6b724280c694a9f588847f754198fb96c43d805f065c3a5b28bbc9594541c84",
+        "affectsGlobalScope": false
+      },
       "../node_modules/typescript/lib/lib.es2015.core.d.ts": {
         "version": "46ee15e9fefa913333b61eaf6b18885900b139867d89832a515059b62cf16a17",
         "signature": "46ee15e9fefa913333b61eaf6b18885900b139867d89832a515059b62cf16a17",
@@ -124,6 +129,26 @@
       "../node_modules/typescript/lib/lib.es2018.regexp.d.ts": {
         "version": "c80df75850fea5caa2afe43b9949338ce4e2de086f91713e9af1a06f973872b8",
         "signature": "c80df75850fea5caa2afe43b9949338ce4e2de086f91713e9af1a06f973872b8",
+        "affectsGlobalScope": true
+      },
+      "../node_modules/typescript/lib/lib.es2019.array.d.ts": {
+        "version": "9d57b2b5d15838ed094aa9ff1299eecef40b190722eb619bac4616657a05f951",
+        "signature": "9d57b2b5d15838ed094aa9ff1299eecef40b190722eb619bac4616657a05f951",
+        "affectsGlobalScope": true
+      },
+      "../node_modules/typescript/lib/lib.es2019.object.d.ts": {
+        "version": "6c51b5dd26a2c31dbf37f00cfc32b2aa6a92e19c995aefb5b97a3a64f1ac99de",
+        "signature": "6c51b5dd26a2c31dbf37f00cfc32b2aa6a92e19c995aefb5b97a3a64f1ac99de",
+        "affectsGlobalScope": true
+      },
+      "../node_modules/typescript/lib/lib.es2019.string.d.ts": {
+        "version": "93544ca2f26a48716c1b6c5091842cad63129daac422dfa4bc52460465f22bb1",
+        "signature": "93544ca2f26a48716c1b6c5091842cad63129daac422dfa4bc52460465f22bb1",
+        "affectsGlobalScope": true
+      },
+      "../node_modules/typescript/lib/lib.es2019.symbol.d.ts": {
+        "version": "2ad234885a4240522efccd77de6c7d99eecf9b4de0914adb9a35c0c22433f993",
+        "signature": "2ad234885a4240522efccd77de6c7d99eecf9b4de0914adb9a35c0c22433f993",
         "affectsGlobalScope": true
       },
       "../node_modules/typescript/lib/lib.es2020.bigint.d.ts": {
@@ -692,8 +717,8 @@
         "affectsGlobalScope": false
       },
       "./src/extension.ts": {
-        "version": "3f209241c176ee931fb0184988e6a9541512eefdce1d12595986728beaa03402",
-        "signature": "86f0fb23c01694d99a0b5780aeed49946d980b6eb7d8e35be86325153a10355d",
+        "version": "c263a07da88d6a50834fe442727338cb4d4e48d1c4051de08a5112aa0c69b4dc",
+        "signature": "90a90943de0816b6cb86c52f8c9d3e72e1250ce59c56ac4a62d0a88b09fd80a9",
         "affectsGlobalScope": false
       },
       "./src/app/logmanager.ts": {
@@ -701,14 +726,134 @@
         "signature": "bb8a8cf08c4e48240614794740c3d1e6488387e24f892b8317eadb79d028ee05",
         "affectsGlobalScope": false
       },
+      "../shared/out/model/task/task.d.ts": {
+        "version": "1a669af9011e97edb27e56c6c800b0b3ffc3824aabe253af02298b3574708d88",
+        "signature": "1a669af9011e97edb27e56c6c800b0b3ffc3824aabe253af02298b3574708d88",
+        "affectsGlobalScope": false
+      },
+      "../shared/out/model/task/basictask.d.ts": {
+        "version": "441e6ffb7c708faa8112a58d1382b4e36d7c9cc5acfa40b188f0a7c406406eea",
+        "signature": "441e6ffb7c708faa8112a58d1382b4e36d7c9cc5acfa40b188f0a7c406406eea",
+        "affectsGlobalScope": false
+      },
+      "../shared/out/model/roundingscheme/durationapproximation.d.ts": {
+        "version": "4f7a3ab79c1db34e8fd847892fb79ba793ac2300baf79b7552f2459cde7add6f",
+        "signature": "4f7a3ab79c1db34e8fd847892fb79ba793ac2300baf79b7552f2459cde7add6f",
+        "affectsGlobalScope": false
+      },
+      "../shared/out/model/summary/settings.d.ts": {
+        "version": "8d8871050ba56eefb3f57ee78f1b5693a419defa68e6921f16d454ebe5d32bab",
+        "signature": "8d8871050ba56eefb3f57ee78f1b5693a419defa68e6921f16d454ebe5d32bab",
+        "affectsGlobalScope": false
+      },
+      "../shared/out/model/roundingscheme/roundingscheme.d.ts": {
+        "version": "277dd25835217b802961e09fa886b762a0bc5b82eebe545dc232519cb7c8d344",
+        "signature": "277dd25835217b802961e09fa886b762a0bc5b82eebe545dc232519cb7c8d344",
+        "affectsGlobalScope": false
+      },
+      "../shared/out/model/types.d.ts": {
+        "version": "85794dbca7d23cbff3fb33fc104300ffbb4031a5559cf930b6c5d10da98afcf0",
+        "signature": "85794dbca7d23cbff3fb33fc104300ffbb4031a5559cf930b6c5d10da98afcf0",
+        "affectsGlobalScope": false
+      },
+      "../shared/out/model/task/worktask.d.ts": {
+        "version": "d68259f45264b5cef0896dbf0ad9d7f0137fac819eafcb521f0df476e2db7f63",
+        "signature": "d68259f45264b5cef0896dbf0ad9d7f0137fac819eafcb521f0df476e2db7f63",
+        "affectsGlobalScope": false
+      },
+      "../shared/out/model/task/break.d.ts": {
+        "version": "a3c28c657010453f1f6832717d4d67538041dd619b2ba8f87ec541e0422950a3",
+        "signature": "a3c28c657010453f1f6832717d4d67538041dd619b2ba8f87ec541e0422950a3",
+        "affectsGlobalScope": false
+      },
+      "../shared/out/model/daylog/daylog.d.ts": {
+        "version": "c9b340ea1d03d09602642159cf37a035a9ffc5bb484d897e328a320ecd84432a",
+        "signature": "c9b340ea1d03d09602642159cf37a035a9ffc5bb484d897e328a320ecd84432a",
+        "affectsGlobalScope": false
+      },
+      "../shared/out/app/basicroundingscheme.d.ts": {
+        "version": "b068609f753a36591f323d6fbd40c14baaa7166894c4ef1bed124d4c35b08fed",
+        "signature": "b068609f753a36591f323d6fbd40c14baaa7166894c4ef1bed124d4c35b08fed",
+        "affectsGlobalScope": false
+      },
+      "../shared/out/app/basicdaylog.d.ts": {
+        "version": "e031a289aba38c64f6d69e1dff75c578a5f6b4dbb3acedef355d950f6f445b7a",
+        "signature": "e031a289aba38c64f6d69e1dff75c578a5f6b4dbb3acedef355d950f6f445b7a",
+        "affectsGlobalScope": false
+      },
+      "../shared/out/model/structuredlog/summary.d.ts": {
+        "version": "81808237053a28b4e3fbc36f7e3cf99adb7b36b5b8d3fcacce61ffd18376d7ea",
+        "signature": "81808237053a28b4e3fbc36f7e3cf99adb7b36b5b8d3fcacce61ffd18376d7ea",
+        "affectsGlobalScope": false
+      },
+      "../shared/out/model/structuredlog/tasklist.d.ts": {
+        "version": "559392b04650c9dc7b9a53644134bcb4f24d54089ae103c667f4bf1d65b17f89",
+        "signature": "559392b04650c9dc7b9a53644134bcb4f24d54089ae103c667f4bf1d65b17f89",
+        "affectsGlobalScope": false
+      },
+      "../shared/out/model/structuredlog/timelog.d.ts": {
+        "version": "a6b6a64e0e971d667522355ee1fb0ed3533c28b633a71349b463b5944b04a867",
+        "signature": "a6b6a64e0e971d667522355ee1fb0ed3533c28b633a71349b463b5944b04a867",
+        "affectsGlobalScope": false
+      },
+      "../shared/out/model/structuredlog/structuredlog.d.ts": {
+        "version": "a353c8a25368ad2c0fd67073563aeb6f41c18e28032fd2a8301a5caf17c4a08d",
+        "signature": "a353c8a25368ad2c0fd67073563aeb6f41c18e28032fd2a8301a5caf17c4a08d",
+        "affectsGlobalScope": false
+      },
+      "../shared/out/model/task/taskfactory.d.ts": {
+        "version": "151732b2a516b775d2789c73cc03dc83b31d8b3080638e2aa38a0f2c7cbcf017",
+        "signature": "151732b2a516b775d2789c73cc03dc83b31d8b3080638e2aa38a0f2c7cbcf017",
+        "affectsGlobalScope": false
+      },
+      "../shared/out/model/defaults/defaultsummarysettings.d.ts": {
+        "version": "03d686a8804e15e36d15741789b18b802c9ce1fd453345abc241d52f3521102f",
+        "signature": "03d686a8804e15e36d15741789b18b802c9ce1fd453345abc241d52f3521102f",
+        "affectsGlobalScope": false
+      },
+      "../shared/out/model/summary/params.d.ts": {
+        "version": "7c63e414778db769e7c72dbc754fa15242ef81642323719e0dcaa632ae53841e",
+        "signature": "7c63e414778db769e7c72dbc754fa15242ef81642323719e0dcaa632ae53841e",
+        "affectsGlobalScope": false
+      },
+      "../shared/out/tools/approximatedurations.d.ts": {
+        "version": "1920e657503b2a6e72449cfea3bf2151f5cb5e68d823aa9d3621279efbbefe98",
+        "signature": "1920e657503b2a6e72449cfea3bf2151f5cb5e68d823aa9d3621279efbbefe98",
+        "affectsGlobalScope": false
+      },
+      "../shared/out/tools/math.d.ts": {
+        "version": "8f684b035eecde82bb1e1b648547b6ea9bbb061786ec2f2c7c69c77afa348de2",
+        "signature": "8f684b035eecde82bb1e1b648547b6ea9bbb061786ec2f2c7c69c77afa348de2",
+        "affectsGlobalScope": false
+      },
+      "../shared/out/tools/string.d.ts": {
+        "version": "e64e3f8bbec437e7b8b4d25e7f3f4ce03449ee8639dc462cc3142fb9fde8d356",
+        "signature": "e64e3f8bbec437e7b8b4d25e7f3f4ce03449ee8639dc462cc3142fb9fde8d356",
+        "affectsGlobalScope": false
+      },
+      "../node_modules/moment/ts3.1-typings/moment.d.ts": {
+        "version": "f97edc4d3b4dd0b32766e9633086497565c37657fb591cc84a35864db4bc2fc5",
+        "signature": "f97edc4d3b4dd0b32766e9633086497565c37657fb591cc84a35864db4bc2fc5",
+        "affectsGlobalScope": false
+      },
+      "../shared/out/tools/time.d.ts": {
+        "version": "7432bb046e954f351abbd87f64d2653b7bee6ea36d55b99a2f14830f0eda83da",
+        "signature": "7432bb046e954f351abbd87f64d2653b7bee6ea36d55b99a2f14830f0eda83da",
+        "affectsGlobalScope": false
+      },
+      "../shared/out/index.d.ts": {
+        "version": "7eb32820d67b6a2ff56239d2058b4cd3a99f176a2b2796f22f7c2da5886d83b0",
+        "signature": "7eb32820d67b6a2ff56239d2058b4cd3a99f176a2b2796f22f7c2da5886d83b0",
+        "affectsGlobalScope": false
+      },
       "./src/app/summarygenerator.ts": {
-        "version": "3d220299a6cb85d6154c5076ba355cac47812d96eceee177f34c42c3aed29e48",
-        "signature": "0446e2a459343b511cb574d4af62a5f38365016f529e5d3bcd48f22982ae32dd",
+        "version": "aab7671d37d24aaca49eecf68f1d99b9552f3f36d04dbfac864d4fdb7fd71f81",
+        "signature": "f80c651cd964615971ae38e9085080ffa9557be2651e129dd0405c64e10b3acd",
         "affectsGlobalScope": false
       },
       "./src/app/tools/approximatedurations.ts": {
-        "version": "bb8f95e11d95e1bad4f2585d49b544c74c9fd8fa183849bc223cb1f606118bb0",
-        "signature": "d61a3a8154a6ee31b714a710c0a8676ee7cda8726b2b47d2c796eeea542e113d",
+        "version": "16e2c585ad3a67e318ca75577954bbd9580781f4d4172f4987d1e1265f3fe638",
+        "signature": "88542c2f36d524035b23da5caa16330117c61a3a2575dd437b9493c60b0c57d0",
         "affectsGlobalScope": false
       },
       "./src/test/helper.ts": {
@@ -785,22 +930,33 @@
         "version": "060f0636cb83057f9a758cafc817b7be1e8612c4387dfe3fbadda865958cf8c1",
         "signature": "060f0636cb83057f9a758cafc817b7be1e8612c4387dfe3fbadda865958cf8c1",
         "affectsGlobalScope": true
+      },
+      "../node_modules/@types/module-alias/index.d.ts": {
+        "version": "ac5a22d3d6ce153bb5a216fffc0f691b9f699508b36f9725b44e12408ed88045",
+        "signature": "ac5a22d3d6ce153bb5a216fffc0f691b9f699508b36f9725b44e12408ed88045",
+        "affectsGlobalScope": false
       }
     },
     "options": {
       "module": 1,
-      "target": 2,
+      "target": 6,
+      "lib": [
+        "lib.es2019.d.ts"
+      ],
       "outDir": "./out",
       "rootDir": "./src",
-      "lib": [
-        "lib.es2015.d.ts"
-      ],
+      "baseUrl": "./",
       "esModuleInterop": true,
       "sourceMap": true,
-      "composite": true,
-      "strict": true,
       "noImplicitReturns": true,
       "noFallthroughCasesInSwitch": true,
+      "composite": true,
+      "paths": {
+        "@shared/*": [
+          "../shared/out/*"
+        ]
+      },
+      "watch": true,
       "configFilePath": "./tsconfig.json"
     },
     "referencedMap": {
@@ -1552,6 +1708,8 @@
         "../node_modules/@types/node/ts3.2/util.d.ts",
         "../node_modules/@types/node/util.d.ts",
         "../node_modules/@types/vscode/index.d.ts",
+        "../node_modules/moment/ts3.1-typings/moment.d.ts",
+        "../shared/out/index.d.ts",
         "./node_modules/vscode-languageclient/lib/common/client.d.ts",
         "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
       ],
@@ -1561,6 +1719,7 @@
         "../node_modules/@types/node/ts3.2/util.d.ts",
         "../node_modules/@types/node/util.d.ts",
         "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/index.d.ts",
         "./node_modules/vscode-languageclient/lib/common/client.d.ts",
         "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
       ],
@@ -1703,6 +1862,15 @@
         "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
       ],
       "../node_modules/@types/mocha/index.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../node_modules/@types/module-alias/index.d.ts": [
         "../node_modules/@types/node/fs.d.ts",
         "../node_modules/@types/node/ts3.2/fs.d.ts",
         "../node_modules/@types/node/ts3.2/util.d.ts",
@@ -2251,6 +2419,15 @@
         "./node_modules/vscode-languageclient/lib/common/client.d.ts",
         "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
       ],
+      "../node_modules/moment/ts3.1-typings/moment.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
       "../node_modules/typescript/lib/lib.es2015.collection.d.ts": [
         "../node_modules/@types/node/fs.d.ts",
         "../node_modules/@types/node/ts3.2/fs.d.ts",
@@ -2467,6 +2644,51 @@
         "./node_modules/vscode-languageclient/lib/common/client.d.ts",
         "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
       ],
+      "../node_modules/typescript/lib/lib.es2019.array.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../node_modules/typescript/lib/lib.es2019.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../node_modules/typescript/lib/lib.es2019.object.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../node_modules/typescript/lib/lib.es2019.string.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../node_modules/typescript/lib/lib.es2019.symbol.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
       "../node_modules/typescript/lib/lib.es2020.bigint.d.ts": [
         "../node_modules/@types/node/fs.d.ts",
         "../node_modules/@types/node/ts3.2/fs.d.ts",
@@ -2491,6 +2713,293 @@
         "../node_modules/@types/node/ts3.2/util.d.ts",
         "../node_modules/@types/node/util.d.ts",
         "../node_modules/@types/vscode/index.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/app/basicdaylog.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/app/basicroundingscheme.d.ts",
+        "../shared/out/model/daylog/daylog.d.ts",
+        "../shared/out/model/roundingscheme/durationapproximation.d.ts",
+        "../shared/out/model/roundingscheme/roundingscheme.d.ts",
+        "../shared/out/model/summary/settings.d.ts",
+        "../shared/out/model/task/basictask.d.ts",
+        "../shared/out/model/task/break.d.ts",
+        "../shared/out/model/task/task.d.ts",
+        "../shared/out/model/task/worktask.d.ts",
+        "../shared/out/model/types.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/app/basicroundingscheme.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/model/roundingscheme/durationapproximation.d.ts",
+        "../shared/out/model/roundingscheme/roundingscheme.d.ts",
+        "../shared/out/model/task/basictask.d.ts",
+        "../shared/out/model/task/task.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/index.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/app/basicdaylog.d.ts",
+        "../shared/out/app/basicroundingscheme.d.ts",
+        "../shared/out/model/daylog/daylog.d.ts",
+        "../shared/out/model/defaults/defaultsummarysettings.d.ts",
+        "../shared/out/model/roundingscheme/durationapproximation.d.ts",
+        "../shared/out/model/roundingscheme/roundingscheme.d.ts",
+        "../shared/out/model/structuredlog/structuredlog.d.ts",
+        "../shared/out/model/structuredlog/summary.d.ts",
+        "../shared/out/model/structuredlog/tasklist.d.ts",
+        "../shared/out/model/structuredlog/timelog.d.ts",
+        "../shared/out/model/summary/params.d.ts",
+        "../shared/out/model/summary/settings.d.ts",
+        "../shared/out/model/task/basictask.d.ts",
+        "../shared/out/model/task/break.d.ts",
+        "../shared/out/model/task/task.d.ts",
+        "../shared/out/model/task/taskfactory.d.ts",
+        "../shared/out/model/task/worktask.d.ts",
+        "../shared/out/model/types.d.ts",
+        "../shared/out/tools/approximatedurations.d.ts",
+        "../shared/out/tools/math.d.ts",
+        "../shared/out/tools/string.d.ts",
+        "../shared/out/tools/time.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/model/daylog/daylog.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/model/roundingscheme/durationapproximation.d.ts",
+        "../shared/out/model/roundingscheme/roundingscheme.d.ts",
+        "../shared/out/model/summary/settings.d.ts",
+        "../shared/out/model/task/basictask.d.ts",
+        "../shared/out/model/task/break.d.ts",
+        "../shared/out/model/task/task.d.ts",
+        "../shared/out/model/task/worktask.d.ts",
+        "../shared/out/model/types.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/model/defaults/defaultsummarysettings.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/model/summary/settings.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/model/roundingscheme/durationapproximation.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/model/task/basictask.d.ts",
+        "../shared/out/model/task/task.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/model/roundingscheme/roundingscheme.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/model/roundingscheme/durationapproximation.d.ts",
+        "../shared/out/model/summary/settings.d.ts",
+        "../shared/out/model/task/basictask.d.ts",
+        "../shared/out/model/task/task.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/model/structuredlog/structuredlog.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/model/structuredlog/summary.d.ts",
+        "../shared/out/model/structuredlog/tasklist.d.ts",
+        "../shared/out/model/structuredlog/timelog.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/model/structuredlog/summary.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/model/task/task.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/model/structuredlog/tasklist.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/model/task/task.d.ts",
+        "../shared/out/model/types.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/model/structuredlog/timelog.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/model/task/task.d.ts",
+        "../shared/out/model/types.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/model/summary/params.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/http2.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/ts3.7/index.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/model/summary/settings.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/model/summary/settings.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/model/roundingscheme/roundingscheme.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/model/task/basictask.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/model/task/task.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/model/task/break.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/model/task/basictask.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/model/task/task.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/model/task/taskfactory.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/model/task/basictask.d.ts",
+        "../shared/out/model/task/task.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/model/task/worktask.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/model/task/basictask.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/model/types.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/tools/approximatedurations.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/app/basicroundingscheme.d.ts",
+        "../shared/out/model/roundingscheme/durationapproximation.d.ts",
+        "../shared/out/model/roundingscheme/roundingscheme.d.ts",
+        "../shared/out/model/summary/settings.d.ts",
+        "../shared/out/model/task/basictask.d.ts",
+        "../shared/out/model/task/task.d.ts",
+        "../shared/out/model/types.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/tools/math.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/model/roundingscheme/durationapproximation.d.ts",
+        "../shared/out/model/summary/settings.d.ts",
+        "../shared/out/model/task/task.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/tools/string.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/tools/time.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../node_modules/moment/ts3.1-typings/moment.d.ts",
+        "../shared/out/index.d.ts",
         "./node_modules/vscode-languageclient/lib/common/client.d.ts",
         "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
       ]
@@ -3202,6 +3711,12 @@
         "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts",
         "./node_modules/vscode-test/out/download.d.ts"
       ],
+      "./src/app/summarygenerator.ts": [
+        "../shared/out/index.d.ts"
+      ],
+      "./src/app/tools/approximatedurations.ts": [
+        "../shared/out/index.d.ts"
+      ],
       "./src/contribute/commands.ts": [
         "../node_modules/@types/vscode/index.d.ts"
       ],
@@ -3264,6 +3779,15 @@
         "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
       ],
       "../node_modules/@types/mocha/index.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../node_modules/@types/module-alias/index.d.ts": [
         "../node_modules/@types/node/fs.d.ts",
         "../node_modules/@types/node/ts3.2/fs.d.ts",
         "../node_modules/@types/node/ts3.2/util.d.ts",
@@ -3812,6 +4336,15 @@
         "./node_modules/vscode-languageclient/lib/common/client.d.ts",
         "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
       ],
+      "../node_modules/moment/ts3.1-typings/moment.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
       "../node_modules/typescript/lib/lib.es2015.collection.d.ts": [
         "../node_modules/@types/node/fs.d.ts",
         "../node_modules/@types/node/ts3.2/fs.d.ts",
@@ -4028,6 +4561,51 @@
         "./node_modules/vscode-languageclient/lib/common/client.d.ts",
         "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
       ],
+      "../node_modules/typescript/lib/lib.es2019.array.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../node_modules/typescript/lib/lib.es2019.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../node_modules/typescript/lib/lib.es2019.object.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../node_modules/typescript/lib/lib.es2019.string.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../node_modules/typescript/lib/lib.es2019.symbol.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
       "../node_modules/typescript/lib/lib.es2020.bigint.d.ts": [
         "../node_modules/@types/node/fs.d.ts",
         "../node_modules/@types/node/ts3.2/fs.d.ts",
@@ -4052,6 +4630,293 @@
         "../node_modules/@types/node/ts3.2/util.d.ts",
         "../node_modules/@types/node/util.d.ts",
         "../node_modules/@types/vscode/index.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/app/basicdaylog.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/app/basicroundingscheme.d.ts",
+        "../shared/out/model/daylog/daylog.d.ts",
+        "../shared/out/model/roundingscheme/durationapproximation.d.ts",
+        "../shared/out/model/roundingscheme/roundingscheme.d.ts",
+        "../shared/out/model/summary/settings.d.ts",
+        "../shared/out/model/task/basictask.d.ts",
+        "../shared/out/model/task/break.d.ts",
+        "../shared/out/model/task/task.d.ts",
+        "../shared/out/model/task/worktask.d.ts",
+        "../shared/out/model/types.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/app/basicroundingscheme.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/model/roundingscheme/durationapproximation.d.ts",
+        "../shared/out/model/roundingscheme/roundingscheme.d.ts",
+        "../shared/out/model/task/basictask.d.ts",
+        "../shared/out/model/task/task.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/index.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/app/basicdaylog.d.ts",
+        "../shared/out/app/basicroundingscheme.d.ts",
+        "../shared/out/model/daylog/daylog.d.ts",
+        "../shared/out/model/defaults/defaultsummarysettings.d.ts",
+        "../shared/out/model/roundingscheme/durationapproximation.d.ts",
+        "../shared/out/model/roundingscheme/roundingscheme.d.ts",
+        "../shared/out/model/structuredlog/structuredlog.d.ts",
+        "../shared/out/model/structuredlog/summary.d.ts",
+        "../shared/out/model/structuredlog/tasklist.d.ts",
+        "../shared/out/model/structuredlog/timelog.d.ts",
+        "../shared/out/model/summary/params.d.ts",
+        "../shared/out/model/summary/settings.d.ts",
+        "../shared/out/model/task/basictask.d.ts",
+        "../shared/out/model/task/break.d.ts",
+        "../shared/out/model/task/task.d.ts",
+        "../shared/out/model/task/taskfactory.d.ts",
+        "../shared/out/model/task/worktask.d.ts",
+        "../shared/out/model/types.d.ts",
+        "../shared/out/tools/approximatedurations.d.ts",
+        "../shared/out/tools/math.d.ts",
+        "../shared/out/tools/string.d.ts",
+        "../shared/out/tools/time.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/model/daylog/daylog.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/model/roundingscheme/durationapproximation.d.ts",
+        "../shared/out/model/roundingscheme/roundingscheme.d.ts",
+        "../shared/out/model/summary/settings.d.ts",
+        "../shared/out/model/task/basictask.d.ts",
+        "../shared/out/model/task/break.d.ts",
+        "../shared/out/model/task/task.d.ts",
+        "../shared/out/model/task/worktask.d.ts",
+        "../shared/out/model/types.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/model/defaults/defaultsummarysettings.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/model/summary/settings.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/model/roundingscheme/durationapproximation.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/model/task/basictask.d.ts",
+        "../shared/out/model/task/task.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/model/roundingscheme/roundingscheme.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/model/roundingscheme/durationapproximation.d.ts",
+        "../shared/out/model/summary/settings.d.ts",
+        "../shared/out/model/task/basictask.d.ts",
+        "../shared/out/model/task/task.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/model/structuredlog/structuredlog.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/model/structuredlog/summary.d.ts",
+        "../shared/out/model/structuredlog/tasklist.d.ts",
+        "../shared/out/model/structuredlog/timelog.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/model/structuredlog/summary.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/model/task/task.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/model/structuredlog/tasklist.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/model/task/task.d.ts",
+        "../shared/out/model/types.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/model/structuredlog/timelog.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/model/task/task.d.ts",
+        "../shared/out/model/types.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/model/summary/params.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/http2.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/ts3.7/index.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/model/summary/settings.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/model/summary/settings.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/model/roundingscheme/roundingscheme.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/model/task/basictask.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/model/task/task.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/model/task/break.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/model/task/basictask.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/model/task/task.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/model/task/taskfactory.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/model/task/basictask.d.ts",
+        "../shared/out/model/task/task.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/model/task/worktask.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/model/task/basictask.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/model/types.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/tools/approximatedurations.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/app/basicroundingscheme.d.ts",
+        "../shared/out/model/roundingscheme/durationapproximation.d.ts",
+        "../shared/out/model/roundingscheme/roundingscheme.d.ts",
+        "../shared/out/model/summary/settings.d.ts",
+        "../shared/out/model/task/basictask.d.ts",
+        "../shared/out/model/task/task.d.ts",
+        "../shared/out/model/types.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/tools/math.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../shared/out/model/roundingscheme/durationapproximation.d.ts",
+        "../shared/out/model/summary/settings.d.ts",
+        "../shared/out/model/task/task.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/tools/string.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
+        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
+      ],
+      "../shared/out/tools/time.d.ts": [
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/vscode/index.d.ts",
+        "../node_modules/moment/ts3.1-typings/moment.d.ts",
+        "../shared/out/index.d.ts",
         "./node_modules/vscode-languageclient/lib/common/client.d.ts",
         "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts"
       ]
@@ -4121,264 +4986,8 @@
       "./src/app/commands/segments.ts",
       "./src/app/commands/tasks.ts",
       "./src/app/logmanager.ts",
-      [
-        "./src/app/summarygenerator.ts",
-        [
-          {
-            "file": "./src/app/summarygenerator.ts",
-            "start": 24,
-            "length": 24,
-            "messageText": "Cannot find module 'shared/app/BasicDayLog' or its corresponding type declarations.",
-            "category": 1,
-            "code": 2307
-          },
-          {
-            "file": "./src/app/summarygenerator.ts",
-            "start": 146,
-            "length": 8,
-            "messageText": "Cannot find name 'Settings'.",
-            "category": 1,
-            "code": 2304
-          },
-          {
-            "file": "./src/app/summarygenerator.ts",
-            "start": 211,
-            "length": 8,
-            "messageText": "Cannot find name 'Settings'.",
-            "category": 1,
-            "code": 2304
-          },
-          {
-            "file": "./src/app/summarygenerator.ts",
-            "start": 433,
-            "length": 4,
-            "messageText": "Parameter 'line' implicitly has an 'any' type.",
-            "category": 1,
-            "code": 7006
-          },
-          {
-            "file": "./src/app/summarygenerator.ts",
-            "start": 442,
-            "length": 12,
-            "messageText": "Cannot find name 'formatString'.",
-            "category": 1,
-            "code": 2304
-          },
-          {
-            "file": "./src/app/summarygenerator.ts",
-            "start": 659,
-            "length": 4,
-            "messageText": "Parameter 'line' implicitly has an 'any' type.",
-            "category": 1,
-            "code": 7006
-          },
-          {
-            "file": "./src/app/summarygenerator.ts",
-            "start": 668,
-            "length": 12,
-            "messageText": "Cannot find name 'formatString'.",
-            "category": 1,
-            "code": 2304
-          },
-          {
-            "file": "./src/app/summarygenerator.ts",
-            "start": 806,
-            "length": 14,
-            "messageText": "Cannot find name 'OverviewParams'.",
-            "category": 1,
-            "code": 2304
-          },
-          {
-            "file": "./src/app/summarygenerator.ts",
-            "start": 1005,
-            "length": 4,
-            "messageText": "Parameter 'line' implicitly has an 'any' type.",
-            "category": 1,
-            "code": 7006
-          },
-          {
-            "file": "./src/app/summarygenerator.ts",
-            "start": 1014,
-            "length": 12,
-            "messageText": "Cannot find name 'formatString'.",
-            "category": 1,
-            "code": 2304
-          },
-          {
-            "file": "./src/app/summarygenerator.ts",
-            "start": 1118,
-            "length": 18,
-            "messageText": "Cannot find name 'DurationListParams'.",
-            "category": 1,
-            "code": 2304
-          },
-          {
-            "file": "./src/app/summarygenerator.ts",
-            "start": 1263,
-            "length": 19,
-            "messageText": "Cannot find name 'BasicRoundingScheme'.",
-            "category": 1,
-            "code": 2304
-          },
-          {
-            "file": "./src/app/summarygenerator.ts",
-            "start": 1372,
-            "length": 19,
-            "messageText": "Cannot find name 'BasicRoundingScheme'.",
-            "category": 1,
-            "code": 2304
-          },
-          {
-            "file": "./src/app/summarygenerator.ts",
-            "start": 1462,
-            "length": 19,
-            "messageText": "Cannot find name 'BasicRoundingScheme'.",
-            "category": 1,
-            "code": 2304
-          },
-          {
-            "file": "./src/app/summarygenerator.ts",
-            "start": 1570,
-            "length": 19,
-            "messageText": "Cannot find name 'BasicRoundingScheme'.",
-            "category": 1,
-            "code": 2304
-          },
-          {
-            "file": "./src/app/summarygenerator.ts",
-            "start": 1661,
-            "length": 10,
-            "messageText": "Cannot find name 'formatDate'.",
-            "category": 1,
-            "code": 2304
-          },
-          {
-            "file": "./src/app/summarygenerator.ts",
-            "start": 1672,
-            "length": 6,
-            "messageText": "Cannot find name 'moment'.",
-            "category": 1,
-            "code": 2304
-          },
-          {
-            "file": "./src/app/summarygenerator.ts",
-            "start": 1855,
-            "length": 12,
-            "messageText": "Cannot find name 'formatString'.",
-            "category": 1,
-            "code": 2304
-          },
-          {
-            "file": "./src/app/summarygenerator.ts",
-            "start": 1917,
-            "length": 12,
-            "messageText": "Cannot find name 'formatString'.",
-            "category": 1,
-            "code": 2304
-          },
-          {
-            "file": "./src/app/summarygenerator.ts",
-            "start": 2020,
-            "length": 21,
-            "messageText": "Cannot find name 'DurationApproximation'.",
-            "category": 1,
-            "code": 2304
-          },
-          {
-            "file": "./src/app/summarygenerator.ts",
-            "start": 2042,
-            "length": 12,
-            "messageText": "Cannot find name 'TaskTypeName'.",
-            "category": 1,
-            "code": 2304
-          },
-          {
-            "file": "./src/app/summarygenerator.ts",
-            "start": 2245,
-            "length": 14,
-            "messageText": "Cannot find name 'formatDuration'.",
-            "category": 1,
-            "code": 2304
-          },
-          {
-            "file": "./src/app/summarygenerator.ts",
-            "start": 2317,
-            "length": 14,
-            "messageText": "Cannot find name 'formatDuration'.",
-            "category": 1,
-            "code": 2304
-          },
-          {
-            "file": "./src/app/summarygenerator.ts",
-            "start": 2432,
-            "length": 12,
-            "messageText": "Cannot find name 'formatString'.",
-            "category": 1,
-            "code": 2304
-          }
-        ]
-      ],
-      [
-        "./src/app/tools/approximatedurations.ts",
-        [
-          {
-            "file": "./src/app/tools/approximatedurations.ts",
-            "start": 34,
-            "length": 66,
-            "messageText": "Cannot find module '../../../../model/src/model/RoundingScheme/DurationApproximation' or its corresponding type declarations.",
-            "category": 1,
-            "code": 2307
-          },
-          {
-            "file": "./src/app/tools/approximatedurations.ts",
-            "start": 133,
-            "length": 46,
-            "messageText": "Cannot find module '../../../../model/src/model/Summary/Settings' or its corresponding type declarations.",
-            "category": 1,
-            "code": 2307
-          },
-          {
-            "file": "./src/app/tools/approximatedurations.ts",
-            "start": 211,
-            "length": 34,
-            "messageText": "Cannot find module '../../../../model/src/model/Task' or its corresponding type declarations.",
-            "category": 1,
-            "code": 2307
-          },
-          {
-            "file": "./src/app/tools/approximatedurations.ts",
-            "start": 270,
-            "length": 44,
-            "messageText": "Cannot find module '../../../../model/src/model/Task/BasicTask' or its corresponding type declarations.",
-            "category": 1,
-            "code": 2307
-          },
-          {
-            "file": "./src/app/tools/approximatedurations.ts",
-            "start": 349,
-            "length": 35,
-            "messageText": "Cannot find module '../../../../model/src/model/Types' or its corresponding type declarations.",
-            "category": 1,
-            "code": 2307
-          },
-          {
-            "file": "./src/app/tools/approximatedurations.ts",
-            "start": 419,
-            "length": 64,
-            "messageText": "Cannot find module '../../../../model/src/model/RoundingScheme/BasicRoundingScheme' or its corresponding type declarations.",
-            "category": 1,
-            "code": 2307
-          },
-          {
-            "file": "./src/app/tools/approximatedurations.ts",
-            "start": 513,
-            "length": 59,
-            "messageText": "Cannot find module '../../../../model/src/model/RoundingScheme/RoundingScheme' or its corresponding type declarations.",
-            "category": 1,
-            "code": 2307
-          }
-        ]
-      ],
+      "./src/app/summarygenerator.ts",
+      "./src/app/tools/approximatedurations.ts",
       "./src/contribute/commands.ts",
       "./src/contribute/languageclient.ts",
       "./src/extension.ts",
@@ -4393,6 +5002,7 @@
       "../node_modules/@types/json-schema/index.d.ts",
       "../node_modules/@types/minimatch/index.d.ts",
       "../node_modules/@types/mocha/index.d.ts",
+      "../node_modules/@types/module-alias/index.d.ts",
       "../node_modules/@types/node/async_hooks.d.ts",
       "../node_modules/@types/node/base.d.ts",
       "../node_modules/@types/node/buffer.d.ts",
@@ -4443,6 +5053,7 @@
       "../node_modules/@types/node/worker_threads.d.ts",
       "../node_modules/@types/node/zlib.d.ts",
       "../node_modules/@types/vscode/index.d.ts",
+      "../node_modules/moment/ts3.1-typings/moment.d.ts",
       "../node_modules/typescript/lib/lib.es2015.collection.d.ts",
       "../node_modules/typescript/lib/lib.es2015.core.d.ts",
       "../node_modules/typescript/lib/lib.es2015.d.ts",
@@ -4467,695 +5078,37 @@
       "../node_modules/typescript/lib/lib.es2018.intl.d.ts",
       "../node_modules/typescript/lib/lib.es2018.promise.d.ts",
       "../node_modules/typescript/lib/lib.es2018.regexp.d.ts",
+      "../node_modules/typescript/lib/lib.es2019.array.d.ts",
+      "../node_modules/typescript/lib/lib.es2019.d.ts",
+      "../node_modules/typescript/lib/lib.es2019.object.d.ts",
+      "../node_modules/typescript/lib/lib.es2019.string.d.ts",
+      "../node_modules/typescript/lib/lib.es2019.symbol.d.ts",
       "../node_modules/typescript/lib/lib.es2020.bigint.d.ts",
       "../node_modules/typescript/lib/lib.es5.d.ts",
-      "../node_modules/typescript/lib/lib.esnext.intl.d.ts"
-    ],
-    "affectedFilesPendingEmit": [
-      [
-        "./node_modules/vscode-jsonrpc/lib/common/api.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-jsonrpc/lib/common/cancellation.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-jsonrpc/lib/common/connection.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-jsonrpc/lib/common/disposable.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-jsonrpc/lib/common/encoding.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-jsonrpc/lib/common/events.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-jsonrpc/lib/common/messagereader.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-jsonrpc/lib/common/messages.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-jsonrpc/lib/common/messagewriter.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-jsonrpc/lib/common/ral.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-jsonrpc/lib/node/main.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-jsonrpc/node.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-jsonrpc/typings/thenable.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageclient/lib/common/api.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageclient/lib/common/callhierarchy.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageclient/lib/common/client.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageclient/lib/common/codeconverter.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageclient/lib/common/colorprovider.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageclient/lib/common/commonclient.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageclient/lib/common/configuration.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageclient/lib/common/declaration.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageclient/lib/common/fileoperations.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageclient/lib/common/foldingrange.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageclient/lib/common/implementation.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageclient/lib/common/linkededitingrange.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageclient/lib/common/protocolcompletionitem.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageclient/lib/common/protocolconverter.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageclient/lib/common/selectionrange.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageclient/lib/common/semantictokens.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageclient/lib/common/typedefinition.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageclient/lib/common/workspacefolders.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageclient/lib/node/main.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageclient/node.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageclient/typings/vscode-proposed.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageserver-protocol/lib/common/api.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageserver-protocol/lib/common/connection.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageserver-protocol/lib/common/messages.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageserver-protocol/lib/common/protocol.callhierarchy.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageserver-protocol/lib/common/protocol.colorprovider.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageserver-protocol/lib/common/protocol.configuration.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageserver-protocol/lib/common/protocol.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageserver-protocol/lib/common/protocol.declaration.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageserver-protocol/lib/common/protocol.fileoperations.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageserver-protocol/lib/common/protocol.foldingrange.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageserver-protocol/lib/common/protocol.implementation.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageserver-protocol/lib/common/protocol.linkededitingrange.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageserver-protocol/lib/common/protocol.moniker.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageserver-protocol/lib/common/protocol.progress.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageserver-protocol/lib/common/protocol.selectionrange.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageserver-protocol/lib/common/protocol.semantictokens.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageserver-protocol/lib/common/protocol.showdocument.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageserver-protocol/lib/common/protocol.typedefinition.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageserver-protocol/lib/common/protocol.workspacefolders.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageserver-protocol/lib/node/main.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageserver-protocol/node.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-languageserver-types/lib/umd/main.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-test/out/download.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-test/out/index.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-test/out/runtest.d.ts",
-        1
-      ],
-      [
-        "./node_modules/vscode-test/out/util.d.ts",
-        1
-      ],
-      [
-        "./src/app/commands/basic.ts",
-        1
-      ],
-      [
-        "./src/app/commands/segments.ts",
-        1
-      ],
-      [
-        "./src/app/commands/tasks.ts",
-        1
-      ],
-      [
-        "./src/app/logmanager.ts",
-        1
-      ],
-      [
-        "./src/app/summarygenerator.ts",
-        1
-      ],
-      [
-        "./src/app/tools/approximatedurations.ts",
-        1
-      ],
-      [
-        "./src/contribute/commands.ts",
-        1
-      ],
-      [
-        "./src/contribute/languageclient.ts",
-        1
-      ],
-      [
-        "./src/extension.ts",
-        1
-      ],
-      [
-        "./src/test/completion.test.ts",
-        1
-      ],
-      [
-        "./src/test/diagnostics.test.ts",
-        1
-      ],
-      [
-        "./src/test/helper.ts",
-        1
-      ],
-      [
-        "./src/test/index.ts",
-        1
-      ],
-      [
-        "./src/test/runtest.ts",
-        1
-      ],
-      [
-        "./src_temp/app/commands/basic.ts",
-        1
-      ],
-      [
-        "./src_temp/app/commands/segments.ts",
-        1
-      ],
-      [
-        "./src_temp/app/commands/tasks.ts",
-        1
-      ],
-      [
-        "./src_temp/app/logmanager.ts",
-        1
-      ],
-      [
-        "./src_temp/app/summarygenerator.ts",
-        1
-      ],
-      [
-        "./src_temp/app/tools/approximatedurations.ts",
-        1
-      ],
-      [
-        "./src_temp/contribute/commands.ts",
-        1
-      ],
-      [
-        "./src_temp/contribute/languageclient.ts",
-        1
-      ],
-      [
-        "./src_temp/extension.ts",
-        1
-      ],
-      [
-        "./src_temp/test/completion.test.ts",
-        1
-      ],
-      [
-        "./src_temp/test/diagnostics.test.ts",
-        1
-      ],
-      [
-        "./src_temp/test/helper.ts",
-        1
-      ],
-      [
-        "./src_temp/test/index.ts",
-        1
-      ],
-      [
-        "./src_temp/test/runtest.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/color-name/index.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/eslint-visitor-keys/index.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/glob/index.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/json-schema/index.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/minimatch/index.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/mocha/index.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/async_hooks.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/base.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/buffer.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/child_process.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/cluster.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/console.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/constants.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/crypto.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/dgram.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/dns.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/domain.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/events.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/fs.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/globals.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/http.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/http2.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/https.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/inspector.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/module.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/net.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/os.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/path.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/perf_hooks.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/process.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/punycode.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/querystring.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/readline.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/repl.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/stream.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/string_decoder.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/timers.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/tls.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/trace_events.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/ts3.2/base.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/ts3.2/fs.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/ts3.2/globals.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/ts3.2/util.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/ts3.4/base.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/ts3.4/globals.global.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/ts3.7/assert.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/ts3.7/base.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/ts3.7/index.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/tty.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/url.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/util.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/v8.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/vm.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/worker_threads.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/node/zlib.d.ts",
-        1
-      ],
-      [
-        "../node_modules/@types/vscode/index.d.ts",
-        1
-      ],
-      [
-        "../node_modules/typescript/lib/lib.es2015.collection.d.ts",
-        1
-      ],
-      [
-        "../node_modules/typescript/lib/lib.es2015.core.d.ts",
-        1
-      ],
-      [
-        "../node_modules/typescript/lib/lib.es2015.d.ts",
-        1
-      ],
-      [
-        "../node_modules/typescript/lib/lib.es2015.generator.d.ts",
-        1
-      ],
-      [
-        "../node_modules/typescript/lib/lib.es2015.iterable.d.ts",
-        1
-      ],
-      [
-        "../node_modules/typescript/lib/lib.es2015.promise.d.ts",
-        1
-      ],
-      [
-        "../node_modules/typescript/lib/lib.es2015.proxy.d.ts",
-        1
-      ],
-      [
-        "../node_modules/typescript/lib/lib.es2015.reflect.d.ts",
-        1
-      ],
-      [
-        "../node_modules/typescript/lib/lib.es2015.symbol.d.ts",
-        1
-      ],
-      [
-        "../node_modules/typescript/lib/lib.es2015.symbol.wellknown.d.ts",
-        1
-      ],
-      [
-        "../node_modules/typescript/lib/lib.es2016.array.include.d.ts",
-        1
-      ],
-      [
-        "../node_modules/typescript/lib/lib.es2016.d.ts",
-        1
-      ],
-      [
-        "../node_modules/typescript/lib/lib.es2017.d.ts",
-        1
-      ],
-      [
-        "../node_modules/typescript/lib/lib.es2017.intl.d.ts",
-        1
-      ],
-      [
-        "../node_modules/typescript/lib/lib.es2017.object.d.ts",
-        1
-      ],
-      [
-        "../node_modules/typescript/lib/lib.es2017.sharedmemory.d.ts",
-        1
-      ],
-      [
-        "../node_modules/typescript/lib/lib.es2017.string.d.ts",
-        1
-      ],
-      [
-        "../node_modules/typescript/lib/lib.es2017.typedarrays.d.ts",
-        1
-      ],
-      [
-        "../node_modules/typescript/lib/lib.es2018.asyncgenerator.d.ts",
-        1
-      ],
-      [
-        "../node_modules/typescript/lib/lib.es2018.asynciterable.d.ts",
-        1
-      ],
-      [
-        "../node_modules/typescript/lib/lib.es2018.d.ts",
-        1
-      ],
-      [
-        "../node_modules/typescript/lib/lib.es2018.intl.d.ts",
-        1
-      ],
-      [
-        "../node_modules/typescript/lib/lib.es2018.promise.d.ts",
-        1
-      ],
-      [
-        "../node_modules/typescript/lib/lib.es2018.regexp.d.ts",
-        1
-      ],
-      [
-        "../node_modules/typescript/lib/lib.es2020.bigint.d.ts",
-        1
-      ],
-      [
-        "../node_modules/typescript/lib/lib.es5.d.ts",
-        1
-      ],
-      [
-        "../node_modules/typescript/lib/lib.esnext.intl.d.ts",
-        1
-      ]
+      "../node_modules/typescript/lib/lib.esnext.intl.d.ts",
+      "../shared/out/app/basicdaylog.d.ts",
+      "../shared/out/app/basicroundingscheme.d.ts",
+      "../shared/out/index.d.ts",
+      "../shared/out/model/daylog/daylog.d.ts",
+      "../shared/out/model/defaults/defaultsummarysettings.d.ts",
+      "../shared/out/model/roundingscheme/durationapproximation.d.ts",
+      "../shared/out/model/roundingscheme/roundingscheme.d.ts",
+      "../shared/out/model/structuredlog/structuredlog.d.ts",
+      "../shared/out/model/structuredlog/summary.d.ts",
+      "../shared/out/model/structuredlog/tasklist.d.ts",
+      "../shared/out/model/structuredlog/timelog.d.ts",
+      "../shared/out/model/summary/params.d.ts",
+      "../shared/out/model/summary/settings.d.ts",
+      "../shared/out/model/task/basictask.d.ts",
+      "../shared/out/model/task/break.d.ts",
+      "../shared/out/model/task/task.d.ts",
+      "../shared/out/model/task/taskfactory.d.ts",
+      "../shared/out/model/task/worktask.d.ts",
+      "../shared/out/model/types.d.ts",
+      "../shared/out/tools/approximatedurations.d.ts",
+      "../shared/out/tools/math.d.ts",
+      "../shared/out/tools/string.d.ts",
+      "../shared/out/tools/time.d.ts"
     ]
   },
   "version": "4.0.2"

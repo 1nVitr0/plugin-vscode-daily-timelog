@@ -1,6 +1,7 @@
 import BasicDayLog from './app/BasicDayLog';
 import BasicRoundingScheme from './app/BasicRoundingScheme';
 import DayLog from './model/DayLog/DayLog';
+
 import DurationApproximation from './model/RoundingScheme/DurationApproximation';
 import RoundingScheme from './model/RoundingScheme/RoundingScheme';
 import StructuredLog from './model/StructuredLog/StructuredLog';
@@ -20,6 +21,10 @@ export * from './model/Summary/Params';
 export * from './model/Summary/Settings';
 export * from './model/Task/Task';
 export * from './model/Types';
+export * from './tools/approximateDurations';
+export * from './tools/math';
+export * from './tools/string';
+export * from './tools/time';
 
 export {
   BasicDayLog,

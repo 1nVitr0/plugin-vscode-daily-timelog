@@ -8,10 +8,13 @@
     "sourceMap": true,
     "strict": true,
     "outDir": "out",
+    "rootDir": "src",
     "baseUrl": "./",
-    "composite": true
+    "composite": true,
+    "paths": {
+      "@shared/*": ["../shared/out/*"]
+    }
   },
-  "include": ["src"],
-  "exclude": ["node_modules", ".vscode-test"],
+  "exclude": ["node_modules", ".vscode-test", "out", "../shared/src"],
   "references": [{ "path": "../shared" }]
 }
