@@ -1,10 +1,12 @@
-import DurationApproximation from '../../../../model/src/model/RoundingScheme/DurationApproximation';
-import { BasicSettings } from '../../../../model/src/model/Summary/Settings';
-import { TaskTypeName } from '../../../../model/src/model/Task';
-import BasicTask from '../../../../model/src/model/Task/BasicTask';
-import { ConstructorType } from '../../../../model/src/model/Types';
-import BasicRoundingScheme from '../../../../model/src/model/RoundingScheme/BasicRoundingScheme';
-import RoundingScheme from '../../../../model/src/model/RoundingScheme/RoundingScheme';
+import {
+  TaskTypeName,
+  RoundingScheme,
+  ConstructorType,
+  BasicRoundingScheme,
+  BasicSettings,
+  BasicTask,
+  DurationApproximation,
+} from '@shared/index';
 
 export function getInitializedRoundingScheme<T extends TaskTypeName = TaskTypeName>(
   _roundingScheme: RoundingScheme | ConstructorType<typeof BasicRoundingScheme>,
