@@ -18,7 +18,8 @@ import {
 } from 'vscode-languageserver/node';
 
 import { TextDocument } from 'vscode-languageserver-textdocument';
-import { parse } from 'yaml';
+import CompletionService from './services/CompletionService';
+import { parseDocument } from 'yaml';
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -26,6 +27,7 @@ let connection = createConnection(ProposedFeatures.all);
 
 // Create a simple text document manager.
 let documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
+let completionService = new CompletionService(documents);
 
 let hasConfigurationCapability: boolean = false;
 let hasWorkspaceFolderCapability: boolean = false;
@@ -133,14 +135,23 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 
   // The validator creates diagnostics for all uppercase words length 2 and more
   let text = textDocument.getText();
-  const nodes = parse(text, {
-    keepCstNodes: true,
-  });
+  const nodes = parseDocument(text);
   let pattern = /\b[A-Z]{2,}\b/g;
   let m: RegExpExecArray | null;
 
   let problems = 0;
   let diagnostics: Diagnostic[] = [];
+  if (nodes.range) {
+    diagnostics.push({
+      severity: DiagnosticSeverity.Error,
+      range: {
+        start: textDocument.positionAt(nodes.range[0]),
+        end: textDocument.positionAt(nodes.range[1]),
+      },
+      message: 'Test',
+      source: 'ex',
+    });
+  }
   while ((m = pattern.exec(text)) && problems < settings.maxNumberOfProblems) {
     problems++;
     let diagnostic: Diagnostic = {
@@ -184,6 +195,7 @@ connection.onDidChangeWatchedFiles((_change) => {
 
 // This handler provides the initial list of the completion items.
 connection.onCompletion((_textDocumentPosition: TextDocumentPositionParams): CompletionItem[] => {
+  return completionService.doComplete(_textDocumentPosition);
   // The pass parameter contains the position of the text document in
   // which code complete got requested. For the example we ignore this
   // info and always provide the same completion items.
