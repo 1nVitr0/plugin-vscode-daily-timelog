@@ -5,10 +5,11 @@ import { Duration } from '../Types';
 type TaskName = typeof Task['name'];
 
 export interface TaskDeclaration<T extends TaskName = TaskName> {
-  type?: TaskTypeName; // Defaults to 'task'
-  name: TaskName;
   description?: string;
   estimatedDuration?: Duration;
+  // Defaults to 'task'
+  name: TaskName;
+  type?: TaskTypeName;
 }
 
 export interface TaskDurationList<T extends TaskName = TaskName> {

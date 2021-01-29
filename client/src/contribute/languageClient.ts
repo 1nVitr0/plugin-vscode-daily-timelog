@@ -17,11 +17,11 @@ export default function contributeLanguageClient(context: ExtensionContext): Lan
   };
 
   let clientOptions: LanguageClientOptions = {
-    documentSelector: [{ scheme: 'file', language: 'yaml' }],
+    documentSelector: [{ language: 'yaml', pattern: '**/*.daylog.yml' }],
     synchronize: {
-      fileEvents: workspace.createFileSystemWatcher('*.daylog.yml'),
+      fileEvents: workspace.createFileSystemWatcher('**/*.daylog.yml'),
     },
   };
 
-  return new LanguageClient('languageServerExample', 'Language Server Example', serverOptions, clientOptions);
+  return new LanguageClient('daylogLanguageServer', 'Daylog Language Server', serverOptions, clientOptions);
 }

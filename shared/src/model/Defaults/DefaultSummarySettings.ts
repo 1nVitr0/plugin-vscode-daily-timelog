@@ -5,7 +5,7 @@ export const defaultBasicSettings: BasicSettings = {
   includeBreaksInTotal: false,
   dateFormat: 'YYYY-MM-DD',
   timeFormat: 'HH:mm',
-  durationFormat: '{{d}}d ?{{h}}h ?{{m}}m?',
+  durationFormat: '{{h}}h ?{{m}}m?',
   decimalSeparator: '.',
   durationPrecision: 15,
   durationRounding: 'round',

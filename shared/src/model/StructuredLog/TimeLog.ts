@@ -4,19 +4,19 @@ import { Progress, Time } from '../Types';
 type TaskName = Task['name'];
 
 interface LogEntryBase<T extends TaskName> {
-  task: T;
   comment?: string;
   progress?: Progress;
+  task: T;
 }
 
 export interface LogEntryStyleStart<T extends TaskName = TaskName> extends LogEntryBase<T> {
-  start: Time;
   end?: Time;
+  start: Time;
 }
 
 export interface LogEntryStyleEnd<T extends TaskName = TaskName> extends LogEntryBase<T> {
-  start?: Time;
   end: Time;
+  start?: Time;
 }
 
 export type LogEntry = LogEntryStyleStart | LogEntryStyleEnd;

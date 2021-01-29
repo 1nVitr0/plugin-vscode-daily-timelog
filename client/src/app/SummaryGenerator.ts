@@ -21,9 +21,13 @@ export default class SummaryGenerator {
     this.settings = settings;
   }
 
-  public generateTaskList(): string {
-    const formatParams = this.getFormatParams();
-    const lines = this.settings.taskListStructure.map((line) => formatString(line, formatParams));
+  public generateOverview(): string {
+    const formatParams: OverviewParams = {
+      ...this.getFormatParams(),
+      taskList: this.generateTaskList(),
+      summary: this.generateSummary(),
+    };
+    const lines = this.settings.overviewStructure.map((line) => formatString(line, formatParams));
 
     return lines.join('\n');
   }
@@ -35,15 +39,25 @@ export default class SummaryGenerator {
     return lines.join('\n');
   }
 
-  public generateOverview(): string {
-    const formatParams: OverviewParams = {
-      ...this.getFormatParams(),
-      taskList: this.generateTaskList(),
-      summary: this.generateSummary(),
-    };
-    const lines = this.settings.overviewStructure.map((line) => formatString(line, formatParams));
+  public generateTaskList(): string {
+    const formatParams = this.getFormatParams();
+    const lines = this.settings.taskListStructure.map((line) => formatString(line, formatParams));
 
     return lines.join('\n');
+  }
+
+  private formatDurationList(durations: DurationApproximation<TaskTypeName>[], separator = '\n'): string {
+    const { taskListDurationFormat } = this.settings;
+    return durations
+      .map((durationInfo) => {
+        const duration = {
+          duration: formatDuration(durationInfo.duration, this.settings),
+          error: formatDuration(durationInfo.error, this.settings),
+          task: durationInfo.task,
+        };
+        return formatString(taskListDurationFormat, duration);
+      })
+      .join('\n');
   }
 
   private getFormatParams(): DurationListParams {
@@ -62,19 +76,5 @@ export default class SummaryGenerator {
       totals: formatString(durationFormat, totals),
       estimatedTotals: formatString(durationFormat, estimatedTotals),
     };
-  }
-
-  private formatDurationList(durations: DurationApproximation<TaskTypeName>[], separator = '\n'): string {
-    const { taskListDurationFormat } = this.settings;
-    return durations
-      .map((durationInfo) => {
-        const duration = {
-          duration: formatDuration(durationInfo.duration, this.settings),
-          error: formatDuration(durationInfo.error, this.settings),
-          task: durationInfo.task,
-        };
-        return formatString(taskListDurationFormat, duration);
-      })
-      .join('\n');
   }
 }
