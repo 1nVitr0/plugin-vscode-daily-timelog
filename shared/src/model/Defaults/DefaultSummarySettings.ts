@@ -1,6 +1,8 @@
 import Settings, { BasicSettings } from '../Summary/Settings';
 
 export const defaultBasicSettings: BasicSettings = {
+  commonTasks: ['Organisation', 'Daily', 'Meeting', 'Refactoring', 'Code Review', 'Checking Mails'],
+  commonBreaks: ['Lunch', 'Breakfast', 'Coffee', 'Personal'],
   workDayHours: 8,
   includeBreaksInTotal: false,
   dateFormat: 'YYYY-MM-DD',

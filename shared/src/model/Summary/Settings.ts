@@ -3,6 +3,8 @@ import { RoundingType } from '../RoundingScheme/RoundingScheme';
 export type ListTypeBoolean = 'taskList' | 'summary' | boolean;
 
 export interface BasicSettings {
+  commonBreaks: string[];
+  commonTasks: string[];
   dateFormat: string;
   decimalSeparator: string;
   durationFormat: string;
