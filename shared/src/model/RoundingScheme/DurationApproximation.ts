@@ -17,6 +17,7 @@ export default class DurationApproximation<T extends TaskTypeName = TaskTypeName
   public get duration() {
     return this._duration;
   }
+
   public set duration(duration: number) {
     this._duration = duration;
     this.computeError();
@@ -26,11 +27,11 @@ export default class DurationApproximation<T extends TaskTypeName = TaskTypeName
     return this._error;
   }
 
-  private init() {
-    this.computeError();
-  }
-
   private computeError() {
     this._error = this._duration - this.task.actualDuration;
+  }
+
+  private init() {
+    this.computeError();
   }
 }

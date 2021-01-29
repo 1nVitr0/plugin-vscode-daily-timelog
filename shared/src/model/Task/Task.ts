@@ -1,10 +1,10 @@
 export default interface Task<T extends TaskTypeName = TaskTypeName> {
-  type: T;
-  name: string;
-  description?: string;
-  completed: boolean;
-  estimatedDuration: number;
   actualDuration: number;
+  completed: boolean;
+  description?: string;
+  estimatedDuration: number;
+  name: string;
+  type: T;
 }
 
 export enum TaskType {

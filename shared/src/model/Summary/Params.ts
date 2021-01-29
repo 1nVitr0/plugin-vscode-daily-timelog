@@ -5,8 +5,8 @@ export interface BasicParams extends Settings {
   date: string;
   durations: string;
   estimatedDurations: string;
-  totals: string;
   estimatedTotals: string;
+  totals: string;
 }
 
 export interface TaskListParams extends BasicParams, TaskListSettings {
@@ -22,6 +22,6 @@ export interface DurationListParams extends TaskListParams, SummaryParams {
 }
 
 export interface OverviewParams extends DurationListParams {
-  taskList: string;
   summary: string;
+  taskList: string;
 }

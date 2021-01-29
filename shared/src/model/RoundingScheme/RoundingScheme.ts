@@ -8,7 +8,9 @@ export type RoundingType = 'round' | 'floor' | 'ceil';
 
 export default abstract class RoundingScheme<T extends TaskTypeName = TaskTypeName> {
   public readonly settings: BasicSettings;
+
   protected roundingFunction: PrecisionRoundingFunction = RoundingScheme.roundToPrecision;
+
   private _tasks: BasicTask<T>[];
 
   public constructor(tasks: BasicTask<T>[], settings: BasicSettings) {
@@ -16,6 +18,38 @@ export default abstract class RoundingScheme<T extends TaskTypeName = TaskTypeNa
     this.settings = settings;
 
     this.setRoundingFunction(settings.durationRounding);
+  }
+
+  public get tasks(): readonly BasicTask<T>[] {
+    return this._tasks;
+  }
+
+  public set tasks(tasks: readonly BasicTask<T>[]) {
+    this._tasks = tasks as BasicTask<T>[];
+  }
+
+  protected static ceilToPrecision(number: number, precision: number = 1): number {
+    return Math.ceil(number / precision) * precision;
+  }
+
+  protected static floorToPrecision(number: number, precision: number = 1): number {
+    return Math.floor(number / precision) * precision;
+  }
+
+  protected static roundToPrecision(number: number, precision: number = 1): number {
+    return Math.round(number / precision) * precision;
+  }
+
+  public ceil(n: number): number {
+    return RoundingScheme.ceilToPrecision(n, this.settings.durationPrecision);
+  }
+
+  public floor(n: number): number {
+    return RoundingScheme.floorToPrecision(n, this.settings.durationPrecision);
+  }
+
+  public round(n: number): number {
+    return RoundingScheme.roundToPrecision(n, this.settings.durationPrecision);
   }
 
   public setRoundingFunction(type: RoundingType | PrecisionRoundingFunction) {
@@ -31,37 +65,8 @@ export default abstract class RoundingScheme<T extends TaskTypeName = TaskTypeNa
     }
   }
 
-  protected static roundToPrecision(number: number, precision: number = 1): number {
-    return Math.round(number / precision) * precision;
-  }
-
-  protected static floorToPrecision(number: number, precision: number = 1): number {
-    return Math.floor(number / precision) * precision;
-  }
-
-  protected static ceilToPrecision(number: number, precision: number = 1): number {
-    return Math.ceil(number / precision) * precision;
-  }
-
-  public set tasks(tasks: readonly BasicTask<T>[]) {
-    this._tasks = tasks as BasicTask<T>[];
-  }
-  public get tasks(): readonly BasicTask<T>[] {
-    return this._tasks;
-  }
-
-  public round(n: number): number {
-    return RoundingScheme.roundToPrecision(n, this.settings.durationPrecision);
-  }
-  public floor(n: number): number {
-    return RoundingScheme.floorToPrecision(n, this.settings.durationPrecision);
-  }
-  public ceil(n: number): number {
-    return RoundingScheme.ceilToPrecision(n, this.settings.durationPrecision);
-  }
-
   public abstract getApproximateDurations(): DurationApproximation<T>[];
   public abstract getApproximateEstimatedDurations(): DurationApproximation<T>[];
-  public abstract getApproximateTotal(): number;
   public abstract getApproximateEstimatedTotal(): number;
+  public abstract getApproximateTotal(): number;
 }

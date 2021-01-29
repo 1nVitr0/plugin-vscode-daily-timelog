@@ -3,40 +3,35 @@ import { RoundingType } from '../RoundingScheme/RoundingScheme';
 export type ListTypeBoolean = 'taskList' | 'summary' | boolean;
 
 export interface BasicSettings {
-  workDayHours: 8;
-  includeBreaksInTotal: boolean;
-
   dateFormat: string;
-  timeFormat: string;
-  durationFormat: string;
   decimalSeparator: string;
-
+  durationFormat: string;
   durationPrecision: number;
   durationRounding: RoundingType;
-  minimumDuration: number;
   floorBelowMinimumDuration: ListTypeBoolean;
   forceMinimumDuration: ListTypeBoolean;
+  includeBreaksInTotal: boolean;
+  minimumDuration: number;
+  timeFormat: string;
+  workDayHours: 8;
 }
 
 export interface TaskListSettings extends BasicSettings {
-  taskListStructure: string[];
-  taskListDurationFormat: string;
-  taskListTitle: string;
-
-  includeTotals: boolean;
   approximateTotals: boolean;
+  includeTotals: boolean;
+  taskListDurationFormat: string;
+  taskListStructure: string[];
+  taskListTitle: string;
 }
 
 export interface SummarySettings extends BasicSettings {
-  summaryStructure: string[];
-  summaryDurationFormat: string;
-  summaryTitle: string;
-
+  approximateTotals: boolean;
   combineBreaks: ListTypeBoolean;
   includeBreaks: ListTypeBoolean;
-
   includeTotals: boolean;
-  approximateTotals: boolean;
+  summaryDurationFormat: string;
+  summaryStructure: string[];
+  summaryTitle: string;
 }
 
 export interface OverviewSettings extends TaskListSettings, SummarySettings {

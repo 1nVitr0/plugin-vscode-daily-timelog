@@ -1,6 +1,6 @@
 {
-	"name": "lsp-sample",
-	"description": "A language server example",
+	"name": "daily-timelog",
+	"description": "Dayily Timelog Tools",
 	"author": "Microsoft Corporation",
 	"license": "MIT",
 	"version": "1.0.0",

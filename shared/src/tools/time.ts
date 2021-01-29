@@ -30,9 +30,10 @@ export function formatTime(time: Moment, settings = defaultBasicSettings): strin
 
 export function formatDuration(_duration: Duration | number, settings = defaultBasicSettings) {
   const duration = typeof _duration === 'number' ? parseDuration(_duration) : _duration;
-  const d = Math.floor(duration.asHours() / settings.workDayHours);
-  const h = duration.asHours() - d * settings.workDayHours;
-  const m = duration.asMinutes() - (h + d * settings.workDayHours) * 60;
+  const H = duration.asHours();
+  const h = Math.floor(H);
+  const M = Math.floor(duration.asMinutes());
+  const m = Math.floor(M) - h * 60;
 
-  return formatString(settings.durationFormat, { d, h, m });
+  return formatString(settings.durationFormat, { H, h, M, m });
 }
