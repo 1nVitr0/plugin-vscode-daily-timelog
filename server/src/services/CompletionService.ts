@@ -1,30 +1,54 @@
 import moment from 'moment';
 import { CompletionItem, CompletionItemKind, InsertReplaceEdit, Position, TextEdit } from 'vscode-languageserver';
-import { CST, parseDocument } from 'yaml';
-import { Collection, Node, Pair, Scalar } from 'yaml/types';
-import { Type, YAMLError } from 'yaml/util';
-import { defaultBasicSettings, formatDuration, formatTime } from '../../../shared/out';
-import {
-  YamlKeyDEscriptor as YamlKeyDescriptor,
-  YamlNodeDescriptor,
-  YamlType as YamlType,
-  YamlValueDescriptor as YamlValue,
-  YamlNode,
-} from '../types';
+import { CST } from 'yaml';
+import { Pair, Scalar, YAMLMap } from 'yaml/types';
+import { Type } from 'yaml/util';
+import { defaultBasicSettings, formatDate, formatDuration, formatTime, Path, StructuredLog } from '../../../shared/out';
+import YamlParser from '../parse/YamlParser';
+import { YamlKeyDescriptor, YamlNodeDescriptor, YamlSingleDescriptor, YamlType, YamlValueDescriptor } from '../types';
 import TextDocumentService from './TextDocumentService';
 
-function inRange(node: Node | CST.Node, offset: number, ignoreRange = false): boolean {
-  const cstNode = 'cstNode' in node ? node.cstNode : node;
-  if (!cstNode || !cstNode.range || !('start' in cstNode.range)) return ignoreRange;
-
-  const { start, end, origStart, origEnd } = cstNode.range;
-  return offset >= (origStart || start) && offset <= (origEnd || end) + 1;
-}
-
-// TODO: Replace with param to constructor
-//const roundingScheme = new BasicRoundingScheme();
-
 export default class CompletionService extends TextDocumentService {
+  private _parser?: YamlParser;
+
+  protected get parser(): YamlParser | null {
+    if (this._parser && this._parser.hasDocument(this.currentDocument)) return this._parser;
+    else return this.currentDocument ? (this._parser = new YamlParser(this.currentDocument)) : null;
+  }
+
+  protected static getQuoteOffset(type?: Scalar.Type): number {
+    switch (type) {
+      case Type.QUOTE_DOUBLE:
+      case Type.QUOTE_SINGLE:
+        return 1;
+      case Type.BLOCK_FOLDED:
+      case Type.BLOCK_LITERAL:
+      case Type.PLAIN:
+      case undefined:
+        return 0;
+    }
+  }
+
+  protected static getTimeCompletionItem(
+    time: moment.Moment,
+    diffMinutes: number,
+    quote?: Scalar.Type,
+    preselect?: boolean
+  ): CompletionItem {
+    const label = formatTime(time);
+    const text = CompletionService.quote(label, quote);
+    return {
+      kind: CompletionItemKind.Unit,
+      label,
+      data: diffMinutes,
+      filterText: text,
+      detail: formatDuration(diffMinutes, defaultBasicSettings),
+      sortText: diffMinutes.toFixed(0).padStart(9),
+      insertText: text,
+      preselect,
+    };
+  }
+
   protected static quote(text: string, type?: Scalar.Type, keepEndQuote = true): string {
     switch (type) {
       case Type.QUOTE_DOUBLE:
@@ -39,28 +63,27 @@ export default class CompletionService extends TextDocumentService {
     }
   }
 
-  protected static quoteOffset(type?: Scalar.Type): number {
-    switch (type) {
-      case Type.QUOTE_DOUBLE:
-      case Type.QUOTE_SINGLE:
-        return 1;
-      case Type.BLOCK_FOLDED:
-      case Type.BLOCK_LITERAL:
-      case Type.PLAIN:
-      case undefined:
-        return 0;
+  private static matchContext(
+    match: Path<StructuredLog>,
+    context: (string | Scalar | null)[],
+    matchDepth = true
+  ): boolean {
+    for (let i = 0; i < match.length; i++) {
+      if (match[i] == '*') continue; // match arbitrary context
+      const currentContext = context[i];
+      const parsedContext = typeof currentContext == 'string' ? currentContext : currentContext?.value;
+      if (match[i] != parsedContext) return false;
     }
+
+    if (!matchDepth || match.length == context.length) return true;
+    return false;
   }
 
   public doComplete(position: Position): CompletionItem[] {
-    if (!this.currentDocument) return [];
+    if (!this.parser) return [];
 
-    const offset = this.offsetAt(position);
-    const parsed = parseDocument(this.currentDocument?.getText(), { keepCstNodes: true, setOrigRanges: true });
-
-    if (!parsed.contents) return [];
-    const node = this.getNode(parsed.contents as YamlNode, offset + 1);
-    const error = this.getError(parsed.errors, offset + 1);
+    this.parser.invalidate();
+    const node = this.parser.getNodeAt(position);
 
     switch (node?.type) {
       case YamlType.Key:
@@ -68,142 +91,268 @@ export default class CompletionService extends TextDocumentService {
         return this.completeKey(node as YamlKeyDescriptor, position);
       case YamlType.Value:
       case YamlType.EmptyValue:
-        return this.completeValue(node as YamlValue, position);
+        return this.completeValue(node as YamlValueDescriptor, position);
+      case YamlType.Single:
+        return this.completeSingle(node as YamlSingleDescriptor, position);
       case YamlType.None:
-        return this.getDurationCompletion();
+        return this.completeEmpty(node, position);
       default:
         return [];
     }
   }
 
-  public getDurationCompletion(): CompletionItem[] {
-    const start = 15;
-    const end = 8 * 60;
-
-    const items: CompletionItem[] = [];
-    for (let duration = start; duration < end; duration += 15) {
-      items.push({
-        kind: CompletionItemKind.Unit,
-        label: ` ${formatDuration(duration, defaultBasicSettings)}`,
-        data: duration,
-      });
-    }
-
-    return items;
-  }
-
-  public getTimeCompletion(node: Scalar, position: Position): CompletionItem[] {
-    const kind = CompletionItemKind.Property;
-    const currentTime = moment();
-    currentTime.seconds(0).milliseconds(0);
-
-    const items: CompletionItem[] = [];
-    const nearestTime = moment();
-    for (let i = 0; i < 10; i++) {
-      nearestTime.add(15, 'm');
-      const label = formatTime(nearestTime);
-      const text = CompletionService.quote(label, node.type, false);
-      items.push({
-        kind,
-        label,
-        filterText: text,
-        data: i,
-        textEdit: this.getTextEdit(text, position, node),
-      });
-    }
-
-    return items;
-  }
-
-  protected completeKey(node: YamlKeyDescriptor, position: Position): CompletionItem[] {
-    const kind = CompletionItemKind.Property;
-
-    if (!node.node) return [{ kind, label: `${node.context.join(' => ')}` }];
-
-    const { value, type, cstNode } = node.node;
-
-    if (type == Type.QUOTE_SINGLE) return this.getTimeCompletion(node.node, position);
-    const label = CompletionService.quote(`${node.context.join(' => ')}  | ${value}`, type);
-    const data = 1;
-
-    return [{ label, kind, data }];
-  }
-
-  protected completeValue(node: YamlValue, position: Position): CompletionItem[] {
-    const kind = CompletionItemKind.Value;
-    if (!node.node) return [...this.getDurationCompletion(), { kind, label: `${node.context.join(' => ')}` }];
-
-    const { value, type } = node.node;
-
-    const label = CompletionService.quote(`${node.context.join(' => ')}  | ${value}`, type);
-    const data = 1;
-
-    return [...this.getDurationCompletion(), { label, kind, data }];
-  }
-
-  protected getTextEdit(
-    newText: string,
-    position: Position,
-    originalNode: Scalar
-  ): InsertReplaceEdit | TextEdit | undefined {
-    const range = originalNode.cstNode?.range;
+  protected addTextEdit(completions: CompletionItem[], position: Position, range?: CST.Range | null): CompletionItem[] {
     const offset = this.offsetAt(position);
 
-    const startOffset = range?.origStart || range?.start;
-    const endOffset = range?.origEnd || range?.end;
-    const quoteOffset = originalNode.type == Type.QUOTE_SINGLE || originalNode.type == Type.QUOTE_DOUBLE ? 1 : 0;
+    const [startOffset, endOffset] = [range?.origStart || range?.start, range?.origEnd || range?.end];
 
     if (startOffset !== undefined && endOffset !== undefined) {
-      const start = this.positionAt(startOffset);
-      const end = this.positionAt(endOffset - quoteOffset);
+      const [start, end] = [this.positionAt(startOffset), this.positionAt(endOffset)];
       const offsetPosition = this.positionAt(offset);
 
       const insertRange = { start, end: offsetPosition };
       const replaceRange = { start, end };
 
-      return InsertReplaceEdit.create(newText, insertRange, replaceRange);
+      for (const completion of completions) {
+        const newText = completion.insertText || completion.label;
+        completion.textEdit = InsertReplaceEdit.create(newText, insertRange, replaceRange);
+      }
+    }
+
+    return completions;
+  }
+
+  protected alterInsertReplaceEdit(edit: TextEdit | InsertReplaceEdit, newText: string) {
+    const prefixLength = edit.newText.indexOf(newText);
+    const postfixLength = newText.length - edit.newText.length - prefixLength;
+    if ('range' in edit) {
+      const { range } = edit;
+      return {
+        newText,
+        range: {
+          start: { line: range.start.line, character: range.start.character - prefixLength },
+          end: range.end,
+        },
+      };
+    } else {
+      const { insert, replace } = edit;
+
+      return InsertReplaceEdit.create(
+        newText,
+        {
+          start: { line: insert.start.line, character: insert.start.character - prefixLength },
+          end: insert.end,
+        },
+        {
+          start: { line: insert.start.line, character: insert.start.character - prefixLength },
+          end: { line: insert.end.line, character: insert.end.character + postfixLength },
+        }
+      );
     }
   }
 
-  private getError(errors: YAMLError[], offset: number): YAMLError | null {
-    for (const error of errors) {
-      if (error.source && inRange(error.source, offset)) return error;
+  protected completeEmpty(_node: YamlNodeDescriptor, position: Position): CompletionItem[] {
+    const { context } = _node;
+    const defaultPairKeys: (keyof StructuredLog)[] = ['date'];
+    const defaultKeys: (keyof StructuredLog)[] = ['plannedTasks', 'timeLog'];
+    const kind = CompletionItemKind.Property;
+
+    if (
+      CompletionService.matchContext(['timeLog'], context) ||
+      CompletionService.matchContext(['plannedTasks'], context)
+    )
+      return this.completeKey(_node as YamlKeyDescriptor, position);
+    else if (context.length == 0 && position.character == 0) {
+      return [
+        ...defaultPairKeys.map((label) => ({ kind, label })),
+        ...this.postfixCompletions(
+          defaultKeys.map((label) => ({ kind, label })),
+          ':\n  '
+        ),
+      ];
     }
 
-    return null;
+    return [];
   }
 
-  private getNode(node: YamlNode, offset: number, context: (Scalar | null)[] = []): YamlNodeDescriptor {
-    switch (node.type) {
-      case (Type.MAP, Type.FLOW_MAP, Type.SEQ, Type.FLOW_SEQ, Type.DOCUMENT):
-        return this, this.getNodeFromCollection(node, offset, context);
-      case (Pair.Type.PAIR, Pair.Type.MERGE_PAIR):
-        return this.getNodeFromPair(node, offset, context);
-      case (Type.BLOCK_FOLDED, Type.BLOCK_LITERAL, Type.PLAIN, Type.QUOTE_DOUBLE, Type.QUOTE_SINGLE):
-        if (inRange(node, offset)) return { type: YamlType.Value, node, context };
-      case Type.ALIAS:
-      default:
-        return { type: YamlType.None, context };
-    }
+  protected completeKey({ node, context }: YamlKeyDescriptor, position: Position): CompletionItem[] {
+    let completions: CompletionItem[] = [];
+
+    if (CompletionService.matchContext(['timeLog'], context))
+      completions = this.getTimeCompletion(position, Type.QUOTE_DOUBLE);
+    if (CompletionService.matchContext(['plannedTasks'], context))
+      completions = this.getPlannedTaskCompletion(position);
+
+    return this.addTextEdit(completions, position, node?.cstNode?.range);
   }
 
-  private getNodeFromCollection(node: Collection, offset: number, context: (Scalar | null)[] = []): YamlNodeDescriptor {
-    for (const item of node.items) {
-      const inner = this.getNode(item, offset, context);
-      if (inner.type !== YamlType.None) return inner;
-    }
-    return { type: YamlType.None, context };
+  protected completeSingle(node: YamlSingleDescriptor, position: Position): CompletionItem[] {
+    const { context } = node;
+    if (
+      CompletionService.matchContext(['plannedTasks'], context) ||
+      CompletionService.matchContext(['timeLog'], context)
+    )
+      return this.completeKey(node, position);
+
+    return [];
   }
 
-  private getNodeFromPair(node: Pair, offset: number, context: (Scalar | null)[] = []): YamlNodeDescriptor {
-    const { key, value }: { key: Scalar | null; value: YamlNode | null } = node;
-    const lineOffset = key?.cstNode?.range?.origEnd || value?.cstNode?.range?.origEnd;
+  protected completeValue({ node, context }: YamlValueDescriptor, position: Position): CompletionItem[] {
+    let completions: CompletionItem[] = [];
+    if (CompletionService.matchContext(['date'], context)) completions = this.getDateCompletion(position, Type.PLAIN);
+    if (CompletionService.matchContext(['timeLog', '*'], context))
+      completions = this.getTimelogTaskCompletion(position, Type.PLAIN);
+    if (CompletionService.matchContext(['plannedTasks', '*'], context))
+      completions = this.getDurationCompletion(position, Type.PLAIN);
 
-    if (key && inRange(key, offset)) return { type: YamlType.Key, node: key as Scalar, context };
-    if (value && inRange(value, offset)) return this.getNode(value, offset, [...context, key]);
-    if (lineOffset !== undefined && this.positionAt(offset).line == this.positionAt(lineOffset).line) {
-      return key ? { type: YamlType.EmptyValue, context: [...context, key] } : { type: YamlType.EmptyKey, context };
+    return this.addTextEdit(completions, position, node?.cstNode?.range);
+  }
+
+  protected getDateCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
+    const date = formatDate(moment());
+    return [
+      {
+        kind: CompletionItemKind.Unit,
+        label: date,
+        insertText: CompletionService.quote(date, quote),
+      },
+    ];
+  }
+
+  protected getDurationCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
+    const start = 15;
+    const end = 8 * 60;
+
+    const items: CompletionItem[] = [];
+    for (let duration = start; duration < end; duration += 15) {
+      const label = formatDuration(duration, defaultBasicSettings);
+      const text = CompletionService.quote(label, quote);
+      items.push({
+        kind: CompletionItemKind.Unit,
+        label,
+        filterText: text,
+        insertText: text,
+      });
     }
-    return { type: YamlType.None, context };
+
+    return items;
+  }
+
+  protected getPlannedTaskCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
+    const kind = CompletionItemKind.Value;
+    const planned = this.getPlannedTasksUntil(position);
+
+    const items: CompletionItem[] = [];
+    for (const task of defaultBasicSettings.commonTasks) {
+      const text = CompletionService.quote(task, quote);
+      if (planned.indexOf(task) < 0) items.push({ kind, label: task, filterText: text, insertText: text });
+    }
+
+    return items;
+  }
+
+  protected getPlannedTasksUntil(position: Position): string[] {
+    if (!this.parser) return [];
+
+    const previousLogs = this.parser.getListNodesBefore(position, ['plannedTasks']);
+    const tasks: (string | null)[] = previousLogs.map((log) => {
+      if (YamlParser.isScalar(log)) return log.toString();
+      else if (log.type == Pair.Type.PAIR || log.type == Pair.Type.MERGE_PAIR)
+        return log.key ? log.key.toString() : null;
+      else if (log.type == Type.MAP || log.type == Type.FLOW_MAP) return YamlParser.getFirstKey(log as YAMLMap);
+    });
+
+    return tasks.filter((task) => !!task) as string[];
+  }
+
+  protected getTimeCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
+    const { durationPrecision } = defaultBasicSettings;
+    const currentTime = moment().seconds(0).milliseconds(0);
+    const before = this.getTimeLogUntil(position);
+    const lastTime = before.pop() || moment('08:00', 'HH:mm'); // TODO: use settings
+    const age = currentTime.diff(lastTime, 'm');
+
+    const items: CompletionItem[] = [];
+    for (let i = 1; i <= 10; i++) {
+      lastTime.add(durationPrecision, 'm');
+      items.push(CompletionService.getTimeCompletionItem(lastTime, i * durationPrecision, quote));
+    }
+
+    items.push(CompletionService.getTimeCompletionItem(currentTime, age, quote, true));
+
+    return items;
+  }
+
+  protected getTimeLogUntil(position: Position): moment.Moment[] {
+    if (!this.parser) return [];
+
+    const previousLogs = this.parser.getListNodesBefore(position, ['timeLog']);
+    const times: (string | null)[] = previousLogs.map((log) => {
+      if (YamlParser.isScalar(log)) return log.toString();
+      else if (log.type == Pair.Type.PAIR || log.type == Pair.Type.MERGE_PAIR)
+        return log.key ? log.key.toString() : null;
+      else if (log.type == Type.MAP || log.type == Type.FLOW_MAP) return YamlParser.getFirstKey(log as YAMLMap);
+    });
+
+    return times.map((time) => moment(time, defaultBasicSettings.timeFormat));
+  }
+
+  protected getTimelogTaskCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
+    const kind = CompletionItemKind.Value;
+    const planned = this.getPlannedTasksUntil(position);
+    for (const task of defaultBasicSettings.commonTasks) if (planned.indexOf(task) < 0) planned.push(task);
+
+    let priority = 0;
+    const items: CompletionItem[] = [];
+    for (const task of planned) {
+      const text = CompletionService.quote(task, quote);
+      items.push({
+        kind,
+        label: task,
+        filterText: text,
+        insertText: text,
+        sortText: (priority++).toString().padStart(9),
+      });
+    }
+
+    return items;
+  }
+
+  protected postfixCompletions(completions: CompletionItem[], postfix: string, changeLabels = false): CompletionItem[] {
+    return completions.map((completion) => {
+      const altered = { ...completion };
+      altered.label = changeLabels ? `${completion.label}${postfix}` : completion.label;
+      altered.insertText = completion.insertText
+        ? `${completion.insertText}${postfix}`
+        : `${completion.label}${postfix}`;
+      altered.textEdit = altered.textEdit
+        ? this.alterInsertReplaceEdit(altered.textEdit, `${altered.textEdit}${postfix}`)
+        : altered.textEdit;
+
+      return altered;
+    });
+  }
+
+  protected prefixCompletions(completions: CompletionItem[], prefix: string, changeLabels = false): CompletionItem[] {
+    return completions.map((completion) => {
+      const altered = { ...completion };
+      altered.label = changeLabels ? `${prefix}${completion.label}` : completion.label;
+      altered.insertText = completion.insertText ? `${prefix}${completion.insertText}` : `${prefix}${completion.label}`;
+      altered.textEdit = altered.textEdit
+        ? this.alterInsertReplaceEdit(altered.textEdit, `${prefix}${altered.textEdit}`)
+        : altered.textEdit;
+
+      return altered;
+    });
+  }
+
+  protected prepostfixCompletions(
+    completions: CompletionItem[],
+    prefix: string,
+    postfix: string,
+    changeLabels = false
+  ): CompletionItem[] {
+    const prefixed = this.prefixCompletions(completions, prefix, changeLabels);
+    return this.postfixCompletions(prefixed, postfix, changeLabels);
   }
 }

@@ -112,6 +112,7 @@
 	"dependencies": {
 		"glob": "^7.1.6",
 		"module-alias": "^2.2.2",
-		"moment": "^2.29.1"
+		"moment": "^2.29.1",
+		"yaml": "^1.10.0"
 	}
 }
