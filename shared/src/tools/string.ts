@@ -16,10 +16,10 @@ function traverseParamTree<T>(paramTree: (keyof T)[], params: StructuredParams<T
 }
 
 export function formatString<T>(
-  string: string,
+  format: string,
   params: T extends StructuredParams<infer R> ? StructuredParams<R> : any
 ): string {
-  return string
+  return format
     .replace(/{{(.+?)}}([^{]*\?)?/g, (_, g1, g2) => {
       const param: string = g1.trim();
       const paramTree = param.split('.');
@@ -31,4 +31,18 @@ export function formatString<T>(
       return paramValue === null ? param : paramValue;
     })
     .trim();
+}
+
+export function parseString<T>(string: string, format: string): { [key: string]: string } {
+  const params: { [key: string]: string } = {};
+  const keys: string[] = [];
+  const regex = format.replace(/{{(.+?)}}([^{?]*)?(\??)?/g, (_, g1, g2, g3) => {
+    keys.push(g1.trim());
+    return `((.+?)${g2 || '$'})${g3 ? '?' : ''}`;
+  });
+  const matches = string.match(new RegExp(regex));
+
+  for (let i = 2; i < (matches?.length || 0); i += 2) params[keys[(i - 2) / 2]] = matches[i];
+
+  return params;
 }
