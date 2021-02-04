@@ -14,6 +14,24 @@ export default abstract class TextDocumentService {
     return this;
   }
 
+  protected getCharBeforePosition(position: Position): string | undefined {
+    return this.currentDocument?.getText({
+      start: { line: position.line, character: position.character - 1 },
+      end: position,
+    });
+  }
+
+  protected getIndent(position: Position, indentSpaces = 2): number {
+    const line = this.currentDocument?.getText({
+      start: { line: position.line, character: 0 },
+      end: position,
+    });
+    let indent = 0;
+    while (line && indent < line.length && line[indent].match(/\s/)) indent++;
+
+    return Math.floor(indent / indentSpaces);
+  }
+
   protected offsetAt(position: Position): number {
     return this.currentDocument?.offsetAt(position) || 0;
   }
@@ -24,5 +42,9 @@ export default abstract class TextDocumentService {
 
   private getDocument(uri: string): TextDocument | undefined {
     return this.documents.get(uri);
+  }
+
+  private getLineCount(): number | undefined {
+    return this.currentDocument?.lineCount;
   }
 }

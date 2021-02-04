@@ -18,6 +18,7 @@
       "type": "node",
       "request": "attach",
       "name": "Attach to Server",
+      "timeout": 20000,
       "port": 6010,
       "restart": true,
       "outFiles": ["${workspaceRoot}/server/out/**/*.js"]

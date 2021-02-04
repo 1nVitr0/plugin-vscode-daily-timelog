@@ -1,7 +1,7 @@
 import moment, { Moment, Duration } from 'moment';
 import { defaultBasicSettings } from '../model/Defaults/DefaultSummarySettings';
 import DefaultTime from '../model/Defaults/DefaultTime';
-import { formatString } from './string';
+import { formatString, parseString } from './string';
 
 export function validateDate(date: string, settings = defaultBasicSettings): boolean {
   const parsed = moment(date, settings.dateFormat);
@@ -16,7 +16,16 @@ export function formatDate(date: Moment, settings = defaultBasicSettings): strin
   return date.format(settings.dateFormat);
 }
 
-export function parseDuration(minutes: number, settings = defaultBasicSettings): Duration {
+export function parseDuration(duration: string, settings = defaultBasicSettings): Duration {
+  const params = parseString(duration, settings.durationFormat);
+  let minutes = 0;
+  if ('M' in params && params.M !== undefined) minutes = parseInt(params.M || '0');
+  else if ('H' in params && params.H !== undefined) minutes = parseFloat(params.H || '0') * 60;
+  else {
+    if ('h' in params) minutes += (parseInt(params.h || '0') || 0) * 60;
+    if ('m' in params) minutes += parseInt(params.m || '0') || 0;
+  }
+
   return moment.duration(minutes, 'm');
 }
 
@@ -29,7 +38,7 @@ export function formatTime(time: Moment, settings = defaultBasicSettings): strin
 }
 
 export function formatDuration(_duration: Duration | number, settings = defaultBasicSettings) {
-  const duration = typeof _duration === 'number' ? parseDuration(_duration) : _duration;
+  const duration = typeof _duration === 'number' ? moment.duration(_duration, 'm') : _duration;
   const H = duration.asHours();
   const h = Math.floor(H);
   const M = Math.floor(duration.asMinutes());
