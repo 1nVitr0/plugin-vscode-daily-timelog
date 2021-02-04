@@ -4,17 +4,18 @@ import { Duration } from '../Types';
 
 type TaskName = typeof Task['name'];
 
-export interface TaskDeclaration<T extends TaskName = TaskName> {
+export interface TaskDeclaration {
   description?: string;
-  estimatedDuration?: Duration;
-  // Defaults to 'task'
+  estimatedDuration: Duration;
   name: TaskName;
   type?: TaskTypeName;
 }
 
-export interface TaskDurationList<T extends TaskName = TaskName> {
-  [key: string]: Duration | TaskDeclaration<T>;
-}
+export type TaskDurationDeclaration =
+  | {
+      [key: string]: Duration;
+    }
+  | Omit<TaskDeclaration, 'name' | 'estimatedDuration'>;
 
-type TaskList<T extends TaskName = TaskName> = TaskDurationList<T> | TaskDeclaration<T>[];
+type TaskList = (TaskDurationDeclaration | TaskDeclaration)[];
 export default TaskList;

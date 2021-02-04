@@ -14,14 +14,16 @@ export const defaultBasicSettings: BasicSettings = {
   minimumDuration: 15,
   floorBelowMinimumDuration: false,
   forceMinimumDuration: true,
+  approximateTotals: true,
+  includeTotals: true,
 };
 
 export const defaultSettings: Settings = {
   ...defaultBasicSettings,
 
+  overviewFileFormat: 'txt',
+  autoGenerateOverview: true,
   includeBreaks: false,
-  includeTotals: true,
-  approximateTotals: true,
   combineBreaks: true,
 
   taskListTitle: "Today's Tasks",
@@ -32,7 +34,4 @@ export const defaultSettings: Settings = {
   summaryStructure: ['*{{summaryTitle}} - {{date}}*\n', '{{durations}}', '={{totals}}'],
   overviewTitle: '',
   overviewStructure: ['{{overviewTitle}}\n?', '{{taskList}}', '{{summary}}'],
-
-  overviewFileFormat: 'log',
-  autoGenerateOverview: true,
 };

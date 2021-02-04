@@ -28,7 +28,7 @@ export default class DurationApproximation<T extends TaskTypeName = TaskTypeName
   }
 
   private computeError() {
-    this._error = this._duration - this.task.actualDuration;
+    this._error = this._duration - this.task.actualDuration.asMinutes();
   }
 
   private init() {

@@ -9,32 +9,31 @@ export default class BasicRoundingScheme<T extends TaskTypeName = TaskTypeName> 
     return this.calculateDurations(this.tasks);
   }
 
-  public getApproximateTotal(): number {
-    const total = this.tasks.reduce((sum, task) => sum + task.actualDuration, 0);
-    return this.roundingFunction.call(this, total, this.settings.durationPrecision);
-  }
-
   public getApproximateEstimatedDurations(): DurationApproximation<T>[] {
     return this.calculateDurations(this.tasks, true);
   }
+
   public getApproximateEstimatedTotal(): number {
-    const total = this.tasks.reduce((sum, task) => sum + task.estimatedDuration, 0);
+    const total = this.tasks.reduce((sum, task) => sum + task.estimatedDuration.asMinutes(), 0);
     return this.roundingFunction.call(this, total, this.settings.durationPrecision);
   }
 
-  protected calculateDurations(tasks: readonly BasicTask<T>[], estimated = false): DurationApproximation<T>[] {
-    const durations = tasks.map((task) => {
-      const duration = this.roundingFunction.call(
-        this,
-        estimated ? task.estimatedDuration : task.actualDuration,
-        this.settings.durationPrecision
-      );
-      return new DurationApproximation<T>(task, duration);
-    });
+  public getApproximateTotal(): number {
+    const total = this.tasks.reduce((sum, task) => sum + task.actualDuration.asMinutes(), 0);
+    return this.roundingFunction.call(this, total, this.settings.durationPrecision);
+  }
 
-    this.adjustMinimumDurations(durations);
-    this.balanceDurations(durations);
-    return durations;
+  protected adjustMinimumDurations(durations: DurationApproximation<T>[]) {
+    const { minimumDuration, forceMinimumDuration, floorBelowMinimumDuration } = this.settings;
+
+    if (!(forceMinimumDuration || floorBelowMinimumDuration)) return;
+
+    for (const duration of durations) {
+      if (duration.duration < minimumDuration) {
+        if (forceMinimumDuration) duration.duration = minimumDuration;
+        else if (floorBelowMinimumDuration) duration.duration = 0;
+      }
+    }
   }
 
   protected balanceDurations(durations: DurationApproximation<T>[]) {
@@ -51,16 +50,18 @@ export default class BasicRoundingScheme<T extends TaskTypeName = TaskTypeName> 
     }
   }
 
-  protected adjustMinimumDurations(durations: DurationApproximation<T>[]) {
-    const { minimumDuration, forceMinimumDuration, floorBelowMinimumDuration } = this.settings;
+  protected calculateDurations(tasks: readonly BasicTask<T>[], estimated = false): DurationApproximation<T>[] {
+    const durations = tasks.map((task) => {
+      const duration = this.roundingFunction.call(
+        this,
+        estimated ? task.estimatedDuration.asMinutes() : task.actualDuration.asMinutes(),
+        this.settings.durationPrecision
+      );
+      return new DurationApproximation<T>(task, duration);
+    });
 
-    if (!(forceMinimumDuration || floorBelowMinimumDuration)) return;
-
-    for (const duration of durations) {
-      if (duration.duration < minimumDuration) {
-        if (forceMinimumDuration) duration.duration = minimumDuration;
-        else if (floorBelowMinimumDuration) duration.duration = 0;
-      }
-    }
+    this.adjustMinimumDurations(durations);
+    this.balanceDurations(durations);
+    return durations;
   }
 }

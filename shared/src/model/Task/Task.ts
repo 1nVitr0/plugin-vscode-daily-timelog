@@ -1,8 +1,8 @@
 export default interface Task<T extends TaskTypeName = TaskTypeName> {
-  actualDuration: number;
+  actualDuration: number | moment.Duration;
   completed: boolean;
   description?: string;
-  estimatedDuration: number;
+  estimatedDuration: number | moment.Duration;
   name: string;
   type: T;
 }
