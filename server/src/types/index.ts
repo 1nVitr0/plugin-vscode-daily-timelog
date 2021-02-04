@@ -5,14 +5,16 @@ export enum YamlType {
   EmptyKey = 'EMPTY_KEY',
   Value = 'VALUE',
   EmptyValue = 'EMPTY_VALUE',
+  Single = 'SINGLE',
   None = 'NONE',
 }
 export type YamlNode = Scalar | Alias | Pair | Merge | Collection | YAMLMap | YAMLSeq;
-export type YamlNodeDescriptor = {
-  type: YamlType;
+export interface YamlNodeDescriptor {
   context: (Scalar | null)[];
   node?: Scalar | null;
-};
+  type: YamlType;
+}
 
-export type YamlKeyDEscriptor = YamlNodeDescriptor & { type: YamlType.Key };
-export type YamlValueDescriptor = YamlNodeDescriptor & { type: YamlType.Value };
+export type YamlKeyDescriptor = YamlNodeDescriptor & { type: YamlType.Key | YamlType.Single };
+export type YamlValueDescriptor = YamlNodeDescriptor & { type: YamlType.Value | YamlType.Single };
+export type YamlSingleDescriptor = YamlNodeDescriptor & { type: YamlType.Single };

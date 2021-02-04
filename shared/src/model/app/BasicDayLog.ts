@@ -1,30 +1,23 @@
-import { TaskFactory } from '..';
-import DayLog from '../model/DayLog/DayLog';
-import { defaultBasicSettings } from '../model/Defaults/DefaultSummarySettings';
-import DurationApproximation from '../model/RoundingScheme/DurationApproximation';
-import RoundingScheme from '../model/RoundingScheme/RoundingScheme';
-import StructuredLog from '../model/StructuredLog/StructuredLog';
-import TimeLog, {
-  LogEntryEndTimeDeclaration,
-  LogEntryStyleEnd,
-  LogEntryStyleStart,
-} from '../model/StructuredLog/TimeLog';
-import { BasicSettings } from '../model/Summary/Settings';
-import BasicTask from '../model/Task/BasicTask';
-import Break from '../model/Task/Break';
-import Task, { TaskTypeName } from '../model/Task/Task';
-import WorkTask from '../model/Task/WorkTask';
-import { ConstructorType } from '../model/Types';
+import BasicRoundingScheme from '../../app/BasicRoundingScheme';
 import {
+  getInitializedRoundingScheme,
   getApproximateDurations,
   getApproximateEstimatedDurations,
-  getInitializedRoundingScheme,
-} from '../tools/approximateDurations';
-import BasicRoundingScheme from './BasicRoundingScheme';
+} from '../../tools/approximateDurations';
+import DayLog from '../DayLog/DayLog';
+import { defaultBasicSettings } from '../Defaults/DefaultSummarySettings';
+import DurationApproximation from '../RoundingScheme/DurationApproximation';
+import RoundingScheme from '../RoundingScheme/RoundingScheme';
+import { BasicSettings } from '../Summary/Settings';
+import BasicTask from '../Task/BasicTask';
+import Break from '../Task/Break';
+import Task, { TaskTypeName } from '../Task/Task';
+import WorkTask from '../Task/WorkTask';
+import { ConstructorType } from '../Types';
 
 type TaskName = Task['name'];
 
-export default class BasicDayLog implements DayLog {
+export default class BasicDayLog<T extends TaskName = TaskName> implements DayLog {
   public readonly date: Date;
 
   private tasks: Record<string, BasicTask<TaskTypeName>> = {};
@@ -32,16 +25,6 @@ export default class BasicDayLog implements DayLog {
   public constructor(date: Date = new Date(), tasks: BasicTask<TaskTypeName>[] = []) {
     this.date = date;
     for (const task of tasks) this.addTask(task);
-  }
-
-  public static fromStructuredLog(log: StructuredLog): BasicDayLog {
-    const factory = new TaskFactory();
-    const tasks = log.plannedTasks?.map((task) => factory.fromData(task));
-
-    const result = new BasicDayLog(new Date(), tasks);
-    if (log.timeLog) result.applyLog(log.timeLog);
-
-    return result;
   }
 
   public addBreak(_break: Break) {
@@ -54,19 +37,6 @@ export default class BasicDayLog implements DayLog {
 
   public addWorkTask(task: WorkTask) {
     this.addTask(task);
-  }
-
-  public applyLog(_log: TimeLog) {
-    if (!_log.length) return;
-    const first = _log[0];
-
-    if ('start' in first) {
-      const log = _log as LogEntryStyleStart[];
-      this.applyLogStyleStart(log.map((entry) => TaskFactory.logEntryFromDeclaration<LogEntryStyleStart>(entry)));
-    } else {
-      const log = _log as (LogEntryStyleEnd | LogEntryEndTimeDeclaration)[];
-      this.applyLogStyleEnd(log.map((entry) => TaskFactory.logEntryFromDeclaration<LogEntryStyleEnd>(entry)));
-    }
   }
 
   public getApproximateBreakDurations(
@@ -129,7 +99,7 @@ export default class BasicDayLog implements DayLog {
     return getApproximateDurations(_roundingScheme, settings, this.getWorkTasks());
   }
 
-  public getBreak(name: TaskName): Break | null {
+  public getBreak(name: string): Break | null {
     const task = this.tasks[name];
     if (task.type === 'break') return task as Break;
     else return null;
@@ -139,7 +109,7 @@ export default class BasicDayLog implements DayLog {
     return this.getTasks().filter((task) => task.type === 'break') as Break[];
   }
 
-  public getTask(name: TaskName): BasicTask<TaskTypeName> | null {
+  public getTask(name: string): BasicTask<TaskTypeName> | null {
     return this.tasks[name] || null;
   }
 
@@ -148,7 +118,7 @@ export default class BasicDayLog implements DayLog {
     return taskNames.map((name) => this.tasks[name]);
   }
 
-  public getWorkTask(name: TaskName): WorkTask | null {
+  public getWorkTask(name: string): WorkTask | null {
     const task = this.tasks[name];
     if (task.type === 'task') return task as WorkTask;
     else return null;
@@ -157,8 +127,4 @@ export default class BasicDayLog implements DayLog {
   public getWorkTasks(): WorkTask[] {
     return this.getTasks().filter((task) => task.type === 'task') as WorkTask[];
   }
-
-  private applyLogStyleEnd(log: LogEntryStyleEnd[]) {}
-
-  private applyLogStyleStart(log: LogEntryStyleStart[]) {}
 }

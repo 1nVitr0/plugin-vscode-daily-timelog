@@ -1,8 +1,10 @@
 import { RoundingType } from '../RoundingScheme/RoundingScheme';
 
 export type ListTypeBoolean = 'taskList' | 'summary' | boolean;
+export type ExportFileFormat = 'txt' | 'json' | 'csv' | 'clipboard';
 
 export interface BasicSettings {
+  approximateTotals: ListTypeBoolean;
   commonBreaks: string[];
   commonTasks: string[];
   dateFormat: string;
@@ -12,25 +14,22 @@ export interface BasicSettings {
   durationRounding: RoundingType;
   floorBelowMinimumDuration: ListTypeBoolean;
   forceMinimumDuration: ListTypeBoolean;
-  includeBreaksInTotal: boolean;
+  includeBreaksInTotal: ListTypeBoolean;
+  includeTotals: ListTypeBoolean;
   minimumDuration: number;
   timeFormat: string;
   workDayHours: 8;
 }
 
 export interface TaskListSettings extends BasicSettings {
-  approximateTotals: boolean;
-  includeTotals: boolean;
   taskListDurationFormat: string;
   taskListStructure: string[];
   taskListTitle: string;
 }
 
 export interface SummarySettings extends BasicSettings {
-  approximateTotals: boolean;
-  combineBreaks: ListTypeBoolean;
-  includeBreaks: ListTypeBoolean;
-  includeTotals: boolean;
+  combineBreaks: boolean;
+  includeBreaks: boolean;
   summaryDurationFormat: string;
   summaryStructure: string[];
   summaryTitle: string;
@@ -43,7 +42,7 @@ export interface OverviewSettings extends TaskListSettings, SummarySettings {
 
 export default interface Settings extends TaskListSettings, SummarySettings, OverviewSettings {
   autoGenerateOverview: boolean;
-  overviewFileFormat: string;
+  overviewFileFormat: ExportFileFormat;
 }
 
 export type SettingsCustom = Partial<Settings>;
