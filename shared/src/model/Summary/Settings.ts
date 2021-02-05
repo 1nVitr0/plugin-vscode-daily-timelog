@@ -5,6 +5,7 @@ export type ExportFileFormat = 'txt' | 'json' | 'csv' | 'clipboard';
 
 export interface BasicSettings {
   approximateTotals: ListTypeBoolean;
+  combineBreaks: ListTypeBoolean;
   commonBreaks: string[];
   commonTasks: string[];
   dateFormat: string;
@@ -14,11 +15,13 @@ export interface BasicSettings {
   durationRounding: RoundingType;
   floorBelowMinimumDuration: ListTypeBoolean;
   forceMinimumDuration: ListTypeBoolean;
+  includeBreaks: ListTypeBoolean;
   includeBreaksInTotal: ListTypeBoolean;
-  includeTotals: ListTypeBoolean;
   minimumDuration: number;
   timeFormat: string;
   workDayHours: 8;
+  workHoursEnd: string;
+  workHoursStart: string;
 }
 
 export interface TaskListSettings extends BasicSettings {
@@ -28,8 +31,6 @@ export interface TaskListSettings extends BasicSettings {
 }
 
 export interface SummarySettings extends BasicSettings {
-  combineBreaks: boolean;
-  includeBreaks: boolean;
   summaryDurationFormat: string;
   summaryStructure: string[];
   summaryTitle: string;
@@ -42,7 +43,6 @@ export interface OverviewSettings extends TaskListSettings, SummarySettings {
 
 export default interface Settings extends TaskListSettings, SummarySettings, OverviewSettings {
   autoGenerateOverview: boolean;
-  overviewFileFormat: ExportFileFormat;
 }
 
 export type SettingsCustom = Partial<Settings>;

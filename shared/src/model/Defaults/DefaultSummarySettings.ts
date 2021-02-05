@@ -15,23 +15,25 @@ export const defaultBasicSettings: BasicSettings = {
   floorBelowMinimumDuration: false,
   forceMinimumDuration: true,
   approximateTotals: true,
-  includeTotals: true,
+  combineBreaks: true,
+  includeBreaks: false,
+  workHoursStart: '08:00',
+  workHoursEnd: '17:00',
 };
 
 export const defaultSettings: Settings = {
   ...defaultBasicSettings,
 
-  overviewFileFormat: 'txt',
   autoGenerateOverview: true,
   includeBreaks: false,
   combineBreaks: true,
 
   taskListTitle: "Today's Tasks",
   taskListDurationFormat: '{{task.name}}: {{duration}}',
-  taskListStructure: ['*{{taskListTitle}} - {{date}}*\n', '', '{{estimatedDurations}}', '', '={{estimatedTotals}}'],
+  taskListStructure: ['*{{taskListTitle}} - {{date}}*\n', '{{estimatedDurations}}\n', '={{estimatedTotals}}'],
   summaryTitle: "Today's Summary",
   summaryDurationFormat: '{{task.name}}: {{duration}} ({{error}})',
-  summaryStructure: ['*{{summaryTitle}} - {{date}}*\n', '', '{{durations}}', '', '={{totals}}'],
+  summaryStructure: ['*{{summaryTitle}} - {{date}}*\n', '{{durations}}\n', '={{totals}}'],
   overviewTitle: '',
   overviewStructure: ['{{overviewTitle}}\n?', '{{taskList}}', '{{summary}}'],
 };

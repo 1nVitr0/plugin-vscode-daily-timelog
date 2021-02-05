@@ -3,7 +3,7 @@ import { CompletionItem, CompletionItemKind, InsertReplaceEdit, Position, TextEd
 import { CST } from 'yaml';
 import { Pair, Scalar, YAMLMap } from 'yaml/types';
 import { Type } from 'yaml/util';
-import { defaultBasicSettings, formatDate, formatDuration, formatTime, Path, StructuredLog } from '../../../shared/out';
+import { formatDate, formatDuration, formatTime, Path, StructuredLog, defaultBasicSettings } from '../../../shared/out';
 import YamlParser from '../parse/YamlParser';
 import { YamlKeyDescriptor, YamlNodeDescriptor, YamlSingleDescriptor, YamlType, YamlValueDescriptor } from '../types';
 import TextDocumentService from './TextDocumentService';
@@ -14,39 +14,6 @@ export default class CompletionService extends TextDocumentService {
   protected get parser(): YamlParser | null {
     if (this._parser && this._parser.hasDocument(this.currentDocument)) return this._parser;
     else return this.currentDocument ? (this._parser = new YamlParser(this.currentDocument)) : null;
-  }
-
-  protected static getQuoteOffset(type?: Scalar.Type): number {
-    switch (type) {
-      case Type.QUOTE_DOUBLE:
-      case Type.QUOTE_SINGLE:
-        return 1;
-      case Type.BLOCK_FOLDED:
-      case Type.BLOCK_LITERAL:
-      case Type.PLAIN:
-      case undefined:
-        return 0;
-    }
-  }
-
-  protected static getTimeCompletionItem(
-    time: moment.Moment,
-    diffMinutes: number,
-    quote?: Scalar.Type,
-    preselect?: boolean
-  ): CompletionItem {
-    const label = formatTime(time);
-    const text = CompletionService.quote(label, quote);
-    return {
-      kind: CompletionItemKind.Unit,
-      label,
-      data: diffMinutes,
-      filterText: text,
-      detail: formatDuration(diffMinutes, defaultBasicSettings),
-      sortText: diffMinutes.toFixed(0).padStart(9),
-      insertText: text,
-      preselect,
-    };
   }
 
   protected static quote(text: string, type?: Scalar.Type, keepEndQuote = true): string {
@@ -209,7 +176,7 @@ export default class CompletionService extends TextDocumentService {
   }
 
   protected getDateCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
-    const date = formatDate(moment());
+    const date = formatDate(moment(), this.currentConfiguration);
     return [
       {
         kind: CompletionItemKind.Unit,
@@ -220,12 +187,12 @@ export default class CompletionService extends TextDocumentService {
   }
 
   protected getDurationCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
-    const start = 15;
-    const end = 8 * 60;
+    const precision = this.currentConfiguration?.durationPrecision || defaultBasicSettings.durationPrecision;
+    const end = (this.currentConfiguration?.workDayHours || defaultBasicSettings.workDayHours) * 60;
 
     const items: CompletionItem[] = [];
-    for (let duration = start; duration < end; duration += 15) {
-      const label = formatDuration(duration, defaultBasicSettings);
+    for (let duration = precision; duration < end; duration += precision) {
+      const label = formatDuration(duration, this.currentConfiguration);
       const text = CompletionService.quote(label, quote);
       items.push({
         kind: CompletionItemKind.Unit,
@@ -243,7 +210,7 @@ export default class CompletionService extends TextDocumentService {
     const planned = this.getPlannedTasksUntil(position);
 
     const items: CompletionItem[] = [];
-    for (const task of defaultBasicSettings.commonTasks) {
+    for (const task of this.currentConfiguration?.commonTasks || defaultBasicSettings.commonTasks) {
       const text = CompletionService.quote(task, quote);
       if (planned.indexOf(task) < 0) items.push({ kind, label: task, filterText: text, insertText: text });
     }
@@ -265,22 +232,55 @@ export default class CompletionService extends TextDocumentService {
     return tasks.filter((task) => !!task) as string[];
   }
 
+  protected getQuoteOffset(type?: Scalar.Type): number {
+    switch (type) {
+      case Type.QUOTE_DOUBLE:
+      case Type.QUOTE_SINGLE:
+        return 1;
+      case Type.BLOCK_FOLDED:
+      case Type.BLOCK_LITERAL:
+      case Type.PLAIN:
+      case undefined:
+        return 0;
+    }
+  }
+
   protected getTimeCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
-    const { durationPrecision } = defaultBasicSettings;
+    const { durationPrecision, workHoursStart } = this.currentConfiguration || defaultBasicSettings;
     const currentTime = moment().seconds(0).milliseconds(0);
     const before = this.getTimeLogUntil(position);
-    const lastTime = before.pop() || moment('08:00', 'HH:mm'); // TODO: use settings
+    const lastTime = before.pop() || moment(workHoursStart, 'HH:mm');
     const age = currentTime.diff(lastTime, 'm');
 
     const items: CompletionItem[] = [];
     for (let i = 1; i <= 10; i++) {
       lastTime.add(durationPrecision, 'm');
-      items.push(CompletionService.getTimeCompletionItem(lastTime, i * durationPrecision, quote));
+      items.push(this.getTimeCompletionItem(lastTime, i * durationPrecision, quote));
     }
 
-    items.push(CompletionService.getTimeCompletionItem(currentTime, age, quote, true));
+    items.push(this.getTimeCompletionItem(currentTime, age, quote, true));
 
     return items;
+  }
+
+  protected getTimeCompletionItem(
+    time: moment.Moment,
+    diffMinutes: number,
+    quote?: Scalar.Type,
+    preselect?: boolean
+  ): CompletionItem {
+    const label = formatTime(time, this.currentConfiguration);
+    const text = CompletionService.quote(label, quote);
+    return {
+      kind: CompletionItemKind.Unit,
+      label,
+      data: diffMinutes,
+      filterText: text,
+      detail: formatDuration(diffMinutes, this.currentConfiguration),
+      sortText: diffMinutes.toFixed(0).padStart(9),
+      insertText: text,
+      preselect,
+    };
   }
 
   protected getTimeLogUntil(position: Position): moment.Moment[] {
@@ -294,13 +294,15 @@ export default class CompletionService extends TextDocumentService {
       else if (log.type == Type.MAP || log.type == Type.FLOW_MAP) return YamlParser.getFirstKey(log as YAMLMap);
     });
 
-    return times.map((time) => moment(time, defaultBasicSettings.timeFormat));
+    return times.map((time) => moment(time, this.currentConfiguration?.timeFormat || defaultBasicSettings.timeFormat));
   }
 
   protected getTimelogTaskCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
     const kind = CompletionItemKind.Value;
     const planned = this.getPlannedTasksUntil(position);
-    for (const task of defaultBasicSettings.commonTasks) if (planned.indexOf(task) < 0) planned.push(task);
+    for (const task of this.currentConfiguration?.commonTasks || defaultBasicSettings.commonTasks) {
+      if (planned.indexOf(task) < 0) planned.push(task);
+    }
 
     let priority = 0;
     const items: CompletionItem[] = [];

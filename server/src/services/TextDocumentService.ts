@@ -1,16 +1,22 @@
 import { Position, TextDocumentIdentifier, TextDocuments } from 'vscode-languageserver';
 import { TextDocument } from 'vscode-languageserver-textdocument';
+import { Settings } from '../../../shared/out';
+import ConfigurationService from './ConfigurationService';
 
 export default abstract class TextDocumentService {
+  protected configurationService: ConfigurationService;
+  protected currentConfiguration?: Settings;
   protected currentDocument?: TextDocument;
   protected documents: TextDocuments<TextDocument>;
 
-  public constructor(documents: TextDocuments<TextDocument>) {
+  public constructor(documents: TextDocuments<TextDocument>, configurationService: ConfigurationService) {
     this.documents = documents;
+    this.configurationService = configurationService;
   }
 
-  public for(document: TextDocumentIdentifier): this {
+  public async for(document: TextDocumentIdentifier): Promise<this> {
     this.currentDocument = this.getDocument(document.uri);
+    this.currentConfiguration = await this.configurationService.getDocumentSettings(document.uri);
     return this;
   }
 
