@@ -1,4 +1,3 @@
-import 'module-alias/register';
 import { ExtensionContext } from 'vscode';
 import { LanguageClient } from 'vscode-languageclient/node';
 import contributeCommands from './contribute/commands';

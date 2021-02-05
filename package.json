@@ -3,7 +3,7 @@
 	"description": "Daily Timelog Tools",
 	"author": "1nVitr0",
 	"license": "MIT",
-	"version": "1.0.0-0",
+	"version": "0.0.1",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/1nVitr0/plugin-vscode-daily-timelog"
@@ -19,6 +19,7 @@
 	"activationEvents": [
 		"onLanguage:yaml"
 	],
+	"preview": true,
 	"main": "./client/out/extension",
 	"contributes": {
 		"commands": [
@@ -57,11 +58,14 @@
 		]
 	},
 	"scripts": {
-		"vscode:prepublish": "npm run compile",
+		"vscode:prepublish": "npm run webpack",
+		"webpack": "npm run clean && webpack --mode production --config ./shared/webpack.config.js && webpack --mode production --config ./client/webpack.config.js && webpack --mode production --config ./server/webpack.config.js",
+		"webpack:dev": "npm run clean && webpack --mode none --config ./shared/webpack.config.js && webpack --mode none --config ./client/webpack.config.js && webpack --mode none --config ./server/webpack.config.js",
 		"compile": "tsc -b",
 		"watch": "tsc -b -w",
 		"postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
 		"test": "sh ./scripts/e2e.sh",
+		"clean": "rimraf shared/out && rimraf client/out && rimraf server/out",
 		"schemas": "node scripts/schemas.js"
 	},
 	"devDependencies": {
@@ -72,14 +76,18 @@
 		"@types/vscode": "^1.52.0",
 		"@typescript-eslint/parser": "^2.3.0",
 		"eslint": "^6.4.0",
+		"merge-options": "^3.0.4",
 		"mocha": "^8.1.1",
-		"typescript": "^4.0.2"
+		"rimraf": "^2.6.3",
+		"ts-loader": "^8.0.15",
+		"typescript": "^4.0.2",
+		"webpack": "^5.20.2",
+		"webpack-cli": "^4.5.0"
 	},
 	"dependencies": {
 		"glob": "^7.1.6",
-		"module-alias": "^2.2.2",
 		"moment": "^2.29.1",
 		"typescript-json-schema": "^0.48.0",
-		"yaml": "git@github.com:1nVitr0/yaml.git"
+		"yaml": "^1.10.0"
 	}
 }
