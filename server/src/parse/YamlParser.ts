@@ -50,50 +50,6 @@ export default class YamlParser {
     );
   }
 
-  private static chunk(text: string): string[][] {
-    const lines = `${text}\n`.match(/[^\r\n]*(\r?\n)/g);
-    if (!lines) return [[text]];
-    if (lines.length) lines[lines?.length - 1] = lines[lines?.length - 1].slice(0, -1);
-
-    const chunks: string[][] = [];
-    let chunk: string[] = [];
-    let i = 0;
-    for (const line of lines) {
-      const indentMatch = line.match(/^\s*/);
-      if (chunk.length && indentMatch && indentMatch[0].length == 0) {
-        chunks.push(chunk);
-        chunk = [];
-      }
-
-      chunk.push(line);
-    }
-
-    if (chunk.length) chunks.push(chunk);
-
-    return chunks;
-  }
-
-  private static getChunkAtLine(line: number, text: string): { chunk: string[]; range: Range } | null {
-    const chunks = YamlParser.chunk(text);
-
-    let startLine = 0;
-    for (const chunk of chunks) {
-      const nextStart = startLine + chunk.length;
-      if (startLine < nextStart) {
-        return {
-          chunk,
-          range: {
-            start: { line: startLine, character: 0 },
-            end: { line: nextStart - 1, character: chunk[chunk.length - 1].length },
-          },
-        };
-      }
-      startLine += chunk.length;
-    }
-
-    return null;
-  }
-
   public getError(errors: YAMLError[], offset: number): YAMLError | null {
     for (const error of errors) {
       if (error.source && this.isInRange(error.source, offset)) return error;

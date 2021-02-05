@@ -1,8 +1,9 @@
 import { BasicDayLog, defaultSettings, StructuredLog } from '../../../../shared/out';
 import { parse } from 'yaml';
-import { env, window } from 'vscode';
+import { env, window, workspace } from 'vscode';
 import { readFileSync } from 'fs';
 import SummaryGenerator from '../SummaryGenerator';
+import { getConfiguration } from '../tools/configuration';
 
 export function startNewDaylog() {
   console.log('Start a new Day!');
@@ -10,10 +11,11 @@ export function startNewDaylog() {
 
 function getSummaryGenerator(includeUnplanned = false) {
   const text = window.activeTextEditor.document.getText();
+  const config = getConfiguration();
   const log: StructuredLog = parse(text);
   const dayLog = BasicDayLog.fromStructuredLog(log, includeUnplanned);
 
-  return new SummaryGenerator(dayLog, defaultSettings);
+  return new SummaryGenerator(dayLog, config);
 }
 
 export function generateTaskList() {

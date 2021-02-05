@@ -1,93 +1,316 @@
 {
-	"name": "daily-timelog",
-	"description": "Daily Timelog Tools",
-	"author": "1nVitr0",
-	"license": "MIT",
-	"version": "0.0.1",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/1nVitr0/plugin-vscode-daily-timelog"
-	},
-	"publisher": "1nVitr0",
-	"categories": [],
-	"keywords": [
-		"multi-root ready"
-	],
-	"engines": {
-		"vscode": "^1.52.0"
-	},
-	"activationEvents": [
-		"onLanguage:yaml"
-	],
-	"preview": true,
-	"main": "./client/out/extension",
-	"contributes": {
-		"commands": [
-			{
-				"command": "daily-timelog.startNewDaylog",
-				"title": "Daily Timelog: Start a new Day"
-			},
-			{
-				"command": "daily-timelog.startWorkSegment",
-				"title": "Daily Timelog: Start a Work Segment"
-			},
-			{
-				"command": "daily-timelog.startBreakSegment",
-				"title": "Daily Timelog: Take a Break"
-			},
-			{
-				"command": "daily-timelog.completeWorkSegment",
-				"title": "Daily Timelog: Complete a Work Segment"
-			},
-			{
-				"command": "daily-timelog.completeBreakSegment",
-				"title": "Daily Timelog: Back to Work"
-			},
-			{
-				"command": "daily-timelog.completeTask",
-				"title": "Daily Timelog: Complete a Task"
-			},
-			{
-				"command": "daily-timelog.generateTaskList",
-				"title": "Daily Timelog: Generate Task List"
-			},
-			{
-				"command": "daily-timelog.generateSummary",
-				"title": "Daily Timelog: Generate Summary"
-			}
-		]
-	},
-	"scripts": {
-		"vscode:prepublish": "npm run webpack",
-		"webpack": "npm run clean && webpack --mode production --config ./shared/webpack.config.js && webpack --mode production --config ./client/webpack.config.js && webpack --mode production --config ./server/webpack.config.js",
-		"webpack:dev": "npm run clean && webpack --mode none --config ./shared/webpack.config.js && webpack --mode none --config ./client/webpack.config.js && webpack --mode none --config ./server/webpack.config.js",
-		"compile": "tsc -b",
-		"watch": "tsc -b -w",
-		"postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
-		"test": "sh ./scripts/e2e.sh",
-		"clean": "rimraf shared/out && rimraf client/out && rimraf server/out",
-		"schemas": "node scripts/schemas.js"
-	},
-	"devDependencies": {
-		"@types/glob": "^7.1.3",
-		"@types/mocha": "^8.0.3",
-		"@types/module-alias": "^2.0.0",
-		"@types/node": "^12.12.0",
-		"@types/vscode": "^1.52.0",
-		"@typescript-eslint/parser": "^2.3.0",
-		"eslint": "^6.4.0",
-		"merge-options": "^3.0.4",
-		"mocha": "^8.1.1",
-		"rimraf": "^2.6.3",
-		"ts-loader": "^8.0.15",
-		"typescript": "^4.0.2",
-		"webpack": "^5.20.2",
-		"webpack-cli": "^4.5.0"
-	},
-	"dependencies": {
-		"glob": "^7.1.6",
-		"moment": "^2.29.1",
-		"typescript-json-schema": "^0.48.0",
-		"yaml": "^1.10.0"
-	}
+  "name": "daily-timelog",
+  "displayName": "Daily Timelog",
+  "description": "Daily Timelog Tools",
+  "author": "1nVitr0",
+  "license": "MIT",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/1nVitr0/plugin-vscode-daily-timelog"
+  },
+  "publisher": "1nVitr0",
+  "categories": [],
+  "keywords": [
+    "multi-root ready"
+  ],
+  "engines": {
+    "vscode": "^1.52.0"
+  },
+  "activationEvents": [
+    "onLanguage:yaml"
+  ],
+  "preview": true,
+  "main": "./client/out/extension",
+  "contributes": {
+    "commands": [
+      {
+        "command": "daily-timelog.startNewDaylog",
+        "title": "Daily Timelog: Start a new Day"
+      },
+      {
+        "command": "daily-timelog.startWorkSegment",
+        "title": "Daily Timelog: Start a Work Segment"
+      },
+      {
+        "command": "daily-timelog.startBreakSegment",
+        "title": "Daily Timelog: Take a Break"
+      },
+      {
+        "command": "daily-timelog.completeWorkSegment",
+        "title": "Daily Timelog: Complete a Work Segment"
+      },
+      {
+        "command": "daily-timelog.completeBreakSegment",
+        "title": "Daily Timelog: Back to Work"
+      },
+      {
+        "command": "daily-timelog.completeTask",
+        "title": "Daily Timelog: Complete a Task"
+      },
+      {
+        "command": "daily-timelog.generateTaskList",
+        "title": "Daily Timelog: Generate Task List"
+      },
+      {
+        "command": "daily-timelog.generateSummary",
+        "title": "Daily Timelog: Generate Summary"
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "Daily Timelog",
+      "properties": {
+        "daily-timelog.commonTasks": {
+          "scope": "resources",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "Organisation",
+            "Daily",
+            "Meeting",
+            "Refactoring",
+            "Code Review",
+            "Checking Mails"
+          ],
+          "description": "List of common tasks"
+        },
+        "daily-timelog.commonBreaks": {
+          "scope": "resources",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "Lunch",
+            "Breakfast",
+            "Coffee",
+            "Personal"
+          ],
+          "description": "List of common break types"
+        },
+        "daily-timelog.workDayHours": {
+          "scope": "resources",
+          "type": "number",
+          "default": 8,
+          "description": "Default number of hours in a work day"
+        },
+        "daily-timelog.includeBreaksInTotal": {
+          "scope": "resources",
+          "type": "boolean",
+          "default": false,
+          "description": "include break time in totals"
+        },
+        "daily-timelog.dateFormat": {
+          "scope": "resources",
+          "type": "string",
+          "default": "YYYY-MM-DD",
+          "description": "date format- supports the  formats supplied by moment.js"
+        },
+        "daily-timelog.timeFormat": {
+          "scope": "resources",
+          "type": "string",
+          "default": "HH:mm",
+          "description": "time format- supports the  formats supplied by moment.js"
+        },
+        "daily-timelog.durationFormat": {
+          "scope": "resources",
+          "type": "string",
+          "default": "{{h}}h ?{{m}}m?",
+          "description": "duration format - params are enclosed in {{}}, when followed by '?', the param and all the text following it until the next param will be hidden if param resolves to a falsy value. Possible values are H: total hours (float), M: total minutes, h: floored hours, m: remaining minutes"
+        },
+        "daily-timelog.decimalSeparator": {
+          "scope": "resources",
+          "type": "string",
+          "enum": [
+            ".",
+            ","
+          ],
+          "default": ".",
+          "description": "decimal separator"
+        },
+        "daily-timelog.durationPrecision": {
+          "scope": "resources",
+          "type": "integer",
+          "default": 15,
+          "description": "precision the durations will be rounded to"
+        },
+        "daily-timelog.durationRounding": {
+          "scope": "resources",
+          "type": "string",
+          "enum": [
+            "round",
+            "floor",
+            "ceil"
+          ],
+          "default": "round",
+          "description": "type of rounding for precisions, 'floor' and 'ceil' can lead to strange results due to balancing"
+        },
+        "daily-timelog.minimumDuration": {
+          "scope": "resources",
+          "type": "integer",
+          "default": 15,
+          "description": "minimum duration for a task to be included in summary"
+        },
+        "daily-timelog.floorBelowMinimumDuration": {
+          "scope": "resources",
+          "type": "boolean",
+          "default": false,
+          "description": "floor tasks below minimum duration to 0 (mutually exclusive to forceMinimumDuration)"
+        },
+        "daily-timelog.forceMinimumDuration": {
+          "scope": "resources",
+          "type": "boolean",
+          "default": true,
+          "description": "force tasks to have minimum duration (mutually exclusive to floorBelowMinimumDuration)"
+        },
+        "daily-timelog.approximateTotals": {
+          "scope": "resources",
+          "type": "boolean",
+          "default": true,
+          "description": "enable approximationm of totals"
+        },
+        "daily-timelog.includeTotals": {
+          "scope": "resources",
+          "type": "boolean",
+          "default": true,
+          "description": "include totals"
+        },
+        "daily-timelog.overviewFileFormat": {
+          "scope": "resources",
+          "type": "string",
+          "enum": [
+            "txt",
+            "json"
+          ],
+          "default": "txt",
+          "description": "unused"
+        },
+        "daily-timelog.autoGenerateOverview": {
+          "scope": "resources",
+          "type": "boolean",
+          "default": true,
+          "description": "auto generate overview on save"
+        },
+        "daily-timelog.includeBreaks": {
+          "scope": "resources",
+          "type": "boolean",
+          "default": false,
+          "description": "include breaks in tasklist or summary"
+        },
+        "daily-timelog.combineBreaks": {
+          "scope": "resources",
+          "type": "boolean",
+          "default": true,
+          "description": "combine breaks in summary or tasklist"
+        },
+        "daily-timelog.taskListTitle": {
+          "scope": "resources",
+          "type": "string",
+          "default": "Today's Tasks",
+          "description": "title of task list"
+        },
+        "daily-timelog.taskListDurationFormat": {
+          "scope": "resources",
+          "type": "string",
+          "default": "{{task.name}}: {{duration}}",
+          "description": "duration format - params are enclosed in {{}}, when followed by '?', the param and all the text following it until the next param will be hidden if param resolves to a falsy value. Possible values are task.name: task name, duration: duration, error: rounding error"
+        },
+        "daily-timelog.taskListStructure": {
+          "scope": "resources",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "*{{taskListTitle}} - {{date}}*\n",
+            "{{estimatedDurations}}\n",
+            "={{estimatedTotals}}"
+          ],
+          "description": "structure of task list"
+        },
+        "daily-timelog.summaryTitle": {
+          "scope": "resources",
+          "type": "string",
+          "default": "Today's Summary",
+          "description": "title of summary"
+        },
+        "daily-timelog.summaryDurationFormat": {
+          "scope": "resources",
+          "type": "string",
+          "default": "{{task.name}}: {{duration}} ({{error}})",
+          "description": "duration format - params are enclosed in {{}}, when followed by '?', the param and all the text following it until the next param will be hidden if param resolves to a falsy value. Possible values are task.name: task name, duration: duration, error: rounding error"
+        },
+        "daily-timelog.summaryStructure": {
+          "scope": "resources",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "*{{summaryTitle}} - {{date}}*\n",
+            "{{durations}}\n",
+            "={{totals}}"
+          ],
+          "description": "structure of summary"
+        },
+        "daily-timelog.overviewTitle": {
+          "scope": "resources",
+          "type": "string",
+          "default": "",
+          "description": "title of overview"
+        },
+        "daily-timelog.overviewStructure": {
+          "scope": "resources",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "{{overviewTitle}}?",
+            "{{taskList}}",
+            "{{summary}}"
+          ],
+          "description": "structure of overview"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run webpack",
+    "webpack": "npm run clean && webpack --mode production --config ./shared/webpack.config.js && webpack --mode production --config ./client/webpack.config.js && webpack --mode production --config ./server/webpack.config.js",
+    "webpack:dev": "npm run clean && webpack --mode none --config ./shared/webpack.config.js && webpack --mode none --config ./client/webpack.config.js && webpack --mode none --config ./server/webpack.config.js",
+    "compile": "tsc -b",
+    "watch": "tsc -b -w",
+    "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
+    "test": "sh ./scripts/e2e.sh",
+    "clean": "rimraf shared/out && rimraf client/out && rimraf server/out",
+    "schemas": "node scripts/schemas.js"
+  },
+  "devDependencies": {
+    "@types/glob": "^7.1.3",
+    "@types/lodash": "^4.14.168",
+    "@types/mocha": "^8.0.3",
+    "@types/module-alias": "^2.0.0",
+    "@types/node": "^12.12.0",
+    "@types/vscode": "^1.52.0",
+    "@typescript-eslint/parser": "^2.3.0",
+    "eslint": "^6.4.0",
+    "merge-options": "^3.0.4",
+    "mocha": "^8.1.1",
+    "rimraf": "^2.6.3",
+    "ts-loader": "^8.0.15",
+    "typescript": "^4.0.2",
+    "webpack": "^5.20.2",
+    "webpack-cli": "^4.5.0"
+  },
+  "dependencies": {
+    "glob": "^7.1.6",
+    "lodash": "^4.17.19",
+    "moment": "^2.29.1",
+    "typescript-json-schema": "^0.48.0",
+    "yaml": "^1.10.0"
+  }
 }
