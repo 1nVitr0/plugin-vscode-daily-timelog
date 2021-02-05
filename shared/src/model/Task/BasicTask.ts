@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { isKeyOf } from '../../tools/typings';
+import { parseDuration } from '../../tools/time';
 import { TaskDeclaration, TaskDurationDeclaration } from '../StructuredLog/TaskList';
 import Task, { TaskTypeName } from './Task';
 
@@ -12,20 +12,27 @@ export default abstract class BasicTask<T extends TaskTypeName> implements Task<
   protected _completed: boolean = false;
   protected _estimatedDuration: moment.Duration = moment.duration(0);
 
-  public constructor(declaration: TaskDeclaration | TaskDurationDeclaration);
+  public constructor(declaration: TaskDeclaration);
   public constructor(name: string, estimatedDuration?: number | moment.Duration);
   public constructor(name: string, description?: string, estimatedDuration?: number | moment.Duration);
   public constructor(
-    _name: string | TaskDeclaration | TaskDurationDeclaration,
-    _description: string | number | moment.Duration = 0,
-    estimatedDuration: number | moment.Duration = 0
+    _name: string | TaskDeclaration,
+    _description?: string | number | moment.Duration,
+    _estimatedDuration: number | moment.Duration = 0
   ) {
-    const name = typeof _name == 'string' ? _name : '';
-    const description = typeof _description === 'string' ? _description : undefined;
+    const name = typeof _name == 'string' ? _name : _name.name;
+    const description =
+      typeof _name != 'string' ? _name.description : typeof _description === 'string' ? _description : undefined;
+    const estimatedDuration =
+      typeof _name != 'string'
+        ? parseDuration(_name.estimatedDuration)
+        : typeof _description == 'object' || typeof _description == 'number'
+        ? _description
+        : _estimatedDuration;
 
     this.name = name;
     this.description = description;
-    this.estimatedDuration =
+    this._estimatedDuration =
       typeof estimatedDuration == 'number' ? moment.duration(estimatedDuration, 'm') : estimatedDuration;
   }
 

@@ -4,15 +4,15 @@ export function isStructuredParams(params: any): params is StructuredParams<any>
   return typeof params === 'object';
 }
 
-function traverseParamTree<T>(paramTree: (keyof T)[], params: StructuredParams<T>): string | null {
-  const node = paramTree.shift();
+function traverseParamTree<T>(paramTree: (keyof T)[], params: StructuredParams<T>): string | number | boolean | null {
+  const node = [...paramTree].shift();
   if (!node) return null; // should not happen
 
   const param = params[node];
 
-  if (!params[node]) return null;
-  if (isStructuredParams(param) && paramTree.length > 1) return traverseParamTree(paramTree.slice(1), param);
-  return params[node].toString();
+  if (params[node] == undefined) return null;
+  if (isStructuredParams(param) && paramTree.length >= 1) return traverseParamTree(paramTree.slice(1), param);
+  return typeof param == 'object' ? JSON.stringify(param) : (param as string | number | boolean);
 }
 
 export function formatString<T>(
@@ -28,7 +28,7 @@ export function formatString<T>(
 
       if (optional) return paramValue ? `${paramValue}${optional}` : '';
 
-      return paramValue === null ? param : paramValue;
+      return paramValue === null ? param : paramValue.toString();
     })
     .trim();
 }

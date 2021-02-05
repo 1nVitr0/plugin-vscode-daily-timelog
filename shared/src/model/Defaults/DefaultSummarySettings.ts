@@ -27,11 +27,11 @@ export const defaultSettings: Settings = {
   combineBreaks: true,
 
   taskListTitle: "Today's Tasks",
-  taskListDurationFormat: '',
-  taskListStructure: ['*{{taskListTitle}} - {{date}}*\n', '{{estimatedDurations}}', '={{estimatedTotals}}'],
+  taskListDurationFormat: '{{task.name}}: {{duration}}',
+  taskListStructure: ['*{{taskListTitle}} - {{date}}*\n', '', '{{estimatedDurations}}', '', '={{estimatedTotals}}'],
   summaryTitle: "Today's Summary",
-  summaryDurationFormat: '',
-  summaryStructure: ['*{{summaryTitle}} - {{date}}*\n', '{{durations}}', '={{totals}}'],
+  summaryDurationFormat: '{{task.name}}: {{duration}} ({{error}})',
+  summaryStructure: ['*{{summaryTitle}} - {{date}}*\n', '', '{{durations}}', '', '={{totals}}'],
   overviewTitle: '',
   overviewStructure: ['{{overviewTitle}}\n?', '{{taskList}}', '{{summary}}'],
 };

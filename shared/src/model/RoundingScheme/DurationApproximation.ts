@@ -6,10 +6,12 @@ export default class DurationApproximation<T extends TaskTypeName = TaskTypeName
 
   private _duration: number;
   private _error: number = 0;
+  private estimated: boolean;
 
-  public constructor(task: BasicTask<T>, duration: number) {
+  public constructor(task: BasicTask<T>, duration: number, estimated = false) {
     this.task = task;
     this._duration = duration;
+    this.estimated = estimated;
 
     this.init();
   }
@@ -28,7 +30,9 @@ export default class DurationApproximation<T extends TaskTypeName = TaskTypeName
   }
 
   private computeError() {
-    this._error = this._duration - this.task.actualDuration.asMinutes();
+    this._error =
+      this._duration -
+      (this.estimated ? this.task.estimatedDuration.asMinutes() : this.task.actualDuration.asMinutes());
   }
 
   private init() {

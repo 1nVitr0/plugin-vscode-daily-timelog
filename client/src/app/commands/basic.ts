@@ -1,4 +1,4 @@
-import { BasicDayLog, defaultSettings, StructuredLog } from '../../../../shared/src';
+import { BasicDayLog, defaultSettings, StructuredLog } from '../../../../shared/out';
 import { parse } from 'yaml';
 import { env, window } from 'vscode';
 import { readFileSync } from 'fs';
@@ -8,11 +8,10 @@ export function startNewDaylog() {
   console.log('Start a new Day!');
 }
 
-function getSummaryGenerator() {
-  const fn = window.activeTextEditor.document.fileName;
-  const text = readFileSync(fn).toString();
+function getSummaryGenerator(includeUnplanned = false) {
+  const text = window.activeTextEditor.document.getText();
   const log: StructuredLog = parse(text);
-  const dayLog = BasicDayLog.fromStructuredLog(log);
+  const dayLog = BasicDayLog.fromStructuredLog(log, includeUnplanned);
 
   return new SummaryGenerator(dayLog, defaultSettings);
 }
@@ -24,13 +23,13 @@ export function generateTaskList() {
 }
 
 export function generateSummary() {
-  const summaryGenerator = getSummaryGenerator();
+  const summaryGenerator = getSummaryGenerator(true);
 
   env.clipboard.writeText(summaryGenerator.generateSummary());
 }
 
 export function generateOverview() {
-  const summaryGenerator = getSummaryGenerator();
+  const summaryGenerator = getSummaryGenerator(true);
 
   env.clipboard.writeText(summaryGenerator.generateOverview());
 }

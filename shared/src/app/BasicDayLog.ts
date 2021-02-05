@@ -20,6 +20,7 @@ import {
   getApproximateEstimatedDurations,
   getInitializedRoundingScheme,
 } from '../tools/approximateDurations';
+import { parseTime } from '../tools/time';
 import BasicRoundingScheme from './BasicRoundingScheme';
 
 type TaskName = Task['name'];
@@ -34,12 +35,12 @@ export default class BasicDayLog implements DayLog {
     for (const task of tasks) this.addTask(task);
   }
 
-  public static fromStructuredLog(log: StructuredLog): BasicDayLog {
+  public static fromStructuredLog(log: StructuredLog, includeUnplanned = false): BasicDayLog {
     const factory = new TaskFactory();
     const tasks = log.plannedTasks?.map((task) => factory.fromData(task));
 
     const result = new BasicDayLog(new Date(), tasks);
-    if (log.timeLog) result.applyLog(log.timeLog);
+    if (log.timeLog) result.applyLog(log.timeLog, includeUnplanned);
 
     return result;
   }
@@ -56,16 +57,22 @@ export default class BasicDayLog implements DayLog {
     this.addTask(task);
   }
 
-  public applyLog(_log: TimeLog) {
+  public applyLog(_log: TimeLog, addMissing = false) {
     if (!_log.length) return;
     const first = _log[0];
 
     if ('start' in first) {
       const log = _log as LogEntryStyleStart[];
-      this.applyLogStyleStart(log.map((entry) => TaskFactory.logEntryFromDeclaration<LogEntryStyleStart>(entry)));
+      this.applyLogStyleStart(
+        log.map((entry) => TaskFactory.logEntryFromDeclaration<LogEntryStyleStart>(entry)),
+        addMissing
+      );
     } else {
       const log = _log as (LogEntryStyleEnd | LogEntryEndTimeDeclaration)[];
-      this.applyLogStyleEnd(log.map((entry) => TaskFactory.logEntryFromDeclaration<LogEntryStyleEnd>(entry)));
+      this.applyLogStyleEnd(
+        log.map((entry) => TaskFactory.logEntryFromDeclaration<LogEntryStyleEnd>(entry)),
+        addMissing
+      );
     }
   }
 
@@ -158,7 +165,38 @@ export default class BasicDayLog implements DayLog {
     return this.getTasks().filter((task) => task.type === 'task') as WorkTask[];
   }
 
-  private applyLogStyleEnd(log: LogEntryStyleEnd[]) {}
+  private applyLogStyleEnd(_log: LogEntryStyleEnd[], addMissing = false) {
+    if (!_log.length) return;
 
-  private applyLogStyleStart(log: LogEntryStyleStart[]) {}
+    const log = [..._log];
+    let previous = log.shift();
+    let current: LogEntryStyleEnd | undefined;
+
+    while ((current = log.shift())) {
+      const duration = parseTime(current.end).diff(parseTime(previous?.end || current.end), 'm');
+      if (addMissing && !this.getTask(current.task)) this.addTask(new WorkTask(current.task));
+      this.getTask(current.task)?.execute(duration);
+      previous = current;
+    }
+  }
+
+  private applyLogStyleStart(_log: LogEntryStyleStart[], addMissing = false) {
+    if (!_log.length) return;
+
+    const log = [..._log];
+    let current = log.shift();
+    let next: LogEntryStyleStart | undefined;
+
+    while ((next = log.shift())) {
+      const duration = parseTime(current?.end || next.start).diff(parseTime(current?.start || next.start), 'm');
+      if (addMissing && current && !this.getTask(current.task)) this.addTask(new WorkTask(current.task));
+      if (current) this.getTask(current.task)?.execute(duration);
+      current = next;
+    }
+
+    if (current?.end) {
+      const duration = parseTime(current.start).diff(parseTime(current.end), 'm');
+      this.getTask(current.task)?.execute(duration);
+    }
+  }
 }

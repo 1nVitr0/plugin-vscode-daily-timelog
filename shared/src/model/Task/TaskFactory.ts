@@ -10,6 +10,7 @@ import {
   TaskDurationDeclaration,
 } from '../..';
 import { isKeyOf } from '../../tools/typings';
+import { parseDuration, parseTime } from '../../tools/time';
 
 export default class TaskFactory {
   public constructor() {}
@@ -32,16 +33,19 @@ export default class TaskFactory {
       // @ts-ignore: Needed due to declaration[key]
       if (isKeyOf<LogEntryStyleStart | LogEntryStyleEnd>(key, dummyKeys)) logEntry[key] = declaration[key];
       // @ts-ignore: Needed due to declaration[key]
-      else [logEntry.task, logEntry.end] = [key, parseInt(declaration[key])];
+      else [logEntry.task, logEntry.end] = [declaration[key], key];
     }
 
-    return { ...logEntry } as T extends LogEntryStyleStart ? LogEntryStyleStart : LogEntryStyleEnd;
+    return logEntry as T extends LogEntryStyleStart ? LogEntryStyleStart : LogEntryStyleEnd;
   }
 
   private static taskFromDeclaration(declaration: TaskDeclaration | TaskDurationDeclaration | Task): Task {
     if ('actualDuration' in declaration) return declaration as Task;
-    if ('name' in declaration && 'estimatedDuration' in declaration)
-      return { ...declaration, actualDuration: 0, completed: false } as Task;
+    if ('name' in declaration && 'estimatedDuration' in declaration) {
+      const task: Task = { ...declaration, actualDuration: 0, completed: false } as Task;
+      task.type = task.type || 'task';
+      return task;
+    }
 
     const dummyKeys: Record<keyof TaskDeclaration, any> = { name: 1, estimatedDuration: 1, description: 1, type: 1 };
     const task: Partial<Task> = {};
@@ -49,9 +53,10 @@ export default class TaskFactory {
       // @ts-ignore: Needed due to declaration[key]
       if (isKeyOf<TaskDeclaration>(key, dummyKeys)) task[key] = declaration[key];
       // @ts-ignore: Needed due to declaration[key]
-      else [task.name, task.estimatedDuration] = [key, parseInt(declaration[key])];
+      else [task.name, task.estimatedDuration] = [key, parseDuration(declaration[key])];
     }
 
+    task.type = task.type || 'task';
     return { ...task, actualDuration: 0, completed: false } as Task;
   }
 
