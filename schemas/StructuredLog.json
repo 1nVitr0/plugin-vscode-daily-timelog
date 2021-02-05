@@ -1,0 +1,344 @@
+{
+  "anyOf": [
+    {
+      "allOf": [
+        {
+          "type": "object",
+          "properties": {
+            "date": {
+              "description": "Enables basic storage and retrieval of dates and times.",
+              "type": "string",
+              "format": "date-time"
+            },
+            "summary": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/definitions/Pick<default<\"task\"|\"break\">,\"estimatedDuration\"|\"description\"|\"type\"|\"actualDuration\"|\"completed\">"
+              }
+            }
+          },
+          "required": [
+            "date"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "plannedTasks": {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/NameDurationPair"
+                  },
+                  {
+                    "$ref": "#/definitions/TaskDeclaration"
+                  },
+                  {
+                    "$ref": "#/definitions/Pick<TaskDeclaration,\"description\"|\"type\">"
+                  }
+                ]
+              }
+            },
+            "timeLog": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/definitions/TimeTaskPair"
+                      },
+                      {
+                        "$ref": "#/definitions/LogEntryStyleEnd"
+                      },
+                      {
+                        "$ref": "#/definitions/Pick<LogEntryStyleEnd,\"comment\"|\"progress\">"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/LogEntryStyleStart"
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "plannedTasks"
+          ]
+        }
+      ]
+    },
+    {
+      "allOf": [
+        {
+          "type": "object",
+          "properties": {
+            "date": {
+              "description": "Enables basic storage and retrieval of dates and times.",
+              "type": "string",
+              "format": "date-time"
+            },
+            "summary": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/definitions/Pick<default<\"task\"|\"break\">,\"estimatedDuration\"|\"description\"|\"type\"|\"actualDuration\"|\"completed\">"
+              }
+            }
+          },
+          "required": [
+            "date"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "plannedTasks": {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/NameDurationPair"
+                  },
+                  {
+                    "$ref": "#/definitions/TaskDeclaration"
+                  },
+                  {
+                    "$ref": "#/definitions/Pick<TaskDeclaration,\"description\"|\"type\">"
+                  }
+                ]
+              }
+            },
+            "timeLog": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/definitions/TimeTaskPair"
+                      },
+                      {
+                        "$ref": "#/definitions/LogEntryStyleEnd"
+                      },
+                      {
+                        "$ref": "#/definitions/Pick<LogEntryStyleEnd,\"comment\"|\"progress\">"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/LogEntryStyleStart"
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "timeLog"
+          ]
+        }
+      ]
+    }
+  ],
+  "definitions": {
+    "Pick<default<\"task\"|\"break\">,\"estimatedDuration\"|\"description\"|\"type\"|\"actualDuration\"|\"completed\">": {
+      "description": "From T, pick a set of properties whose keys are in the union K",
+      "type": "object",
+      "properties": {
+        "estimatedDuration": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/moment.Duration"
+            },
+            {
+              "type": "number"
+            }
+          ]
+        },
+        "description": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/Task.T"
+        },
+        "actualDuration": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/moment.Duration"
+            },
+            {
+              "type": "number"
+            }
+          ]
+        },
+        "completed": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "actualDuration",
+        "completed",
+        "estimatedDuration",
+        "type"
+      ]
+    },
+    "moment.Duration": {
+      "type": "object"
+    },
+    "Task.T": {
+      "enum": [
+        "break",
+        "task"
+      ],
+      "type": "string"
+    },
+    "NameDurationPair": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "TaskDeclaration": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "estimatedDuration": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "break",
+            "task"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "estimatedDuration",
+        "name"
+      ]
+    },
+    "Pick<TaskDeclaration,\"description\"|\"type\">": {
+      "description": "From T, pick a set of properties whose keys are in the union K",
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "break",
+            "task"
+          ],
+          "type": "string"
+        }
+      }
+    },
+    "TimeTaskPair": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "LogEntryStyleEnd": {
+      "type": "object",
+      "properties": {
+        "end": {
+          "type": "string"
+        },
+        "comment": {
+          "type": "string"
+        },
+        "progress": {
+          "anyOf": [
+            {
+              "enum": [
+                "DONE"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
+          ]
+        },
+        "task": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "end",
+        "task"
+      ]
+    },
+    "Pick<LogEntryStyleEnd,\"comment\"|\"progress\">": {
+      "description": "From T, pick a set of properties whose keys are in the union K",
+      "type": "object",
+      "properties": {
+        "comment": {
+          "type": "string"
+        },
+        "progress": {
+          "anyOf": [
+            {
+              "enum": [
+                "DONE"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
+          ]
+        }
+      }
+    },
+    "LogEntryStyleStart": {
+      "type": "object",
+      "properties": {
+        "end": {
+          "type": "string"
+        },
+        "start": {
+          "type": "string"
+        },
+        "comment": {
+          "type": "string"
+        },
+        "progress": {
+          "anyOf": [
+            {
+              "enum": [
+                "DONE"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
+          ]
+        },
+        "task": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "start",
+        "task"
+      ]
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

@@ -8,7 +8,7 @@
 		"type": "git",
 		"url": "https://github.com/Microsoft/vscode-extension-samples"
 	},
-	"publisher": "vscode-samples",
+	"publisher": "1nVitr0",
 	"categories": [],
 	"keywords": [
 		"multi-root ready"
@@ -55,10 +55,6 @@
 			{
 				"command": "daily-timelog.startNewDaylog",
 				"title": "Daily Timelog: Start a new Day"
-			},
-			{
-				"command": "daily-timelog.createTask",
-				"title": "Daily Timelog: Create a new Task"
 			},
 			{
 				"command": "daily-timelog.startWorkSegment",
@@ -113,6 +109,7 @@
 		"glob": "^7.1.6",
 		"module-alias": "^2.2.2",
 		"moment": "^2.29.1",
+		"typescript-json-schema": "^0.48.0",
 		"yaml": "^1.10.0"
 	}
 }

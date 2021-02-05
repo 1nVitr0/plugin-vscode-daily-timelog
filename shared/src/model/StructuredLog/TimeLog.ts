@@ -2,6 +2,12 @@ import Task from '../Task/Task';
 import { Progress, Time } from '../Types';
 
 type TaskName = Task['name'];
+/**
+ * @TJS-propertyNames { "pattern": "^\d\d:\d\d$" }
+ */
+interface TimeTaskPair {
+  [key: string]: TaskName;
+}
 
 interface LogEntryBase {
   comment?: string;
@@ -20,11 +26,7 @@ export interface LogEntryStyleEnd extends LogEntryBase {
 
 export type LogEntry = LogEntryStyleStart | LogEntryStyleEnd;
 
-export type LogEntryEndTimeDeclaration =
-  | {
-      [key: string]: TaskName;
-    }
-  | Omit<LogEntryStyleEnd, 'task' | 'end'>;
+export type LogEntryEndTimeDeclaration = TimeTaskPair | Omit<LogEntryStyleEnd, 'task' | 'end'>;
 
 type TimeLog = (LogEntryEndTimeDeclaration | LogEntryStyleEnd)[] | LogEntryStyleStart[];
 export default TimeLog;
