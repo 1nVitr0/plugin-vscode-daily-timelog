@@ -16,7 +16,6 @@ import {
   TextDocuments,
   TextDocumentSyncKind,
 } from 'vscode-languageserver/node';
-import { parseDocument } from 'yaml';
 import CompletionService from './services/CompletionService';
 
 // Create a connection for the server, using Node's IPC as a transport.
