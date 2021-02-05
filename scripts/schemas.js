@@ -5,7 +5,7 @@ const TJS = require('typescript-json-schema');
 const { existsSync, mkdir, writeFile } = fs;
 const { join, resolve } = path;
 
-const schemaDir = 'client/out/schemas/';
+const schemaDir = 'schemas/';
 const types = [
   "StructuredLog"
 ];
@@ -14,7 +14,7 @@ const settings = {
   required: true,
 };
 
-const program = TJS.programFromConfig('client/tsconfig.json');
+const program = TJS.programFromConfig('shared/tsconfig.json');
 
 async function createSchemas (schemas) {
   if (!existsSync(schemaDir)) { await new Promise(r => mkdir(schemaDir, { recursive: true }, resolve)); }
