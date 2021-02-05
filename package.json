@@ -2,6 +2,7 @@
   "name": "daily-timelog",
   "displayName": "Daily Timelog",
   "description": "Daily Timelog Tools",
+  "icon": "resources/icon.png",
   "author": "1nVitr0",
   "license": "MIT",
   "version": "0.0.2",
