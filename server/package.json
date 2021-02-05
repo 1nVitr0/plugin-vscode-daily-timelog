@@ -2,14 +2,14 @@
 	"name": "daylog-lsp-server",
 	"description": "LSP Server for Daylog files.",
 	"version": "1.0.0",
-	"author": "Microsoft Corporation",
+	"author": "1nVitr0",
 	"license": "MIT",
 	"engines": {
 		"node": "*"
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/Microsoft/vscode-extension-samples"
+		"url": "https://github.com/1nVitr0/plugin-vscode-daily-timelog"
 	},
 	"dependencies": {
 		"vscode-languageserver": "^7.0.0",

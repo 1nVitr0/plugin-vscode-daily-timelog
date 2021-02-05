@@ -1,12 +1,12 @@
 {
 	"name": "daily-timelog",
-	"description": "Dayily Timelog Tools",
-	"author": "Microsoft Corporation",
+	"description": "Daily Timelog Tools",
+	"author": "1nVitr0",
 	"license": "MIT",
-	"version": "1.0.0",
+	"version": "1.0.0-0",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/Microsoft/vscode-extension-samples"
+		"url": "https://github.com/1nVitr0/plugin-vscode-daily-timelog"
 	},
 	"publisher": "1nVitr0",
 	"categories": [],
@@ -21,36 +21,6 @@
 	],
 	"main": "./client/out/extension",
 	"contributes": {
-		"grammars": [
-			{
-				"language": "yaml",
-				"scopeName": "source.yaml.daylog",
-				"path": "./syntaxes/yaml.daylog.tmLanguage.json"
-			}
-		],
-		"configuration": {
-			"type": "object",
-			"title": "Example configuration",
-			"properties": {
-				"languageServerExample.maxNumberOfProblems": {
-					"scope": "resource",
-					"type": "number",
-					"default": 100,
-					"description": "Controls the maximum number of problems produced by the server."
-				},
-				"languageServerExample.trace.server": {
-					"scope": "window",
-					"type": "string",
-					"enum": [
-						"off",
-						"messages",
-						"verbose"
-					],
-					"default": "off",
-					"description": "Traces the communication between VS Code and the language server."
-				}
-			}
-		},
 		"commands": [
 			{
 				"command": "daily-timelog.startNewDaylog",
@@ -110,6 +80,6 @@
 		"module-alias": "^2.2.2",
 		"moment": "^2.29.1",
 		"typescript-json-schema": "^0.48.0",
-		"yaml": "^1.10.0"
+		"yaml": "git@github.com:1nVitr0/yaml.git"
 	}
 }
