@@ -57,11 +57,18 @@ export default class BasicRoundingScheme<T extends TaskTypeName = TaskTypeName> 
         estimated ? task.estimatedDuration.asMinutes() : task.actualDuration.asMinutes(),
         this.settings.durationPrecision
       );
-      return new DurationApproximation<T>(task, duration);
+      return new DurationApproximation<T>(task, duration, estimated);
     });
 
+    this.excludeZeroDurations(durations);
     this.adjustMinimumDurations(durations);
     this.balanceDurations(durations);
     return durations;
+  }
+
+  protected excludeZeroDurations(durations: DurationApproximation<T>[]) {
+    for (let i = 0; i < durations.length; i++) {
+      if (!durations[i].duration) durations.splice(i--, 1);
+    }
   }
 }

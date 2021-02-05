@@ -9,7 +9,7 @@ import {
   formatDuration,
   OverviewParams,
   TaskTypeName,
-} from '@shared/index';
+} from '../../../shared/out';
 import moment from 'moment';
 
 export default class SummaryGenerator {
@@ -52,7 +52,7 @@ export default class SummaryGenerator {
       .map((durationInfo) => {
         const duration = {
           duration: formatDuration(durationInfo.duration, this.settings),
-          error: formatDuration(durationInfo.error, this.settings),
+          error: (durationInfo.error > 0 ? '+' : '') + formatDuration(durationInfo.error, this.settings),
           task: durationInfo.task,
         };
         return formatString(taskListDurationFormat, duration);
@@ -64,7 +64,7 @@ export default class SummaryGenerator {
     const { timeFormat, durationFormat } = this.settings;
 
     const durations = this.dayLog.getApproximateTaskDurations(BasicRoundingScheme, this.settings);
-    const estimatedDurations = this.dayLog.getApproximateTaskDurations(BasicRoundingScheme, this.settings);
+    const estimatedDurations = this.dayLog.getApproximateEstimatedTaskDurations(BasicRoundingScheme, this.settings);
     const totals = this.dayLog.getApproximateTotals(BasicRoundingScheme, this.settings);
     const estimatedTotals = this.dayLog.getApproximateEstimatedTotals(BasicRoundingScheme, this.settings);
 
@@ -73,8 +73,8 @@ export default class SummaryGenerator {
       date: formatDate(moment(this.dayLog.date), this.settings),
       durations: this.formatDurationList(durations),
       estimatedDurations: this.formatDurationList(estimatedDurations),
-      totals: formatString(durationFormat, totals),
-      estimatedTotals: formatString(durationFormat, estimatedTotals),
+      totals: formatDuration(totals),
+      estimatedTotals: formatDuration(estimatedTotals),
     };
   }
 }

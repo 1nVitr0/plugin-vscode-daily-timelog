@@ -6,7 +6,7 @@ import {
   BasicSettings,
   BasicTask,
   DurationApproximation,
-} from '@shared/index';
+} from '../../../../shared/out';
 
 export function getInitializedRoundingScheme<T extends TaskTypeName = TaskTypeName>(
   _roundingScheme: RoundingScheme | ConstructorType<typeof BasicRoundingScheme>,
