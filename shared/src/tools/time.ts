@@ -1,6 +1,5 @@
 import moment, { Moment, Duration } from 'moment';
-import { defaultBasicSettings } from '../model/Defaults/DefaultSummarySettings';
-import DefaultTime from '../model/Defaults/DefaultTime';
+import { defaultBasicSettings } from '../model/Defaults';
 import { formatString, parseString } from './string';
 
 export function validateDate(date: string, settings = defaultBasicSettings): boolean {
@@ -30,7 +29,7 @@ export function parseDuration(duration: string, settings = defaultBasicSettings)
 }
 
 export function parseTime(time: string, settings = defaultBasicSettings): Moment {
-  return moment(DefaultTime.extendTime(time), DefaultTime.extendTimeFormat(settings.timeFormat));
+  return moment(time, settings.timeFormat);
 }
 
 export function formatTime(time: Moment, settings = defaultBasicSettings): string {
