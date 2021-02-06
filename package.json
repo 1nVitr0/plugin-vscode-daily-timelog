@@ -5,7 +5,7 @@
   "icon": "resources/icon.png",
   "author": "1nVitr0",
   "license": "MIT",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "repository": {
     "type": "git",
     "url": "https://github.com/1nVitr0/plugin-vscode-daily-timelog"
