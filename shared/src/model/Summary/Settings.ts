@@ -5,6 +5,7 @@ export type ExportFileFormat = 'txt' | 'json' | 'csv' | 'clipboard';
 
 export interface BasicSettings {
   approximateTotals: ListTypeBoolean;
+  beginDayMessage: string;
   combineBreaks: ListTypeBoolean;
   commonBreaks: string[];
   commonTasks: string[];

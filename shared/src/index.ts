@@ -14,7 +14,7 @@ import Task from './model/Task/Task';
 import TaskFactory from './model/Task/TaskFactory';
 import WorkTask from './model/Task/WorkTask';
 
-export * from './model/Defaults/DefaultSummarySettings';
+export * from './model/Defaults';
 export * from './model/StructuredLog/TaskList';
 export * from './model/StructuredLog/TimeLog';
 export * from './model/Summary/Params';
