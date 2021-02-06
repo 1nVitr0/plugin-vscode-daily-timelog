@@ -9,13 +9,6 @@ import { YamlKeyDescriptor, YamlNodeDescriptor, YamlSingleDescriptor, YamlType, 
 import TextDocumentService from './TextDocumentService';
 
 export default class CompletionService extends TextDocumentService {
-  private _parser?: YamlParser;
-
-  protected get parser(): YamlParser | null {
-    if (this._parser && this._parser.hasDocument(this.currentDocument)) return this._parser;
-    else return this.currentDocument ? (this._parser = new YamlParser(this.currentDocument)) : null;
-  }
-
   protected static quote(text: string, type?: Scalar.Type, keepEndQuote = true): string {
     switch (type) {
       case Type.QUOTE_DOUBLE:
@@ -66,6 +59,10 @@ export default class CompletionService extends TextDocumentService {
       default:
         return [];
     }
+  }
+
+  public resolveCompletion(completion: CompletionItem): CompletionItem {
+    return completion;
   }
 
   protected addTextEdit(completions: CompletionItem[], position: Position, range?: CST.Range | null): CompletionItem[] {
@@ -166,13 +163,21 @@ export default class CompletionService extends TextDocumentService {
 
   protected completeValue({ node, context }: YamlValueDescriptor, position: Position): CompletionItem[] {
     let completions: CompletionItem[] = [];
-    if (CompletionService.matchContext(['date'], context)) completions = this.getDateCompletion(position, Type.PLAIN);
-    if (CompletionService.matchContext(['timeLog', '*'], context))
-      completions = this.getTimelogTaskCompletion(position, Type.PLAIN);
-    if (CompletionService.matchContext(['plannedTasks', '*'], context))
-      completions = this.getDurationCompletion(position, Type.PLAIN);
+    if (CompletionService.matchContext(['date'], context)) completions = this.getDateCompletion(position);
+    else if (CompletionService.matchContext(['timeLog', '*'], context)) {
+      if (/\!b?r?e?a?k?/.test(node?.tag || '')) completions = this.getTimelogBreakCompletion(position);
+      if (/\!b?e?g?i?n?/.test(node?.tag || '')) completions.push(...this.getTimelogBeginCompletion(position));
+      if (!completions.length) completions = this.getTimelogTaskCompletion(position);
+    } else if (CompletionService.matchContext(['plannedTasks', '*'], context)) {
+      if (/\!b?r?e?a?k?/.test(node?.tag || '')) completions = this.getBreakDurationCompletion(position);
+      else completions = this.getDurationCompletion(position);
+    }
 
     return this.addTextEdit(completions, position, node?.cstNode?.range);
+  }
+
+  protected getBreakDurationCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
+    return this.prefixCompletions(this.getDurationCompletion(position, quote), '!break ', true);
   }
 
   protected getDateCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
@@ -295,6 +300,45 @@ export default class CompletionService extends TextDocumentService {
     });
 
     return times.map((time) => moment(time, this.currentConfiguration?.timeFormat || defaultBasicSettings.timeFormat));
+  }
+
+  protected getTimelogBeginCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
+    const message = this.currentConfiguration?.beginDayMessage || defaultBasicSettings.beginDayMessage;
+    const label = `!begin ${message}`;
+    const text = `!begin ${CompletionService.quote(message, quote)}`;
+
+    return [
+      {
+        kind: CompletionItemKind.Value,
+        label,
+        filterText: text,
+        insertText: text,
+      },
+    ];
+  }
+
+  protected getTimelogBreakCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
+    const kind = CompletionItemKind.Value;
+    const planned = []; // TODO: this.getPlannedTasksUntil(position);
+    for (const task of this.currentConfiguration?.commonBreaks || defaultBasicSettings.commonBreaks) {
+      if (planned.indexOf(task) < 0) planned.push(task);
+    }
+
+    let priority = 0;
+    const items: CompletionItem[] = [];
+    for (const task of planned) {
+      const label = `!break ${task}`;
+      const text = `!break ${CompletionService.quote(task, quote)}`;
+      items.push({
+        kind,
+        label,
+        filterText: text,
+        insertText: text,
+        sortText: (priority++).toString().padStart(9),
+      });
+    }
+
+    return items;
   }
 
   protected getTimelogTaskCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {

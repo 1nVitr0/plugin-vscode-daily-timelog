@@ -1,6 +1,6 @@
 import { TaskFactory } from '..';
 import DayLog from '../model/DayLog/DayLog';
-import { defaultBasicSettings } from '../model/Defaults/DefaultSummarySettings';
+import { defaultBasicSettings } from '../model/Defaults';
 import DurationApproximation from '../model/RoundingScheme/DurationApproximation';
 import RoundingScheme from '../model/RoundingScheme/RoundingScheme';
 import StructuredLog from '../model/StructuredLog/StructuredLog';
