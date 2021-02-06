@@ -16,6 +16,7 @@ import {
 } from 'vscode-languageserver/node';
 import CompletionService from './services/CompletionService';
 import ConfigurationService from './services/ConfigurationService';
+import ValidationService from './services/ValidationService';
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -25,6 +26,7 @@ let connection = createConnection(ProposedFeatures.all);
 let documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 let configurationService = new ConfigurationService(connection);
 let completionService = new CompletionService(documents, configurationService);
+let validationService = new ValidationService(documents, configurationService);
 
 let hasConfigurationCapability: boolean = false;
 let hasWorkspaceFolderCapability: boolean = false;
@@ -78,6 +80,14 @@ connection.onInitialized(() => {
 
 connection.onDidChangeConfiguration((change) => {
   configurationService.changeConfiguration(change);
+  documents.all().forEach((document) => {
+    validationService.for(document).then((validate) => {
+      connection.sendDiagnostics({
+        uri: document.uri,
+        diagnostics: validate.doValidation(),
+      });
+    });
+  });
 });
 // Only keep settings for open documents
 documents.onDidClose((e) => {
@@ -89,19 +99,20 @@ connection.onDidChangeWatchedFiles((_change) => {
   connection.console.log('We received an file change event');
 });
 
-// This handler provides the initial list of the completion items.
-connection.onCompletion(
-  async (_textDocumentPosition: TextDocumentPositionParams): Promise<CompletionItem[]> => {
-    const { textDocument, position } = _textDocumentPosition;
-    const handler = await completionService.for(textDocument);
-    const completions = handler.doComplete(position);
-    return completions;
-  }
-);
-
-connection.onCompletionResolve((completionItem) => {
-  return completionItem;
+documents.onDidChangeContent(async (change) => {
+  connection.sendDiagnostics({
+    uri: change.document.uri,
+    diagnostics: (await validationService.for(change.document)).doValidation(),
+  });
 });
+
+// This handler provides the initial list of the completion items.
+connection.onCompletion(async (_textDocumentPosition) => {
+  const { textDocument, position } = _textDocumentPosition;
+  return (await completionService.for(textDocument)).doComplete(position);
+});
+
+connection.onCompletionResolve((completion) => completionService.resolveCompletion(completion));
 
 // Make the text document manager listen on the connection
 // for open, change and close text document events

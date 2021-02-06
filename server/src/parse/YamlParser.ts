@@ -1,9 +1,12 @@
-import { Range, Position } from 'vscode-languageserver';
+import { Position } from 'vscode-languageserver';
 import { TextDocument } from 'vscode-languageserver-textdocument';
-import { CST, Document, parseDocument } from 'yaml';
+import { CST, defaultOptions, Document, parseDocument } from 'yaml';
 import { Scalar, Pair, Collection, Node, YAMLMap } from 'yaml/types';
 import { YAMLError, Type } from 'yaml/util';
 import { YamlNode, YamlNodeDescriptor, YamlType } from '../types';
+import { yamlCustomTags } from '../../../shared/out';
+
+defaultOptions.customTags = yamlCustomTags;
 
 export default class YamlParser {
   private readonly document: TextDocument;
@@ -31,6 +34,18 @@ export default class YamlParser {
   protected get parsed(): Document.Parsed {
     if (this._parsed !== undefined) return this._parsed;
     return this.parseDocument();
+  }
+
+  public static containsNodeWithTag(node: YamlNode, tag: string | string[], maxDepth = Infinity): boolean {
+    if (maxDepth == 0) return false;
+
+    if (YamlParser.isScalar(node)) {
+      return typeof tag == 'string' ? node.tag == tag : tag.includes(node.tag || '');
+    } else if ('items' in node) {
+      for (const item of node.items) if (YamlParser.containsNodeWithTag(item, tag, maxDepth--)) return true;
+    } else if ('value' in node) return YamlParser.containsNodeWithTag(node.value, tag, maxDepth--);
+
+    return false;
   }
 
   public static getFirstKey(map: YAMLMap): string | null {
@@ -104,6 +119,10 @@ export default class YamlParser {
     }
   }
 
+  public getNodeIn(context: string[]): YamlNode {
+    return this.parsed.getIn(context, true);
+  }
+
   public hasDocument(document?: TextDocument): boolean {
     return document == this.document;
   }
@@ -154,7 +173,7 @@ export default class YamlParser {
 
     if (key && this.isInRange(key, offset)) return { type: YamlType.Key, node: key as Scalar, context };
     if (value && this.isInRange(value, offset)) {
-      if (YamlParser.isScalar(value)) return { type: YamlType.Value, node: value, context };
+      if (YamlParser.isScalar(value)) return { type: YamlType.Value, node: value, context: [...context, key] };
       return this.getNodeAt(offset, value, [...context, key]);
     }
 

@@ -1,6 +1,7 @@
 import { Position, TextDocumentIdentifier, TextDocuments } from 'vscode-languageserver';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { Settings } from '../../../shared/out';
+import YamlParser from '../parse/YamlParser';
 import ConfigurationService from './ConfigurationService';
 
 export default abstract class TextDocumentService {
@@ -9,9 +10,16 @@ export default abstract class TextDocumentService {
   protected currentDocument?: TextDocument;
   protected documents: TextDocuments<TextDocument>;
 
+  private _parser?: YamlParser;
+
   public constructor(documents: TextDocuments<TextDocument>, configurationService: ConfigurationService) {
     this.documents = documents;
     this.configurationService = configurationService;
+  }
+
+  protected get parser(): YamlParser | null {
+    if (this._parser && this._parser.hasDocument(this.currentDocument)) return this._parser;
+    else return this.currentDocument ? (this._parser = new YamlParser(this.currentDocument)) : null;
   }
 
   public async for(document: TextDocumentIdentifier): Promise<this> {
