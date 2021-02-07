@@ -256,7 +256,7 @@
             "{{estimatedDurations}}\n",
             "={{estimatedTotals}}"
           ],
-          "description": "structure of task list"
+          "description": "structure of task list. Parameters include all the settings of this extension as well as {{ date }}: the date supplied, {{ durations }}: list of task durations, {{ estimatedDurations }}: list of estimated task durations, {{ totals }}: formatted totals, {{ estimatedTotals }}: formatted estimated totals"
         },
         "daily-timelog.summaryTitle": {
           "scope": "resources",
@@ -268,7 +268,7 @@
           "scope": "resources",
           "type": "string",
           "default": "{{task.name}}: {{duration}} ({{error}})",
-          "description": "duration format - params are enclosed in {{}}, when followed by '?', the param and all the text following it until the next param will be hidden if param resolves to a falsy value. Possible values are task.name: task name, duration: duration, error: rounding error"
+          "description": "duration format - params are enclosed in {{}}, when followed by '?', the param and all the text following it until the next param will be hidden if param resolves to a falsy value. Possible values are {{ task.name }}: task name, {{ task.type }}: task type, {{ duration }}: duration, {{ error }}: rounding error"
         },
         "daily-timelog.summaryStructure": {
           "scope": "resources",
@@ -281,7 +281,7 @@
             "{{durations}}\n",
             "={{totals}}"
           ],
-          "description": "structure of summary"
+          "description": "structure of summary. Parameters include all the settings of this extension as well as {{ date }}: the date supplied, {{ durations }}: list of task durations, {{ estimatedDurations }}: list of estimated task durations, {{ totals }}: formatted totals, {{ estimatedTotals }}: formatted estimated totals"
         },
         "daily-timelog.overviewTitle": {
           "scope": "resources",
