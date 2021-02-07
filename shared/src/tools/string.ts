@@ -36,13 +36,23 @@ export function formatString<T>(
 export function parseString<T>(string: string, format: string): { [key: string]: string | undefined | null } {
   const params: { [key: string]: string | undefined | null } = {};
   const keys: string[] = [];
-  const regex = format.replace(/{{(.+?)}}([^{?]*)?(\??)?/g, (_, g1, g2, g3) => {
-    keys.push(g1.trim());
-    return `((.+?)${g2 || '$'})${g3 ? '?' : ''}`;
-  });
+  const regex = format
+    .replace(/{{(.+?)}}([^{?]*)?(\?)?/g, (_, g1, g2, g3) => {
+      keys.push(g1.trim());
+      return `((.+?)${g2 || '$'})${g3 ? '?' : ''}`;
+    })
+    .replace(/\s+/, '\\s*');
   const matches = string.match(new RegExp(regex));
 
   for (let i = 2; i < (matches?.length || 0); i += 2) params[keys[(i - 2) / 2]] = matches ? matches[i] : null;
 
   return params;
+}
+
+export function isBreak(breakName?: string): boolean {
+  return !!breakName && /^\[.*\]$/.test(breakName);
+}
+
+export function extractBreak(breakName: string): string {
+  return breakName.replace(/^\[(.*)\]$/, (_, name) => name);
 }
