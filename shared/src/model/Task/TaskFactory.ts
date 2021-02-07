@@ -10,7 +10,8 @@ import {
   TaskDurationDeclaration,
 } from '../..';
 import { isKeyOf } from '../../tools/typings';
-import { parseDuration, parseTime } from '../../tools/time';
+import { parseDuration } from '../../tools/time';
+import { extractBreak, isBreak } from '../../tools/string';
 
 export default class TaskFactory {
   public constructor() {}
@@ -52,11 +53,15 @@ export default class TaskFactory {
     for (const key of Object.keys(declaration)) {
       // @ts-ignore: Needed due to declaration[key]
       if (isKeyOf<TaskDeclaration>(key, dummyKeys)) task[key] = declaration[key];
-      // @ts-ignore: Needed due to declaration[key]
-      else [task.name, task.estimatedDuration] = [key, parseDuration(declaration[key])];
+      else {
+        // @ts-ignore: Needed due to declaration[key]
+        const duration: string = declaration[key];
+        const extracted = extractBreak(duration);
+        task.type = isBreak(duration || '') ? 'break' : 'task';
+        [task.name, task.estimatedDuration] = [key, parseDuration(extractBreak(duration))];
+      }
     }
 
-    task.type = task.type || 'task';
     return { ...task, actualDuration: 0, completed: false } as Task;
   }
 
