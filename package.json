@@ -1,7 +1,7 @@
 {
   "name": "daily-timelog",
   "displayName": "Daily Timelog",
-  "description": "Daily Timelog Tools",
+  "description": "Simple tool set for tracking and planning your daily tasks",
   "icon": "resources/icon.png",
   "author": "1nVitr0",
   "license": "MIT",
@@ -11,9 +11,17 @@
     "url": "https://github.com/1nVitr0/plugin-vscode-daily-timelog"
   },
   "publisher": "1nVitr0",
-  "categories": [],
+  "categories": [
+    "Other",
+    "Programming Languages",
+    "Linters"
+  ],
   "keywords": [
-    "multi-root ready"
+    "time log",
+    "planning",
+    "tasks",
+    "todo",
+    "time tracker"
   ],
   "engines": {
     "vscode": "^1.52.0"
