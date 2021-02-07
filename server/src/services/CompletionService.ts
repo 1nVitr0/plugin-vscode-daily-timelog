@@ -289,14 +289,14 @@ export default class CompletionService extends TextDocumentService {
   protected getTimeCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
     const { durationPrecision, workHoursStart } = this.currentConfiguration || defaultBasicSettings;
     const currentTime = moment().seconds(0).milliseconds(0);
-    const before = this.getTimeLogUntil(position);
-    const lastTime = before.pop() || moment(workHoursStart, 'HH:mm');
+    const lastTime =
+      this.getTimeLogUntil(position).pop()?.add(durationPrecision, 'm') || moment(workHoursStart, 'HH:mm');
     const age = currentTime.diff(lastTime, 'm');
 
     const items: CompletionItem[] = [];
-    for (let i = 1; i <= 10; i++) {
-      lastTime.add(durationPrecision, 'm');
+    for (let i = 0; i < (24 * 60) / durationPrecision; i++) {
       items.push(this.getTimeCompletionItem(lastTime, i * durationPrecision, quote));
+      lastTime.add(durationPrecision, 'm');
     }
 
     items.push(this.getTimeCompletionItem(currentTime, age, quote, true));
@@ -335,7 +335,9 @@ export default class CompletionService extends TextDocumentService {
       else if (log.type == Type.MAP || log.type == Type.FLOW_MAP) return YamlParser.getFirstKey(log as YAMLMap);
     });
 
-    return times.map((time) => moment(time, this.currentConfiguration?.timeFormat || defaultBasicSettings.timeFormat));
+    return times
+      .map((time) => moment(time, this.currentConfiguration?.timeFormat || defaultBasicSettings.timeFormat))
+      .filter((time) => time.isValid());
   }
 
   protected getTimelogBeginCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
