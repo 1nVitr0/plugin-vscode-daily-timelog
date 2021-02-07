@@ -12,7 +12,9 @@ function traverseParamTree<T>(paramTree: (keyof T)[], params: StructuredParams<T
 
   if (params[node] == undefined) return null;
   if (isStructuredParams(param) && paramTree.length >= 1) return traverseParamTree(paramTree.slice(1), param);
-  return typeof param == 'object' ? JSON.stringify(param) : (param as string | number | boolean);
+  return ['number', 'string', 'boolean'].includes(typeof param)
+    ? (param as string | number | boolean)
+    : param.toString();
 }
 
 export function formatString<T>(
