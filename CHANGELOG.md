@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.7](https://github.com/1nVitr0/plugin-vscode-daily-timelog/compare/v0.0.6...v0.0.7) (2021-02-07)
+
+
+### Features
+
+*  add summary date format ([afcf0ce](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/afcf0cea25ffa6ed8fe70e09fe48659907b39522))
+
+
+### Bug Fixes
+
+* clean up structure settings ([f01c8db](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/f01c8db91573f53c85d3bbe85c78a5ad8551535e))
+
 ### [0.0.6](https://github.com/1nVitr0/plugin-vscode-daily-timelog/compare/v0.0.5...v0.0.6) (2021-02-07)
 
 
