@@ -130,6 +130,12 @@
           "default": "YYYY-MM-DD",
           "description": "date format- supports the  formats supplied by moment.js"
         },
+        "daily-timelog.summaryDateFormat": {
+          "scope": "resources",
+          "type": "string",
+          "default": "YYYY-MM-DD",
+          "description": "date format- supports the  formats supplied by moment.js"
+        },
         "daily-timelog.timeFormat": {
           "scope": "resources",
           "type": "string",
@@ -252,9 +258,11 @@
             "type": "string"
           },
           "default": [
-            "*{{taskListTitle}} - {{date}}*\n",
-            "{{estimatedDurations}}\n",
-            "={{estimatedTotals}}"
+            "*{{taskListTitle}} - {{date}}*",
+            "",
+            "{{estimatedDurations}}",
+            "",
+            "= {{estimatedTotals}}"
           ],
           "description": "structure of task list. Parameters include all the settings of this extension as well as {{ date }}: the date supplied, {{ durations }}: list of task durations, {{ estimatedDurations }}: list of estimated task durations, {{ totals }}: formatted totals, {{ estimatedTotals }}: formatted estimated totals"
         },
@@ -277,9 +285,11 @@
             "type": "string"
           },
           "default": [
-            "*{{summaryTitle}} - {{date}}*\n",
-            "{{durations}}\n",
-            "={{totals}}"
+            "*{{summaryTitle}} - {{date}}*",
+            "",
+            "{{durations}}",
+            "",
+            "= {{totals}}"
           ],
           "description": "structure of summary. Parameters include all the settings of this extension as well as {{ date }}: the date supplied, {{ durations }}: list of task durations, {{ estimatedDurations }}: list of estimated task durations, {{ totals }}: formatted totals, {{ estimatedTotals }}: formatted estimated totals"
         },
@@ -296,7 +306,8 @@
             "type": "string"
           },
           "default": [
-            "{{overviewTitle}}?",
+            "{{overviewTitle}} -? {{ date }}",
+            "",
             "{{taskList}}",
             "{{summary}}"
           ],
