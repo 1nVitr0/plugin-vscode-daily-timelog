@@ -41,9 +41,9 @@ export default class YamlParser {
 
     if (YamlParser.isScalar(node)) {
       return typeof tag == 'string' ? node.tag == tag : tag.includes(node.tag || '');
-    } else if ('items' in node) {
+    } else if (node && 'items' in node) {
       for (const item of node.items) if (YamlParser.containsNodeWithTag(item, tag, maxDepth--)) return true;
-    } else if ('value' in node) return YamlParser.containsNodeWithTag(node.value, tag, maxDepth--);
+    } else if (node && 'value' in node) return YamlParser.containsNodeWithTag(node.value, tag, maxDepth--);
 
     return false;
   }

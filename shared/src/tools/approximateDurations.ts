@@ -6,14 +6,14 @@ import { TaskTypeName } from '../model/Task/Task';
 import BasicTask from '../model/Task/BasicTask';
 import { ConstructorType } from '../model/Types';
 
-export function getInitializedRoundingScheme<T extends TaskTypeName = TaskTypeName>(
+export function getInitializedRoundingScheme(
   _roundingScheme: RoundingScheme | ConstructorType<typeof BasicRoundingScheme>,
   _settings: BasicSettings,
-  tasks: BasicTask<T>[]
-): RoundingScheme<T> {
+  tasks: BasicTask[]
+): RoundingScheme {
   const roundingScheme = (typeof _roundingScheme === 'function'
     ? new _roundingScheme(tasks, _settings)
-    : _roundingScheme) as RoundingScheme<T>;
+    : _roundingScheme) as RoundingScheme;
 
   if (typeof _roundingScheme !== 'function') roundingScheme.tasks = tasks;
 
@@ -25,8 +25,8 @@ export function getApproximateDurations<T extends TaskTypeName = TaskTypeName>(
   settings: BasicSettings,
   tasks: BasicTask<T>[]
 ): DurationApproximation<T>[] {
-  const roundingScheme = getInitializedRoundingScheme<T>(_roundingScheme, settings, tasks);
-  return roundingScheme.getApproximateDurations();
+  const roundingScheme = getInitializedRoundingScheme(_roundingScheme, settings, tasks);
+  return roundingScheme.getApproximateDurations() as DurationApproximation<T>[];
 }
 
 export function getApproximateEstimatedDurations<T extends TaskTypeName = TaskTypeName>(
@@ -34,6 +34,6 @@ export function getApproximateEstimatedDurations<T extends TaskTypeName = TaskTy
   settings: BasicSettings,
   tasks: BasicTask<T>[]
 ): DurationApproximation<T>[] {
-  const roundingScheme = getInitializedRoundingScheme<T>(_roundingScheme, settings, tasks);
-  return roundingScheme.getApproximateEstimatedDurations();
+  const roundingScheme = getInitializedRoundingScheme(_roundingScheme, settings, tasks);
+  return roundingScheme.getApproximateEstimatedDurations() as DurationApproximation<T>[];
 }

@@ -20,6 +20,7 @@ import {
   getApproximateEstimatedDurations,
   getInitializedRoundingScheme,
 } from '../tools/approximateDurations';
+import { extractBreak, isBreak } from '../tools/string';
 import { parseTime } from '../tools/time';
 import BasicRoundingScheme from './BasicRoundingScheme';
 
@@ -117,7 +118,8 @@ export default class BasicDayLog implements DayLog {
     _roundingScheme: RoundingScheme | ConstructorType<typeof BasicRoundingScheme>,
     settings: BasicSettings = defaultBasicSettings
   ): DurationApproximation<TaskTypeName>[] {
-    return getApproximateDurations(_roundingScheme, settings, this.getTasks());
+    if (settings.includeBreaks) return getApproximateDurations(_roundingScheme, settings, this.getTasks());
+    else return getApproximateDurations(_roundingScheme, settings, this.getWorkTasks());
   }
 
   public getApproximateTotals(
@@ -146,8 +148,9 @@ export default class BasicDayLog implements DayLog {
     return this.getTasks().filter((task) => task.type === 'break') as Break[];
   }
 
-  public getTask(name: TaskName): BasicTask<TaskTypeName> | null {
-    return this.tasks[name] || null;
+  public getTask(_name: TaskName): BasicTask<TaskTypeName> | null {
+    const name = extractBreak(_name);
+    return this.tasks[name] || this.tasks[`[${name}]`] || null;
   }
 
   public getTasks(): BasicTask<TaskTypeName>[] {
@@ -174,7 +177,10 @@ export default class BasicDayLog implements DayLog {
 
     while ((current = log.shift())) {
       const duration = parseTime(current.end).diff(parseTime(previous?.end || current.end), 'm');
-      if (addMissing && !this.getTask(current.task)) this.addTask(new WorkTask(current.task));
+      if (addMissing && !this.getTask(current.task)) {
+        if (isBreak(current.task)) this.addTask(new Break(current.task));
+        else this.addTask(new WorkTask(current.task));
+      }
       this.getTask(current.task)?.execute(duration);
       previous = current;
     }
@@ -189,7 +195,10 @@ export default class BasicDayLog implements DayLog {
 
     while ((next = log.shift())) {
       const duration = parseTime(current?.end || next.start).diff(parseTime(current?.start || next.start), 'm');
-      if (addMissing && current && !this.getTask(current.task)) this.addTask(new WorkTask(current.task));
+      if (addMissing && current && !this.getTask(current.task)) {
+        if (isBreak(current.task)) this.addTask(new Break(current.task));
+        else this.addTask(new WorkTask(current.task));
+      }
       if (current) this.getTask(current.task)?.execute(duration);
       current = next;
     }

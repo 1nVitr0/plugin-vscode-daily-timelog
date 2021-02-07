@@ -3,13 +3,14 @@ import RoundingScheme from '../model/RoundingScheme/RoundingScheme';
 import { TaskTypeName } from '../model/Task/Task';
 import BasicTask from '../model/Task/BasicTask';
 import { getLargestErrorDuration } from '../tools/math';
+import Break from '../model/Task/Break';
 
-export default class BasicRoundingScheme<T extends TaskTypeName = TaskTypeName> extends RoundingScheme<T> {
-  public getApproximateDurations(): DurationApproximation<T>[] {
+export default class BasicRoundingScheme extends RoundingScheme {
+  public getApproximateDurations(): DurationApproximation[] {
     return this.calculateDurations(this.tasks);
   }
 
-  public getApproximateEstimatedDurations(): DurationApproximation<T>[] {
+  public getApproximateEstimatedDurations(): DurationApproximation[] {
     return this.calculateDurations(this.tasks, true);
   }
 
@@ -23,7 +24,7 @@ export default class BasicRoundingScheme<T extends TaskTypeName = TaskTypeName> 
     return this.roundingFunction.call(this, total, this.settings.durationPrecision);
   }
 
-  protected adjustMinimumDurations(durations: DurationApproximation<T>[]) {
+  protected adjustMinimumDurations(durations: DurationApproximation[]) {
     const { minimumDuration, forceMinimumDuration, floorBelowMinimumDuration } = this.settings;
 
     if (!(forceMinimumDuration || floorBelowMinimumDuration)) return;
@@ -36,7 +37,7 @@ export default class BasicRoundingScheme<T extends TaskTypeName = TaskTypeName> 
     }
   }
 
-  protected balanceDurations(durations: DurationApproximation<T>[]) {
+  protected balanceDurations(durations: DurationApproximation[]) {
     const totalError = durations.reduce((sum, duration) => sum + duration.error, 0);
     let approximateError = this.roundingFunction.call(this, totalError, this.settings.durationPrecision);
 
@@ -50,14 +51,15 @@ export default class BasicRoundingScheme<T extends TaskTypeName = TaskTypeName> 
     }
   }
 
-  protected calculateDurations(tasks: readonly BasicTask<T>[], estimated = false): DurationApproximation<T>[] {
+  protected calculateDurations(_tasks: readonly BasicTask<TaskTypeName>[], estimated = false): DurationApproximation[] {
+    const tasks = this.squashBreaks(_tasks);
     const durations = tasks.map((task) => {
       const duration = this.roundingFunction.call(
         this,
         estimated ? task.estimatedDuration.asMinutes() : task.actualDuration.asMinutes(),
         this.settings.durationPrecision
       );
-      return new DurationApproximation<T>(task, duration, estimated);
+      return new DurationApproximation(task, duration, estimated);
     });
 
     this.excludeZeroDurations(durations);
@@ -66,9 +68,27 @@ export default class BasicRoundingScheme<T extends TaskTypeName = TaskTypeName> 
     return durations;
   }
 
-  protected excludeZeroDurations(durations: DurationApproximation<T>[]) {
+  protected excludeZeroDurations(durations: DurationApproximation[]) {
     for (let i = 0; i < durations.length; i++) {
       if (!durations[i].duration) durations.splice(i--, 1);
     }
+  }
+
+  protected squashBreaks(tasks: readonly BasicTask[]): BasicTask[] {
+    if (this.settings.combineBreaks) {
+      const breaks: BasicTask[] = [];
+      const workTasks: BasicTask[] = [];
+      for (const task of tasks) {
+        if (task.type == 'break') breaks.push(task);
+        else workTasks.push(task);
+      }
+      const squashed = new Break(this.settings.defaultBreakName, 0);
+      for (const b of breaks) {
+        squashed.estimatedDuration = squashed.estimatedDuration.add(b.estimatedDuration);
+        squashed.execute(b.actualDuration);
+      }
+
+      return [...workTasks, squashed];
+    } else return [...tasks];
   }
 }

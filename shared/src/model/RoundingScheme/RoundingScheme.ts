@@ -6,26 +6,26 @@ import BasicTask from '../Task/BasicTask';
 export type PrecisionRoundingFunction = (number: number, precision?: number) => number;
 export type RoundingType = 'round' | 'floor' | 'ceil';
 
-export default abstract class RoundingScheme<T extends TaskTypeName = TaskTypeName> {
+export default abstract class RoundingScheme {
   public readonly settings: BasicSettings;
 
   protected roundingFunction: PrecisionRoundingFunction = RoundingScheme.roundToPrecision;
 
-  private _tasks: BasicTask<T>[];
+  private _tasks: BasicTask<TaskTypeName>[];
 
-  public constructor(tasks: BasicTask<T>[], settings: BasicSettings) {
+  public constructor(tasks: BasicTask<TaskTypeName>[], settings: BasicSettings) {
     this._tasks = tasks;
     this.settings = settings;
 
     this.setRoundingFunction(settings.durationRounding);
   }
 
-  public get tasks(): readonly BasicTask<T>[] {
+  public get tasks(): readonly BasicTask<TaskTypeName>[] {
     return this._tasks;
   }
 
-  public set tasks(tasks: readonly BasicTask<T>[]) {
-    this._tasks = tasks as BasicTask<T>[];
+  public set tasks(tasks: readonly BasicTask<TaskTypeName>[]) {
+    this._tasks = tasks as BasicTask<TaskTypeName>[];
   }
 
   protected static ceilToPrecision(number: number, precision: number = 1): number {
@@ -65,8 +65,8 @@ export default abstract class RoundingScheme<T extends TaskTypeName = TaskTypeNa
     }
   }
 
-  public abstract getApproximateDurations(): DurationApproximation<T>[];
-  public abstract getApproximateEstimatedDurations(): DurationApproximation<T>[];
+  public abstract getApproximateDurations(): DurationApproximation<TaskTypeName>[];
+  public abstract getApproximateEstimatedDurations(): DurationApproximation<TaskTypeName>[];
   public abstract getApproximateEstimatedTotal(): number;
   public abstract getApproximateTotal(): number;
 }

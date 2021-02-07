@@ -3,7 +3,7 @@ import { parseDuration } from '../../tools/time';
 import { TaskDeclaration, TaskDurationDeclaration } from '../StructuredLog/TaskList';
 import Task, { TaskTypeName } from './Task';
 
-export default abstract class BasicTask<T extends TaskTypeName> implements Task<T> {
+export default abstract class BasicTask<T extends TaskTypeName = TaskTypeName> implements Task<T> {
   public readonly description?: string;
   public readonly name: string;
   public abstract readonly type: T;
@@ -49,7 +49,7 @@ export default abstract class BasicTask<T extends TaskTypeName> implements Task<
   }
 
   public set estimatedDuration(newEstimation) {
-    this.estimatedDuration = newEstimation;
+    this._estimatedDuration = newEstimation;
   }
 
   public complete() {

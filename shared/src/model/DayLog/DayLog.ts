@@ -45,7 +45,7 @@ export default interface DayLog<T extends TaskName = TaskName> {
   ): DurationApproximation<TaskTypeName>[];
   getApproximateTotals(roundingScheme: RoundingScheme): number;
   getApproximateTotals(roundingScheme: RoundingSchemeConstructor, settings: BasicSettings): number;
-  getApproximateWorkTaskDurations(roundingScheme: RoundingScheme): DurationApproximation<'task'>[];
+  getApproximateWorkTaskDurations(roundingScheme: RoundingScheme): DurationApproximation[];
   getApproximateWorkTaskDurations(
     roundingScheme: RoundingSchemeConstructor,
     settings: BasicSettings

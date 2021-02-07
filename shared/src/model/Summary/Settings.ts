@@ -11,6 +11,7 @@ export interface BasicSettings {
   commonTasks: string[];
   dateFormat: string;
   decimalSeparator: string;
+  defaultBreakName: string;
   durationFormat: string;
   durationPrecision: number;
   durationRounding: RoundingType;
