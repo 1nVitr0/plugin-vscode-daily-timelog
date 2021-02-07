@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.6](https://github.com/1nVitr0/plugin-vscode-daily-timelog/compare/v0.0.5...v0.0.6) (2021-02-07)
+
+
+### Features
+
+* autocomplete !begin tag ([03a9908](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/03a990896ea73d366147f80e5c1f671956b1202f))
+
+
+### Bug Fixes
+
+* include newline as trigger character ([34cac76](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/34cac767925536a65680dd5bd2c61ec6d6401efc))
+
 ### [0.0.5](https://github.com/1nVitr0/plugin-vscode-daily-timelog/compare/v0.0.4...v0.0.5) (2021-02-07)
 
 
