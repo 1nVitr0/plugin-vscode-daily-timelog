@@ -340,7 +340,7 @@ export default class CompletionService extends TextDocumentService {
       .filter((time) => time.isValid());
   }
 
-  protected getTimelogBeginCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
+  protected getTimelogBeginCompletion(position: Position, quote?: Scalar.Type, preselect = false): CompletionItem[] {
     const message = this.currentConfiguration?.beginDayMessage || defaultBasicSettings.beginDayMessage;
     const label = `!begin ${message}`;
     const text = `!begin ${CompletionService.quote(message, quote)}`;
@@ -351,6 +351,7 @@ export default class CompletionService extends TextDocumentService {
         label,
         filterText: text,
         insertText: text,
+        preselect: preselect,
       },
     ];
   }
@@ -383,6 +384,7 @@ export default class CompletionService extends TextDocumentService {
   protected getTimelogTaskCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
     const kind = CompletionItemKind.Value;
     const planned = this.getPlannedTasksUntil(position);
+    const firstTask = this.getTimeLogUntil(position).length <= 1;
     const commonTasks = [...(this.currentConfiguration?.commonTasks || defaultBasicSettings.commonTasks)];
     const commonBreaks = [...(this.currentConfiguration?.commonBreaks || defaultBasicSettings.commonBreaks)];
     for (const task of commonTasks) if (planned.indexOf(task) < 0) planned.push(task);
@@ -390,6 +392,7 @@ export default class CompletionService extends TextDocumentService {
 
     let priority = 0;
     const items: CompletionItem[] = [];
+    if (firstTask) items.push(...this.getTimelogBeginCompletion(position, quote, true));
     for (const task of planned) {
       const text = CompletionService.quote(task, quote);
       items.push({
