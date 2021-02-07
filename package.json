@@ -1,7 +1,7 @@
 {
   "name": "daily-timelog",
   "displayName": "Daily Timelog",
-  "description": "Simple tool set for tracking and planning your daily tasks",
+  "description": "Simple tool set for tracking, logging and planning your daily tasks",
   "icon": "resources/icon.png",
   "author": "1nVitr0",
   "license": "MIT",
