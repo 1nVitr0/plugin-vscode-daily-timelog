@@ -11,8 +11,8 @@ export function parseDate(date: string, settings = defaultBasicSettings): Moment
   return moment(date, settings.dateFormat);
 }
 
-export function formatDate(date: Moment, settings = defaultBasicSettings): string {
-  return date.format(settings.dateFormat);
+export function formatDate(date: Moment, settings = defaultBasicSettings, summary = false): string {
+  return date.format(summary ? settings.summaryDateFormat : settings.dateFormat);
 }
 
 export function parseDuration(duration: string, settings = defaultBasicSettings): Duration {

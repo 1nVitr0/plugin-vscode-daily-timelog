@@ -9,6 +9,7 @@ export const defaultBasicSettings: BasicSettings = {
   workDayHours: 8,
   includeBreaksInTotal: false,
   dateFormat: 'YYYY-MM-DD',
+  summaryDateFormat: 'YYYY-MM-DD',
   timeFormat: 'HH:mm',
   durationFormat: '{{h}}h? {{m}}m?',
   decimalSeparator: '.',
@@ -29,12 +30,12 @@ export const defaultSettings: Settings = {
   autoGenerateOverview: true,
   taskListTitle: "Today's Tasks",
   taskListDurationFormat: '{{task.name}}: {{duration}}',
-  taskListStructure: ['*{{taskListTitle}} - {{date}}*\n\n', '{{estimatedDurations}}\n\n', '={{estimatedTotals}}'],
+  taskListStructure: ['*{{taskListTitle}} - {{date}}*', '', '{{estimatedDurations}}', '', '={{estimatedTotals}}'],
   summaryTitle: "Today's Summary",
   summaryDurationFormat: '{{task.name}}: {{duration}} ({{error}})',
-  summaryStructure: ['*{{summaryTitle}} - {{date}}*\n\n', '{{durations}}\n\n', '={{totals}}'],
+  summaryStructure: ['*{{summaryTitle}} - {{date}}*', '', '{{durations}}', '', '={{totals}}'],
   overviewTitle: '',
-  overviewStructure: ['{{overviewTitle}}\n\n?', '{{taskList}}', '{{summary}}'],
+  overviewStructure: ['{{overviewTitle}} -? {{ date }}', '', '{{taskList}}', '{{summary}}'],
 };
 
 export const yamlCustomTags: Options['customTags'] = [

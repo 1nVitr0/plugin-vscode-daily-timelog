@@ -70,7 +70,7 @@ export default class SummaryGenerator {
 
     return {
       ...this.settings,
-      date: formatDate(moment(this.dayLog.date), this.settings),
+      date: formatDate(moment(this.dayLog.date), this.settings, true),
       durations: this.formatDurationList(durations),
       estimatedDurations: this.formatDurationList(estimatedDurations),
       totals: formatDuration(totals),

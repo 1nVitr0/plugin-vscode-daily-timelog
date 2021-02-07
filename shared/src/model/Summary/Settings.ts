@@ -20,6 +20,7 @@ export interface BasicSettings {
   includeBreaks: ListTypeBoolean;
   includeBreaksInTotal: ListTypeBoolean;
   minimumDuration: number;
+  summaryDateFormat: string;
   timeFormat: string;
   workDayHours: 8;
   workHoursEnd: string;
