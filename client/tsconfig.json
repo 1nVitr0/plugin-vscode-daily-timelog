@@ -10,7 +10,8 @@
     "sourceMap": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "composite": true
+    "composite": true,
+    "tsBuildInfoFile": "out/.tsbuildinfo"
   },
   "exclude": ["node_modules", ".vscode-test", "../shared/src", "out"],
   "references": [{ "path": "../shared" }]
