@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.5](https://github.com/1nVitr0/plugin-vscode-daily-timelog/compare/v0.0.4...v0.0.5) (2021-02-07)
+
+
+### Features
+
+* set keywords + categories in manifest ([0605bb3](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/0605bb3c60732861f0964cee4dc1319d9561d1ec))
+
+
+### Bug Fixes
+
+* fix invalid date suggestion ([008ae1e](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/008ae1e5b3ddb45c10ddbbf45f0f72b085f93314))
+* increase icon resolution ([e493a71](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/e493a71b6052446e68926aa4c0a436ba8e602885))
+
 ### [0.0.4](https://github.com/1nVitr0/plugin-vscode-daily-timelog/compare/v0.0.3...v0.0.4) (2021-02-07)
 
 
