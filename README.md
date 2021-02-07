@@ -1,8 +1,8 @@
-# Daily Timelog 0.0.6 (Alpha)
+# Daily Timelog 0.0.7 (Alpha)
 
 Basic IntelliSense and tools for planning Tasks and keeping a daily time log.
 
-*This is a very eraly alpha version! Expect Bugs, inefficient Code and more goodies.*
+*This is a very early alpha version! Expect bugs, inefficient code and more goodies.*
 
 ## Usage
 
@@ -37,13 +37,13 @@ timeLog:
   - "17:00": Extra Task
 ```
 
-IntelliSense should offer you reasonably good predictions of durations, times and task names. It keeps ttrack of the task names used in the `plannedTasks` section as well as the tasks already listed in the `timeLog` section.
+IntelliSense should offer you reasonably good predictions of durations, times and task names. It keeps track of the task names used in the `plannedTasks` section as well as the tasks already listed in the `timeLog` section.
 
 ## Commands
 
 `Daily Timelog: Generate Task List` will generate a human-readable list of your planned Tasks for the active file. The result will be put into your clipboard - ready to paste. Customization is already half-implemented.
 
-`Daily Timelog: Generate Summary` will generate a list of your completed tasks inlcunding ones that weren't planned. Same deal as `Generate Task List`.
+`Daily Timelog: Generate Summary` will generate a list of your completed tasks including ones that weren't planned. Same deal as `Generate Task List`.
 
 ## Settings
 
@@ -52,8 +52,8 @@ Generally, the format for these settings is a string containing the standard dou
 
 ```
 Params like {{this}} or {{ this }} will be expanded
-{{ params }} followd by ?, will only be expanded when the param expand to something truthy
-They and all the text following the until '?' will be hidden if falsy
+{{ params }} followed by ?, will only be expanded when the param expand to something truthy
+They and all the text following them until '?' will be hidden if falsy
 sub-objects will also be expanded when using the dot-notation {{ param.deep.inner }}
 params that are not strings, numbers or boolean will be stringified using the object's toString() method
 ```
