@@ -53,7 +53,7 @@ export default class ValidationService extends TextDocumentService {
 
   private validateTaskList(): Diagnostic[] {
     const taskNodes = this.parser?.getNodeIn(['plannedTasks']) || [];
-    if (!('items' in taskNodes)) return [];
+    if (!taskNodes || !('items' in taskNodes)) return [];
 
     const diagnostics: Diagnostic[] = [];
     for (const node of taskNodes.items) {

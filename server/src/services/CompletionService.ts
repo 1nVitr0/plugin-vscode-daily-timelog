@@ -1,9 +1,24 @@
 import moment from 'moment';
-import { CompletionItem, CompletionItemKind, InsertReplaceEdit, Position, TextEdit } from 'vscode-languageserver';
+import {
+  CompletionItem,
+  CompletionItemKind,
+  CompletionItemTag,
+  InsertReplaceEdit,
+  Position,
+  TextEdit,
+} from 'vscode-languageserver';
 import { CST } from 'yaml';
 import { Pair, Scalar, YAMLMap } from 'yaml/types';
 import { Type } from 'yaml/util';
-import { formatDate, formatDuration, formatTime, Path, StructuredLog, defaultBasicSettings } from '../../../shared/out';
+import {
+  formatDate,
+  formatDuration,
+  formatTime,
+  Path,
+  StructuredLog,
+  defaultBasicSettings,
+  TaskTypeName,
+} from '../../../shared/out';
 import YamlParser from '../parse/YamlParser';
 import { YamlKeyDescriptor, YamlNodeDescriptor, YamlSingleDescriptor, YamlType, YamlValueDescriptor } from '../types';
 import TextDocumentService from './TextDocumentService';
@@ -213,25 +228,46 @@ export default class CompletionService extends TextDocumentService {
   protected getPlannedTaskCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
     const kind = CompletionItemKind.Value;
     const planned = this.getPlannedTasksUntil(position);
+    const commonTasks = [...(this.currentConfiguration?.commonTasks || defaultBasicSettings.commonTasks)];
+    const commonBreaks = [...(this.currentConfiguration?.commonBreaks || defaultBasicSettings.commonBreaks)];
 
     const items: CompletionItem[] = [];
-    for (const task of this.currentConfiguration?.commonTasks || defaultBasicSettings.commonTasks) {
+    for (const task of commonTasks) {
       const text = CompletionService.quote(task, quote);
       if (planned.indexOf(task) < 0) items.push({ kind, label: task, filterText: text, insertText: text });
     }
 
-    return items;
+    const breakItems: CompletionItem[] = [];
+    for (const task of commonBreaks) {
+      const text = CompletionService.quote(task, quote);
+      if (planned.indexOf(task) < 0)
+        breakItems.push({
+          kind,
+          label: task,
+          filterText: text,
+          insertText: text,
+          tags: [CompletionItemTag.Deprecated],
+        });
+    }
+
+    return [...items, ...this.postfixCompletions(breakItems, ': !break')];
   }
 
-  protected getPlannedTasksUntil(position: Position): string[] {
+  protected getPlannedTasksUntil(position: Position, type?: TaskTypeName): string[] {
     if (!this.parser) return [];
 
     const previousLogs = this.parser.getListNodesBefore(position, ['plannedTasks']);
     const tasks: (string | null)[] = previousLogs.map((log) => {
-      if (YamlParser.isScalar(log)) return log.toString();
-      else if (log.type == Pair.Type.PAIR || log.type == Pair.Type.MERGE_PAIR)
-        return log.key ? log.key.toString() : null;
-      else if (log.type == Type.MAP || log.type == Type.FLOW_MAP) return YamlParser.getFirstKey(log as YAMLMap);
+      const isBreak = YamlParser.containsNodeWithTag(log, '!break');
+      if ((type == 'task' && isBreak) || (type == 'task' && !isBreak)) return null;
+      const prefix = isBreak ? '!break ' : '';
+
+      if (YamlParser.isScalar(log)) return `${prefix}${log.toString()}`;
+      else if ((log.type == Pair.Type.PAIR || log.type == Pair.Type.MERGE_PAIR) && log.key)
+        return `${prefix}${log.key.toString()}`;
+      else if (log.type == Type.MAP || log.type == Type.FLOW_MAP)
+        return `${prefix}${YamlParser.getFirstKey(log as YAMLMap)}`;
+      else return null;
     });
 
     return tasks.filter((task) => !!task) as string[];
@@ -319,7 +355,7 @@ export default class CompletionService extends TextDocumentService {
 
   protected getTimelogBreakCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
     const kind = CompletionItemKind.Value;
-    const planned = []; // TODO: this.getPlannedTasksUntil(position);
+    const planned = this.getPlannedTasksUntil(position, 'break');
     for (const task of this.currentConfiguration?.commonBreaks || defaultBasicSettings.commonBreaks) {
       if (planned.indexOf(task) < 0) planned.push(task);
     }
@@ -334,6 +370,7 @@ export default class CompletionService extends TextDocumentService {
         label,
         filterText: text,
         insertText: text,
+        tags: [CompletionItemTag.Deprecated],
         sortText: (priority++).toString().padStart(9),
       });
     }
@@ -344,9 +381,10 @@ export default class CompletionService extends TextDocumentService {
   protected getTimelogTaskCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
     const kind = CompletionItemKind.Value;
     const planned = this.getPlannedTasksUntil(position);
-    for (const task of this.currentConfiguration?.commonTasks || defaultBasicSettings.commonTasks) {
-      if (planned.indexOf(task) < 0) planned.push(task);
-    }
+    const commonTasks = [...(this.currentConfiguration?.commonTasks || defaultBasicSettings.commonTasks)];
+    const commonBreaks = [...(this.currentConfiguration?.commonBreaks || defaultBasicSettings.commonBreaks)];
+    for (const task of commonTasks) if (planned.indexOf(task) < 0) planned.push(task);
+    for (const task of commonBreaks) if (planned.indexOf(task) < 0) planned.push(`!break ${task}`);
 
     let priority = 0;
     const items: CompletionItem[] = [];
@@ -357,6 +395,7 @@ export default class CompletionService extends TextDocumentService {
         label: task,
         filterText: text,
         insertText: text,
+        tags: /^\!break /.test(task) ? [CompletionItemTag.Deprecated] : [],
         sortText: (priority++).toString().padStart(9),
       });
     }
@@ -384,6 +423,7 @@ export default class CompletionService extends TextDocumentService {
       const altered = { ...completion };
       altered.label = changeLabels ? `${prefix}${completion.label}` : completion.label;
       altered.insertText = completion.insertText ? `${prefix}${completion.insertText}` : `${prefix}${completion.label}`;
+      altered.filterText = completion.filterText ? `${prefix}${completion.filterText}` : undefined;
       altered.textEdit = altered.textEdit
         ? this.alterInsertReplaceEdit(altered.textEdit, `${prefix}${altered.textEdit}`)
         : altered.textEdit;
