@@ -92,6 +92,18 @@
           ],
           "description": "List of common break types"
         },
+        "daily-timelog.beginDayMessage": {
+          "scope": "resource",
+          "type": "string",
+          "default": "Let's start!",
+          "description": "Name of first entry in timeLog (mnot included in summary)"
+        },
+        "daily-timelog.defaultBreakName": {
+          "scope": "resource",
+          "type": "string",
+          "default": "Breaks",
+          "description": "Default name for breaks, used when combining breaks"
+        },
         "daily-timelog.workDayHours": {
           "scope": "resources",
           "type": "number",
@@ -119,7 +131,7 @@
         "daily-timelog.durationFormat": {
           "scope": "resources",
           "type": "string",
-          "default": "{{h}}h ?{{m}}m?",
+          "default": "{{h}}h? {{m}}m?",
           "description": "duration format - params are enclosed in {{}}, when followed by '?', the param and all the text following it until the next param will be hidden if param resolves to a falsy value. Possible values are H: total hours (float), M: total minutes, h: floored hours, m: remaining minutes"
         },
         "daily-timelog.decimalSeparator": {
@@ -171,7 +183,7 @@
           "scope": "resources",
           "type": "boolean",
           "default": true,
-          "description": "enable approximationm of totals"
+          "description": "enable approximation of totals"
         },
         "daily-timelog.includeTotals": {
           "scope": "resources",
@@ -179,15 +191,21 @@
           "default": true,
           "description": "include totals"
         },
-        "daily-timelog.overviewFileFormat": {
+        "daily-timelog.workHoursStart": {
           "scope": "resources",
           "type": "string",
-          "enum": [
-            "txt",
-            "json"
-          ],
-          "default": "txt",
-          "description": "unused"
+          "format": "HH:mm",
+          "pattern": "((0\\d)|(1[0-2])|(2[0-3])):([0-5]\\d)",
+          "default": "08:00",
+          "description": "usual start of work day"
+        },
+        "daily-timelog.workHoursEnd": {
+          "scope": "resources",
+          "type": "string",
+          "format": "HH:mm",
+          "pattern": "((0\\d)|(1[0-2])|(2[0-3])):([0-5]\\d)",
+          "default": "17:00",
+          "description": "usual end of work day"
         },
         "daily-timelog.autoGenerateOverview": {
           "scope": "resources",
