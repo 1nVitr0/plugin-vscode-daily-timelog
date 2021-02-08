@@ -15,6 +15,10 @@ export function formatDate(date: Moment, settings = defaultBasicSettings, summar
   return date.format(summary ? settings.summaryDateFormat : settings.dateFormat);
 }
 
+export function formatList(format: string, list: string[]): string {
+  return list.map((value, index) => formatString(format, { value, index, nextIndex: index + 1 })).join('\n');
+}
+
 export function parseDuration(duration: string, settings = defaultBasicSettings): Duration {
   const params = parseString(duration, settings.durationFormat);
   let minutes = 0;
