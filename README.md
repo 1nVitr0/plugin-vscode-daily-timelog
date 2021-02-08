@@ -1,4 +1,4 @@
-# Daily Timelog 0.0.7 (Alpha)
+# Daily Timelog 0.0.8 (Alpha)
 
 Basic IntelliSense and tools for planning Tasks and keeping a daily time log.
 
@@ -56,6 +56,13 @@ Params like {{this}} or {{ this }} will be expanded
 They and all the text following them until '?' will be hidden if falsy
 sub-objects will also be expanded when using the dot-notation {{ param.deep.inner }}
 params that are not strings, numbers or boolean will be stringified using the object's toString() method
+In list renderings the parameters {{index}} and {{nextIndex}} are available as well
 ```
 
 Available params will be supplied in the setting's documentation.
+
+## Custom Params
+
+Custom Params can be included in the extension's settings. Two examples (goals and achievements) are already included.
+They will be suggested in the timelog files and can be included in the generated task list / summaries.
+They will be formatted using the template set in the configuration and can simply be included by using {{<param-name>}} in another template.
