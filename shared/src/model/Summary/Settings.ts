@@ -1,4 +1,5 @@
 import { RoundingType } from '../RoundingScheme/RoundingScheme';
+import { CustomParams } from './Params';
 
 export type ListTypeBoolean = 'taskList' | 'summary' | boolean;
 export type ExportFileFormat = 'txt' | 'json' | 'csv' | 'clipboard';
@@ -9,6 +10,7 @@ export interface BasicSettings {
   combineBreaks: ListTypeBoolean;
   commonBreaks: string[];
   commonTasks: string[];
+  customParams: CustomParams[];
   dateFormat: string;
   decimalSeparator: string;
   defaultBreakName: string;

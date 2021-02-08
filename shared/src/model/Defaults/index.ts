@@ -1,9 +1,14 @@
 import { CST, Document, Options } from 'yaml';
 import { isBreak } from '../../tools/string';
+import { ParamType } from '../Summary/Params';
 import Settings, { BasicSettings } from '../Summary/Settings';
 export const defaultBasicSettings: BasicSettings = {
   commonTasks: ['Organisation', 'Daily', 'Meeting', 'Refactoring', 'Code Review', 'Checking Mails'],
   commonBreaks: ['Lunch', 'Breakfast', 'Coffee', 'Personal'],
+  customParams: [
+    { name: 'goals', type: ParamType.Array, template: '{{index}} {{value}}' },
+    { name: 'achievements', type: ParamType.Array, template: '{{index}} {{value}}' },
+  ],
   beginDayMessage: "Let's start!",
   defaultBreakName: 'Breaks',
   workDayHours: 8,
