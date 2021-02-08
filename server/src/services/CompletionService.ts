@@ -18,6 +18,7 @@ import {
   StructuredLog,
   defaultBasicSettings,
   TaskTypeName,
+  ParamType,
 } from '../../../shared/out';
 import YamlParser from '../parse/YamlParser';
 import { YamlKeyDescriptor, YamlNodeDescriptor, YamlSingleDescriptor, YamlType, YamlValueDescriptor } from '../types';
@@ -132,9 +133,14 @@ export default class CompletionService extends TextDocumentService {
 
   protected completeEmpty(_node: YamlNodeDescriptor, position: Position): CompletionItem[] {
     const { context } = _node;
-    const defaultPairKeys: (keyof StructuredLog)[] = ['date'];
-    const defaultKeys: (keyof StructuredLog)[] = ['plannedTasks', 'timeLog'];
+    const defaultPairKeys: string[] = ['date'];
+    const defaultKeys: string[] = ['plannedTasks', 'timeLog'];
     const kind = CompletionItemKind.Property;
+
+    for (const param of this.currentConfiguration?.customParams || []) {
+      if (param.type == ParamType.Array) defaultKeys.push(param.name);
+      else defaultPairKeys.push(param.name);
+    }
 
     if (
       CompletionService.matchContext(['timeLog'], context) ||
