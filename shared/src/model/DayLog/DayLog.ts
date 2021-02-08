@@ -11,6 +11,7 @@ type TaskName = Task['name'];
 type RoundingSchemeConstructor = ConstructorType<typeof RoundingScheme>;
 
 export default interface DayLog<T extends TaskName = TaskName> {
+  readonly customParams: { [key: string]: string | string[] };
   readonly date: Date;
 
   addBreak(_break: Break): void;

@@ -9,8 +9,11 @@ import {
   formatDuration,
   OverviewParams,
   TaskTypeName,
+  ParamType,
+  formatList,
 } from '../../../shared/out';
 import moment from 'moment';
+import { getConfiguration, getCustomParam } from './tools/configuration';
 
 export default class SummaryGenerator {
   private dayLog: BasicDayLog;
@@ -34,14 +37,18 @@ export default class SummaryGenerator {
 
   public generateSummary(): string {
     const formatParams = this.getFormatParams();
-    const lines = this.settings.summaryStructure.map((line) => formatString(line, formatParams));
+    const lines = this.settings.summaryStructure.map((line, index) =>
+      formatString(line, { ...formatParams, index, nextIndex: index + 1 })
+    );
 
     return lines.join('\n');
   }
 
   public generateTaskList(): string {
     const formatParams = this.getFormatParams();
-    const lines = this.settings.taskListStructure.map((line) => formatString(line, formatParams));
+    const lines = this.settings.taskListStructure.map((line, index) =>
+      formatString(line, { ...formatParams, index, nextIndex: index + 1 })
+    );
 
     return lines.join('\n');
   }
@@ -49,8 +56,10 @@ export default class SummaryGenerator {
   private formatDurationList(durations: DurationApproximation<TaskTypeName>[], separator = '\n'): string {
     const { taskListDurationFormat } = this.settings;
     return durations
-      .map((durationInfo) => {
+      .map((durationInfo, index) => {
         const duration = {
+          index,
+          nextIndex: index + 1,
           duration: formatDuration(durationInfo.duration, this.settings),
           error: (durationInfo.error > 0 ? '+' : '') + formatDuration(durationInfo.error, this.settings),
           task: durationInfo.task,
@@ -67,9 +76,16 @@ export default class SummaryGenerator {
     const estimatedDurations = this.dayLog.getApproximateEstimatedTaskDurations(BasicRoundingScheme, this.settings);
     const totals = this.dayLog.getApproximateTotals(BasicRoundingScheme, this.settings);
     const estimatedTotals = this.dayLog.getApproximateEstimatedTotals(BasicRoundingScheme, this.settings);
+    const customParams = Object.keys(this.dayLog.customParams).map((param) => {
+      const paramDescriptor = getCustomParam(param);
+      if (paramDescriptor.type == ParamType.Array)
+        return formatList(paramDescriptor.template || '{{value}}', this.dayLog.customParams[param] as string[]);
+      else return formatString(paramDescriptor.template || '{{value}}', this.dayLog.customParams[param]);
+    });
 
     return {
       ...this.settings,
+      ...customParams,
       date: formatDate(moment(this.dayLog.date), this.settings, true),
       durations: this.formatDurationList(durations),
       estimatedDurations: this.formatDurationList(estimatedDurations),

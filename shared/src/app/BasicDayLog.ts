@@ -27,20 +27,31 @@ import BasicRoundingScheme from './BasicRoundingScheme';
 type TaskName = Task['name'];
 
 export default class BasicDayLog implements DayLog {
+  public readonly customParams: { [key: string]: string | string[] };
   public readonly date: Date;
 
   private tasks: Record<string, BasicTask<TaskTypeName>> = {};
 
-  public constructor(date: Date = new Date(), tasks: BasicTask<TaskTypeName>[] = []) {
+  public constructor(
+    date: Date = new Date(),
+    tasks: BasicTask<TaskTypeName>[] = [],
+    customParams: { [key: string]: string | string[] } = {}
+  ) {
     this.date = date;
+    this.customParams = customParams;
     for (const task of tasks) this.addTask(task);
   }
 
   public static fromStructuredLog(log: StructuredLog, includeUnplanned = false): BasicDayLog {
     const factory = new TaskFactory();
     const tasks = log.plannedTasks?.map((task) => factory.fromData(task));
+    const customParams: { [key: string]: string | string[] } = {};
 
-    const result = new BasicDayLog(new Date(), tasks);
+    for (const param of Object.keys(log)) {
+      if (!['timeLog', 'date', 'plannedTasks'].includes(param)) customParams[param] = log[param];
+    }
+
+    const result = new BasicDayLog(new Date(), tasks, customParams);
     if (log.timeLog) result.applyLog(log.timeLog, includeUnplanned);
 
     return result;

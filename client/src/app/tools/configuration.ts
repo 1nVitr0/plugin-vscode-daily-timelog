@@ -1,6 +1,6 @@
 import { defaultsDeep } from 'lodash';
 import { workspace } from 'vscode';
-import { defaultSettings, Settings } from '../../../../shared/out';
+import { CustomParams, defaultSettings, Settings } from '../../../../shared/out';
 
 let configuration: Settings = defaultSettings;
 
@@ -12,4 +12,12 @@ workspace.onDidChangeConfiguration((e) => {
 
 export function getConfiguration(): Settings {
   return configuration;
+}
+
+export function getCustomParam(name): CustomParams | null {
+  for (const param of configuration.customParams) {
+    if (param.name == name) return param;
+  }
+
+  return null;
 }

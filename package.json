@@ -307,7 +307,7 @@
         "daily-timelog.taskListDurationFormat": {
           "scope": "resources",
           "type": "string",
-          "default": "{{task.name}}: {{duration}}",
+          "default": "{{nextIndex}}. {{task.name}} - {{duration}}",
           "description": "duration format - params are enclosed in {{}}, when followed by '?', the param and all the text following it until the next param will be hidden if param resolves to a falsy value. Possible values are task.name: task name, duration: duration, error: rounding error"
         },
         "daily-timelog.taskListStructure": {
@@ -334,7 +334,7 @@
         "daily-timelog.summaryDurationFormat": {
           "scope": "resources",
           "type": "string",
-          "default": "{{task.name}}: {{duration}} ({{error}})",
+          "default": "{{nextIndex}}. {{task.name}} - {{duration}} ({{error}})",
           "description": "duration format - params are enclosed in {{}}, when followed by '?', the param and all the text following it until the next param will be hidden if param resolves to a falsy value. Possible values are {{ task.name }}: task name, {{ task.type }}: task type, {{ duration }}: duration, {{ error }}: rounding error"
         },
         "daily-timelog.summaryStructure": {
