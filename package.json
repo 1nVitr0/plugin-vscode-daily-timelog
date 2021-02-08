@@ -100,6 +100,65 @@
           ],
           "description": "List of common break types"
         },
+        "daily-timelog.customParams": {
+          "scope": "resources",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "description": "the declaration of a custom prop",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "name (or key) of the task"
+              },
+              "required": {
+                "type": "boolean",
+                "description": "wether the prop is required"
+              },
+              "suggestions": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "list of suggestions displayed for values inside the param"
+              },
+              "template": {
+                "type": "string",
+                "description": "rendering template used when generating"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "array",
+                  "string",
+                  "date",
+                  "time",
+                  "duration",
+                  "task"
+                ],
+                "description": "the type of the custom prop"
+              }
+            },
+            "required": [
+              "name",
+              "type"
+            ],
+            "additionalProperties": false
+          },
+          "description": "list of custom properties that can be included in the timelog",
+          "default": [
+            {
+              "name": "goals",
+              "type": "array",
+              "template": "{{index}} {{value}}"
+            },
+            {
+              "name": "achievements",
+              "type": "ParamType.Array",
+              "template": "{{index}} {{value}}"
+            }
+          ]
+        },
         "daily-timelog.beginDayMessage": {
           "scope": "resource",
           "type": "string",
