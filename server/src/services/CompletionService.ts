@@ -19,6 +19,7 @@ import {
   defaultBasicSettings,
   TaskTypeName,
   ParamType,
+  parseDuration,
 } from '../../../shared/out';
 import YamlParser from '../parse/YamlParser';
 import { YamlKeyDescriptor, YamlNodeDescriptor, YamlSingleDescriptor, YamlType, YamlValueDescriptor } from '../types';
@@ -215,14 +216,20 @@ export default class CompletionService extends TextDocumentService {
   protected getDurationCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
     const precision = this.currentConfiguration?.durationPrecision || defaultBasicSettings.durationPrecision;
     const end = (this.currentConfiguration?.workDayHours || defaultBasicSettings.workDayHours) * 60;
+    const currentTotal = this.getDurationsExcept(
+      position,
+      this.currentConfiguration?.includeBreaksInTotal ? undefined : 'task'
+    ).reduce((sum, dur) => sum.add(dur), moment.duration(0));
 
     const items: CompletionItem[] = [];
     for (let duration = precision; duration < end; duration += precision) {
-      const label = formatDuration(duration, this.currentConfiguration);
+      const label = `Total: ${formatDuration(duration, this.currentConfiguration)}`;
+      const detail = formatDuration(currentTotal.clone().add(duration, 'm'), this.currentConfiguration);
       const text = CompletionService.quote(label, quote);
       items.push({
         kind: CompletionItemKind.Unit,
         label,
+        detail,
         filterText: text,
         insertText: text,
       });
@@ -277,6 +284,26 @@ export default class CompletionService extends TextDocumentService {
     });
 
     return tasks.filter((task) => !!task) as string[];
+  }
+
+  protected getDurationsExcept(position: Position, type?: TaskTypeName): moment.Duration[] {
+    if (!this.parser) return [];
+
+    const otherDurations = this.parser.getListNodesExcept(position, ['plannedTasks']);
+    const durations: (moment.Duration | null)[] = otherDurations.map((log) => {
+      const isBreak = YamlParser.containsNodeWithTag(log, '!break');
+      if ((type == 'task' && isBreak) || (type == 'break' && !isBreak)) return null;
+
+      if (YamlParser.isScalar(log)) return parseDuration(log.toString(), this.currentConfiguration);
+      else if ((log.type == Pair.Type.PAIR || log.type == Pair.Type.MERGE_PAIR) && log.value)
+        return parseDuration(log.value.toString(), this.currentConfiguration);
+      else if (log.type == Type.MAP || log.type == Type.FLOW_MAP) {
+        const value = YamlParser.getFirstValue(log as YAMLMap);
+        return value ? parseDuration(value, this.currentConfiguration) : null;
+      } else return null;
+    });
+
+    return durations.filter((duration) => duration && duration.isValid()) as moment.Duration[];
   }
 
   protected getQuoteOffset(type?: Scalar.Type): number {
