@@ -150,12 +150,12 @@
             {
               "name": "goals",
               "type": "array",
-              "template": "{{index}} {{value}}"
+              "template": "{{nextIndex}}. {{value}}"
             },
             {
               "name": "achievements",
               "type": "ParamType.Array",
-              "template": "{{index}} {{value}}"
+              "template": "{{nextIndex}}. {{value}}"
             }
           ]
         },

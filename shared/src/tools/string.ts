@@ -1,8 +1,30 @@
+import { CustomParams, ParamType } from '../model/Summary/Params';
+
 export type StructuredParams<T> = { [P in keyof T]: string | number | boolean | StructuredParams<T[P]> };
 
 export function isStructuredParams(params: any): params is StructuredParams<any> {
   return typeof params === 'object';
 }
+
+export function formatList(format: string, list: string[]): string {
+  return list.map((value, index) => formatString(format, { value, index, nextIndex: index + 1 })).join('\n');
+}
+
+export function formatCustomParams(paramValues: { [P: string]: string |  string[] }, paramSettings: CustomParams[]): { [P: string]: string } {
+  const result:{ [P: string]: string } = {};
+
+  for (const {name, template, type} of paramSettings) {
+    switch (type) {
+      case ParamType.Array:
+        result[name] = formatList(template || '{{value}}', (paramValues[name] || []) as string[]);
+        break;
+      default:
+        result[name] = formatString(template || '{{value}}', paramValues[name]);
+    }
+  }
+
+  return result;
+} 
 
 function traverseParamTree<T>(paramTree: (keyof T)[], params: StructuredParams<T>): string | number | boolean | null {
   const node = [...paramTree].shift();
