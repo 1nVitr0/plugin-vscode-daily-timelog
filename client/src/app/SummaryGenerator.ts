@@ -11,6 +11,7 @@ import {
   TaskTypeName,
   ParamType,
   formatList,
+  formatCustomParams,
 } from '../../../shared/out';
 import moment from 'moment';
 import { getConfiguration, getCustomParam } from './tools/configuration';
@@ -70,22 +71,16 @@ export default class SummaryGenerator {
   }
 
   private getFormatParams(): DurationListParams {
-    const { timeFormat, durationFormat } = this.settings;
+    const { customParams } = this.settings;
 
     const durations = this.dayLog.getApproximateTaskDurations(BasicRoundingScheme, this.settings);
     const estimatedDurations = this.dayLog.getApproximateEstimatedTaskDurations(BasicRoundingScheme, this.settings);
     const totals = this.dayLog.getApproximateTotals(BasicRoundingScheme, this.settings);
     const estimatedTotals = this.dayLog.getApproximateEstimatedTotals(BasicRoundingScheme, this.settings);
-    const customParams = Object.keys(this.dayLog.customParams).map((param) => {
-      const paramDescriptor = getCustomParam(param);
-      if (paramDescriptor.type == ParamType.Array)
-        return formatList(paramDescriptor.template || '{{value}}', this.dayLog.customParams[param] as string[]);
-      else return formatString(paramDescriptor.template || '{{value}}', this.dayLog.customParams[param]);
-    });
 
     return {
       ...this.settings,
-      ...customParams,
+      ...formatCustomParams(this.dayLog.customParams, customParams),
       date: formatDate(moment(this.dayLog.date), this.settings, true),
       durations: this.formatDurationList(durations),
       estimatedDurations: this.formatDurationList(estimatedDurations),
