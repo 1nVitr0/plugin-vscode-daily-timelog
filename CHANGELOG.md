@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.9](https://github.com/1nVitr0/plugin-vscode-daily-timelog/compare/v0.0.8...v0.0.9) (2021-02-09)
+
+
+### Features
+
+* add total time in suggestion ([ea7fbe8](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/ea7fbe860124b3b3c9f713c0ae66370827633f43))
+
+
+### Bug Fixes
+
+* fix custom params in generation ([b844def](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/b844defcc4b4ad45fd1ccf2d1c0f26193fdb3ca8))
+
 ### [0.0.8](https://github.com/1nVitr0/plugin-vscode-daily-timelog/compare/v0.0.7...v0.0.8) (2021-02-08)
 
 
