@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.11](https://github.com/1nVitr0/plugin-vscode-daily-timelog/compare/v0.0.10...v0.0.11) (2021-02-09)
+
+
+### Bug Fixes
+
+* fix error on generating without all custom params ([3e9908e](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/3e9908e065fe726325c1f03b90a8833243ea37f3))
+
 ### [0.0.10](https://github.com/1nVitr0/plugin-vscode-daily-timelog/compare/v0.0.9...v0.0.10) (2021-02-09)
 
 
