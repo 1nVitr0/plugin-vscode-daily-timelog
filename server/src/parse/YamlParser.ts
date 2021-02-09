@@ -50,7 +50,12 @@ export default class YamlParser {
 
   public static getFirstKey(map: YAMLMap): string | null {
     if (!map.items.length) return null;
-    return map.items[0].key.toString();
+    return map.items[0].key?.toString() || null;
+  }
+
+  public static getFirstValue(map: YAMLMap): string | null {
+    if (!map.items.length) return null;
+    return map.items[0].value?.toString() || null;
   }
 
   public static isScalar(node: YamlNode | null): node is Scalar {
@@ -85,6 +90,19 @@ export default class YamlParser {
     }
 
     return before;
+  }
+
+  public getListNodesExcept(position: Position, targetContext: string[]): YamlNode[] {
+    const list: YamlNode = this.parsed.getIn(targetContext);
+    const others: YamlNode[] = [];
+
+    if (list.type == Type.SEQ && list.items[0]) {
+      for (const item of list.items) {
+        if (item && !this.isInLine(position, item)) others.push(item);
+      }
+    }
+
+    return others;
   }
 
   public getNodeAt(offset: number, node?: YamlNode | null, context?: (Scalar | null)[]): YamlNodeDescriptor;
@@ -201,6 +219,17 @@ export default class YamlParser {
 
     const { start, origStart } = cstNode.range;
     return offset > (origStart || start);
+  }
+
+  private isInLine(offset: number, node: Node | CST.Node): boolean;
+  private isInLine(position: Position, node: Node | CST.Node): boolean;
+  private isInLine(_position: number | Position, node: Node | CST.Node): boolean {
+    const position = typeof _position == 'number' ? this.document.positionAt(_position) : _position;
+    const cstNode = 'cstNode' in node ? node.cstNode : node;
+    if (!cstNode || !cstNode.range || !('start' in cstNode.range)) return false;
+
+    const { start, origStart } = cstNode.range;
+    return this.document.positionAt(origStart || start).line == position.line;
   }
 
   private isInRange(node: Node | CST.Node, offset: number, ignoreRange?: boolean): boolean;
