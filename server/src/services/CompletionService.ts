@@ -223,8 +223,8 @@ export default class CompletionService extends TextDocumentService {
 
     const items: CompletionItem[] = [];
     for (let duration = precision; duration < end; duration += precision) {
-      const label = `Total: ${formatDuration(duration, this.currentConfiguration)}`;
-      const detail = formatDuration(currentTotal.clone().add(duration, 'm'), this.currentConfiguration);
+      const label = formatDuration(duration, this.currentConfiguration);
+      const detail = `Total: ${formatDuration(currentTotal.clone().add(duration, 'm'), this.currentConfiguration)}`;
       const text = CompletionService.quote(label, quote);
       items.push({
         kind: CompletionItemKind.Unit,
