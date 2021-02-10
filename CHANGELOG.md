@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.12](https://github.com/1nVitr0/plugin-vscode-daily-timelog/compare/v0.0.11...v0.0.12) (2021-02-10)
+
+
+### Bug Fixes
+
+* fix error message due to !begin tag ([69366b3](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/69366b36b7c528b2d22e69fc9e8f727e3a0aa634))
+* fix rime and duration sorting and calculation ([531a38e](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/531a38efc9e8db6982896bd3f5afe4e6ee87d1ae))
+* fix textEdit for replace when quoted ([762593d](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/762593d9db7f2b104c8d55d9608e95d98e65557d))
+
 ### [0.0.11](https://github.com/1nVitr0/plugin-vscode-daily-timelog/compare/v0.0.10...v0.0.11) (2021-02-09)
 
 
