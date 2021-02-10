@@ -408,6 +408,6 @@
     "lodash": "^4.17.19",
     "moment": "^2.29.1",
     "typescript-json-schema": "^0.48.0",
-    "yaml": "^1.10.0"
+    "yaml": "https://github.com/1nVitr0/yaml/releases/download/v2.0.0-4/yaml.tar.gz"
   }
 }
