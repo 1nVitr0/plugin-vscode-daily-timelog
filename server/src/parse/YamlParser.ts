@@ -58,6 +58,10 @@ export default class YamlParser {
     return map.items[0].value?.toString() || null;
   }
 
+  public static isQuoted(node?: YamlNode | null): boolean {
+    return !!node && (node.type == Type.QUOTE_DOUBLE || node.type == Type.QUOTE_SINGLE);
+  }
+
   public static isScalar(node: YamlNode | null): node is Scalar {
     if (!node) return false;
     const { type } = node;
