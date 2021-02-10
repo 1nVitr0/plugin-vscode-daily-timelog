@@ -1,4 +1,4 @@
-# Daily Timelog 0.0.11 (Alpha)
+# Daily Timelog 0.0.12 (Alpha)
 
 Basic IntelliSense and tools for planning Tasks and keeping a daily time log.
 
