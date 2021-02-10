@@ -49,6 +49,17 @@ export const yamlCustomTags: Options['customTags'] = [
     identify(node) {
       return typeof node == 'string' && isBreak(node);
     },
+    // @ts-ignore weird types in patched yaml version
+    resolve(doc: Document, cstNode: CST.Scalar) {
+      return `[${cstNode.strValue}]`;
+    },
+  },
+  {
+    tag: '!begin',
+    identify(node) {
+      return typeof node == 'string' && isBreak(node);
+    },
+    // @ts-ignore weird types in patched yaml version
     resolve(doc: Document, cstNode: CST.Scalar) {
       return `[${cstNode.strValue}]`;
     },
