@@ -82,13 +82,19 @@ export default class CompletionService extends TextDocumentService {
     return completion;
   }
 
-  protected addTextEdit(completions: CompletionItem[], position: Position, range?: CST.Range | null): CompletionItem[] {
+  protected addTextEdit(
+    completions: CompletionItem[],
+    position: Position,
+    range?: CST.Range | null,
+    hasQuote = false
+  ): CompletionItem[] {
     const offset = this.offsetAt(position);
+    const quoteOffset = hasQuote ? 1 : 0;
 
     const [startOffset, endOffset] = [range?.origStart || range?.start, range?.origEnd || range?.end];
 
     if (startOffset !== undefined && endOffset !== undefined) {
-      const [start, end] = [this.positionAt(startOffset), this.positionAt(endOffset)];
+      const [start, end] = [this.positionAt(startOffset - quoteOffset), this.positionAt(endOffset + quoteOffset)];
       const offsetPosition = this.positionAt(offset);
 
       const insertRange = { start, end: offsetPosition };
@@ -169,7 +175,7 @@ export default class CompletionService extends TextDocumentService {
     if (CompletionService.matchContext(['plannedTasks'], context))
       completions = this.getPlannedTaskCompletion(position);
 
-    return this.addTextEdit(completions, position, node?.cstNode?.range);
+    return this.addTextEdit(completions, position, node?.cstNode?.range, YamlParser.isQuoted(node));
   }
 
   protected completeSingle(node: YamlSingleDescriptor, position: Position): CompletionItem[] {
@@ -195,7 +201,7 @@ export default class CompletionService extends TextDocumentService {
       else completions = this.getDurationCompletion(position);
     }
 
-    return this.addTextEdit(completions, position, node?.cstNode?.range);
+    return this.addTextEdit(completions, position, node?.cstNode?.range, YamlParser.isQuoted(node));
   }
 
   protected getBreakDurationCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
@@ -230,12 +236,33 @@ export default class CompletionService extends TextDocumentService {
         kind: CompletionItemKind.Unit,
         label,
         detail,
+        sortText: duration.toString().padStart(9, '0'),
         filterText: text,
         insertText: text,
       });
     }
 
     return items;
+  }
+
+  protected getDurationsExcept(position: Position, type?: TaskTypeName): moment.Duration[] {
+    if (!this.parser) return [];
+
+    const otherDurations = this.parser.getListNodesExcept(position, ['plannedTasks']);
+    const durations: (moment.Duration | null)[] = otherDurations.map((log) => {
+      const isBreak = YamlParser.containsNodeWithTag(log, '!break');
+      if ((type == 'task' && isBreak) || (type == 'break' && !isBreak)) return null;
+
+      if (YamlParser.isScalar(log)) return parseDuration(log.toString(), this.currentConfiguration);
+      else if ((log.type == Pair.Type.PAIR || log.type == Pair.Type.MERGE_PAIR) && log.value)
+        return parseDuration(log.value.toString(), this.currentConfiguration);
+      else if (log.type == Type.MAP || log.type == Type.FLOW_MAP) {
+        const value = YamlParser.getFirstValue(log as YAMLMap);
+        return value ? parseDuration(value, this.currentConfiguration) : null;
+      } else return null;
+    });
+
+    return durations.filter((duration) => duration && duration.isValid()) as moment.Duration[];
   }
 
   protected getPlannedTaskCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
@@ -286,26 +313,6 @@ export default class CompletionService extends TextDocumentService {
     return tasks.filter((task) => !!task) as string[];
   }
 
-  protected getDurationsExcept(position: Position, type?: TaskTypeName): moment.Duration[] {
-    if (!this.parser) return [];
-
-    const otherDurations = this.parser.getListNodesExcept(position, ['plannedTasks']);
-    const durations: (moment.Duration | null)[] = otherDurations.map((log) => {
-      const isBreak = YamlParser.containsNodeWithTag(log, '!break');
-      if ((type == 'task' && isBreak) || (type == 'break' && !isBreak)) return null;
-
-      if (YamlParser.isScalar(log)) return parseDuration(log.toString(), this.currentConfiguration);
-      else if ((log.type == Pair.Type.PAIR || log.type == Pair.Type.MERGE_PAIR) && log.value)
-        return parseDuration(log.value.toString(), this.currentConfiguration);
-      else if (log.type == Type.MAP || log.type == Type.FLOW_MAP) {
-        const value = YamlParser.getFirstValue(log as YAMLMap);
-        return value ? parseDuration(value, this.currentConfiguration) : null;
-      } else return null;
-    });
-
-    return durations.filter((duration) => duration && duration.isValid()) as moment.Duration[];
-  }
-
   protected getQuoteOffset(type?: Scalar.Type): number {
     switch (type) {
       case Type.QUOTE_DOUBLE:
@@ -328,7 +335,7 @@ export default class CompletionService extends TextDocumentService {
 
     const items: CompletionItem[] = [];
     for (let i = 0; i < (24 * 60) / durationPrecision; i++) {
-      items.push(this.getTimeCompletionItem(lastTime, i * durationPrecision, quote));
+      items.push(this.getTimeCompletionItem(lastTime, (i + 1) * durationPrecision, quote));
       lastTime.add(durationPrecision, 'm');
     }
 
@@ -345,13 +352,14 @@ export default class CompletionService extends TextDocumentService {
   ): CompletionItem {
     const label = formatTime(time, this.currentConfiguration);
     const text = CompletionService.quote(label, quote);
+    const sortIndex = Math.floor(24 * 60 + diffMinutes);
     return {
       kind: CompletionItemKind.Unit,
       label,
       data: diffMinutes,
       filterText: text,
       detail: formatDuration(diffMinutes, this.currentConfiguration),
-      sortText: diffMinutes.toFixed(0).padStart(9),
+      sortText: sortIndex.toString().padStart(9, '0'),
       insertText: text,
       preselect,
     };
@@ -407,7 +415,7 @@ export default class CompletionService extends TextDocumentService {
         filterText: text,
         insertText: text,
         tags: [CompletionItemTag.Deprecated],
-        sortText: (priority++).toString().padStart(9),
+        sortText: (priority++).toString().padStart(9, '0'),
       });
     }
 
@@ -434,7 +442,7 @@ export default class CompletionService extends TextDocumentService {
         filterText: text,
         insertText: text,
         tags: /^\!break /.test(task) ? [CompletionItemTag.Deprecated] : [],
-        sortText: (priority++).toString().padStart(9),
+        sortText: (priority++).toString().padStart(9, '0'),
       });
     }
 
