@@ -36,9 +36,10 @@ export interface OverviewParams extends DurationListParams {
 }
 
 export interface CustomParams {
+  items?: ParamType;
   name: string;
   required?: boolean;
   suggestions?: string[];
   template?: string;
-  type: typeof ParamType[keyof typeof ParamType];
+  type: ParamType;
 }

@@ -1,4 +1,4 @@
-# Daily Timelog 0.0.12 (Alpha)
+# Daily Time Log 0.0.12 (Alpha)
 
 Basic IntelliSense and tools for planning Tasks and keeping a daily time log.
 
@@ -16,7 +16,7 @@ It also offers some commands, the only ones implemented for now are `Daily Timel
 
 ## Intellisense
 
-You can use intelliSense to rfind out more, but the basic file structure is:
+You can use intelliSense to find out more, but the basic file structure is:
 
 ```yaml
 date: 2021-02-03

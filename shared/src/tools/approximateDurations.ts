@@ -1,7 +1,7 @@
 import BasicRoundingScheme from '../app/BasicRoundingScheme';
 import DurationApproximation from '../model/RoundingScheme/DurationApproximation';
 import RoundingScheme from '../model/RoundingScheme/RoundingScheme';
-import { BasicSettings } from '../model/Summary/Settings';
+import { BasicSettings } from '../model/Settings/Settings';
 import { TaskTypeName } from '../model/Task/Task';
 import BasicTask from '../model/Task/BasicTask';
 import { ConstructorType } from '../model/Types';

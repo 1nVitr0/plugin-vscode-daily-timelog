@@ -1,7 +1,7 @@
 import { CST, Document, Options } from 'yaml';
 import { isBreak } from '../../tools/string';
-import { ParamType } from '../Summary/Params';
-import Settings, { BasicSettings } from '../Summary/Settings';
+import { ParamType } from '../Settings/Params';
+import Settings, { BasicSettings } from '../Settings/Settings';
 export const defaultBasicSettings: BasicSettings = {
   commonTasks: ['Organisation', 'Daily', 'Meeting', 'Refactoring', 'Code Review', 'Checking Mails'],
   commonBreaks: ['Lunch', 'Breakfast', 'Coffee', 'Personal'],
@@ -39,6 +39,20 @@ export const defaultSettings: Settings = {
   summaryTitle: "Today's Summary",
   summaryDurationFormat: '{{nextIndex}}. {{task.name}}: {{duration}} ({{error}})',
   summaryStructure: ['*{{summaryTitle}} - {{date}}*', '', '{{durations}}', '', '={{totals}}'],
+  newDayTemplate: [
+    'date: {{currentDate}}',
+    '',
+    'plannedTasks:',
+    '################################### PLANNING ###################################',
+    '',
+    'plannedTasks:',
+    '  -',
+    '',
+    '################################### TIME LOG ###################################',
+    '',
+    'timeLog:',
+    '  -',
+  ],
   overviewTitle: '',
   overviewStructure: ['{{overviewTitle}} -? {{ date }}', '', '{{taskList}}', '{{summary}}'],
 };

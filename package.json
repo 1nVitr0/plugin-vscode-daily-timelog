@@ -1,6 +1,6 @@
 {
   "name": "daily-timelog",
-  "displayName": "Daily Timelog",
+  "displayName": "Daily Time Log",
   "description": "Simple tool set for tracking, logging and planning your daily tasks",
   "icon": "resources/icon.png",
   "author": "1nVitr0",
@@ -34,41 +34,41 @@
   "contributes": {
     "commands": [
       {
-        "command": "daily-timelog.startNewDaylog",
-        "title": "Daily Timelog: Start a new Day"
+        "command": "daily-timelog.startNewDay",
+        "title": "Daily Time Log: Start a new Day"
       },
       {
         "command": "daily-timelog.startWorkSegment",
-        "title": "Daily Timelog: Start a Work Segment"
+        "title": "Daily Time Log: Start a Work Segment"
       },
       {
         "command": "daily-timelog.startBreakSegment",
-        "title": "Daily Timelog: Take a Break"
+        "title": "Daily Time Log: Take a Break"
       },
       {
         "command": "daily-timelog.completeWorkSegment",
-        "title": "Daily Timelog: Complete a Work Segment"
+        "title": "Daily Time Log: Complete a Work Segment"
       },
       {
         "command": "daily-timelog.completeBreakSegment",
-        "title": "Daily Timelog: Back to Work"
+        "title": "Daily Time Log: Back to Work"
       },
       {
         "command": "daily-timelog.completeTask",
-        "title": "Daily Timelog: Complete a Task"
+        "title": "Daily Time Log: Complete a Task"
       },
       {
         "command": "daily-timelog.generateTaskList",
-        "title": "Daily Timelog: Generate Task List"
+        "title": "Daily Time Log: Generate Task List"
       },
       {
         "command": "daily-timelog.generateSummary",
-        "title": "Daily Timelog: Generate Summary"
+        "title": "Daily Time Log: Generate Summary"
       }
     ],
     "configuration": {
       "type": "object",
-      "title": "Daily Timelog",
+      "title": "Daily Time Log",
       "properties": {
         "daily-timelog.commonTasks": {
           "scope": "resources",
@@ -322,6 +322,27 @@
             "{{estimatedDurations}}",
             "",
             "= {{estimatedTotals}}"
+          ],
+          "description": "structure of task list. Parameters include all the settings of this extension as well as {{ date }}: the date supplied, {{ durations }}: list of task durations, {{ estimatedDurations }}: list of estimated task durations, {{ totals }}: formatted totals, {{ estimatedTotals }}: formatted estimated totals"
+        },
+        "daily-timelog.newDayTemplate": {
+          "scope": "resources",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "date: {{currentDate}}*",
+            "",
+            "################################### PLANNING ###################################",
+            "",
+            "plannedTasks:",
+            "  -",
+            "",
+            "################################### TIME LOG ###################################",
+            "",
+            "timeLog:",
+            "  -"
           ],
           "description": "structure of task list. Parameters include all the settings of this extension as well as {{ date }}: the date supplied, {{ durations }}: list of task durations, {{ estimatedDurations }}: list of estimated task durations, {{ totals }}: formatted totals, {{ estimatedTotals }}: formatted estimated totals"
         },

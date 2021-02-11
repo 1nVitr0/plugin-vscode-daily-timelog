@@ -1,5 +1,5 @@
 import DurationApproximation from '../model/RoundingScheme/DurationApproximation';
-import { BasicSettings } from '../model/Summary/Settings';
+import { BasicSettings } from '../model/Settings/Settings';
 import { TaskTypeName } from '../model/Task/Task';
 
 export function getLargestErrorDuration(

@@ -1,6 +1,6 @@
 import DurationApproximation from '../RoundingScheme/DurationApproximation';
 import RoundingScheme from '../RoundingScheme/RoundingScheme';
-import { BasicSettings } from '../Summary/Settings';
+import { BasicSettings } from '../Settings/Settings';
 import Task, { TaskTypeName } from '../Task/Task';
 import BasicTask from '../Task/BasicTask';
 import { ConstructorType } from '../Types';
