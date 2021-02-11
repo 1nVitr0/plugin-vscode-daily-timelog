@@ -1,36 +1,17 @@
-import { BasicDayLog, StructuredLog } from '../../../../shared/out';
-import { env, window } from 'vscode';
-import SummaryGenerator from '../SummaryGenerator';
+import moment from 'moment';
+import { window, workspace } from 'vscode';
+import { formatDate, formatString, formatTime } from '../../../../shared/out';
 import { getConfiguration } from '../tools/configuration';
-import { parseYaml } from '../tools/parse';
 
 export function startNewDaylog() {
-  console.log('Start a new Day!');
-}
-
-function getSummaryGenerator(includeUnplanned = false) {
-  const text = window.activeTextEditor.document.getText();
   const config = getConfiguration();
-  const log: StructuredLog = parseYaml(text);
-  const dayLog = BasicDayLog.fromStructuredLog(log, includeUnplanned);
+  const params = { currentDate: formatDate(moment(), config), currentTime: formatTime(moment(), config) };
+  const rendered = config.newDayTemplate.map((line) => formatString(line, params, false));
 
-  return new SummaryGenerator(dayLog, config);
-}
-
-export function generateTaskList() {
-  const summaryGenerator = getSummaryGenerator();
-
-  env.clipboard.writeText(summaryGenerator.generateTaskList());
-}
-
-export function generateSummary() {
-  const summaryGenerator = getSummaryGenerator(true);
-
-  env.clipboard.writeText(summaryGenerator.generateSummary());
-}
-
-export function generateOverview() {
-  const summaryGenerator = getSummaryGenerator(true);
-
-  env.clipboard.writeText(summaryGenerator.generateOverview());
+  workspace
+    .openTextDocument({
+      language: 'yaml',
+      content: rendered.join('\n'),
+    })
+    .then((document) => window.showTextDocument(document));
 }
