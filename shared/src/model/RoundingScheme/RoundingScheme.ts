@@ -1,5 +1,5 @@
 import DurationApproximation from './DurationApproximation';
-import { BasicSettings } from '../Summary/Settings';
+import { BasicSettings } from '../Settings/Settings';
 import { TaskTypeName } from '../Task/Task';
 import BasicTask from '../Task/BasicTask';
 

@@ -1,4 +1,4 @@
-import { CustomParams, ParamType } from '../model/Summary/Params';
+import { CustomParams, ParamType } from '../model/Settings/Params';
 
 export type StructuredParams<T> = { [P in keyof T]: string | number | boolean | StructuredParams<T[P]> };
 

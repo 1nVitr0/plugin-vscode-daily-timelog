@@ -9,7 +9,7 @@ import TimeLog, {
   LogEntryStyleEnd,
   LogEntryStyleStart,
 } from '../model/StructuredLog/TimeLog';
-import { BasicSettings } from '../model/Summary/Settings';
+import { BasicSettings } from '../model/Settings/Settings';
 import BasicTask from '../model/Task/BasicTask';
 import Break from '../model/Task/Break';
 import Task, { TaskTypeName } from '../model/Task/Task';

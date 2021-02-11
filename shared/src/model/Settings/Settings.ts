@@ -48,6 +48,7 @@ export interface OverviewSettings extends TaskListSettings, SummarySettings {
 
 export default interface Settings extends TaskListSettings, SummarySettings, OverviewSettings {
   autoGenerateOverview: boolean;
+  newDayTemplate: string[];
 }
 
 export type SettingsCustom = Partial<Settings>;
