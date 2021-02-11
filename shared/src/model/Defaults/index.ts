@@ -42,7 +42,6 @@ export const defaultSettings: Settings = {
   newDayTemplate: [
     'date: {{currentDate}}',
     '',
-    'plannedTasks:',
     '################################### PLANNING ###################################',
     '',
     'plannedTasks:',
@@ -71,11 +70,11 @@ export const yamlCustomTags: Options['customTags'] = [
   {
     tag: '!begin',
     identify(node) {
-      return typeof node == 'string' && isBreak(node);
+      return typeof node == 'string';
     },
     // @ts-ignore weird types in patched yaml version
     resolve(doc: Document, cstNode: CST.Scalar) {
-      return `[${cstNode.strValue}]`;
+      return '[begin]';
     },
   },
 ];

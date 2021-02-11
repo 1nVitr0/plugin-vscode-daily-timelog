@@ -47,20 +47,21 @@ function traverseParamTree<T>(paramTree: (keyof T)[], params: StructuredParams<T
 
 export function formatString<T>(
   format: string,
-  params: T extends StructuredParams<infer R> ? StructuredParams<R> : any
+  params: T extends StructuredParams<infer R> ? StructuredParams<R> : any,
+  trim = true
 ): string {
-  return format
-    .replace(/{{(.+?)}}([^{]*\?)?/g, (_, g1, g2) => {
-      const param: string = g1.trim();
-      const paramTree = param.split('.');
-      const optional: string = g2 ? g2.slice(0, -1) : null;
-      const paramValue = traverseParamTree(paramTree, params);
+  const formatted = format.replace(/{{(.+?)}}([^{]*\?)?/g, (_, g1, g2) => {
+    const param: string = g1.trim();
+    const paramTree = param.split('.');
+    const optional: string = g2 ? g2.slice(0, -1) : null;
+    const paramValue = traverseParamTree(paramTree, params);
 
-      if (optional) return paramValue ? `${paramValue}${optional}` : '';
+    if (optional) return paramValue ? `${paramValue}${optional}` : '';
 
-      return paramValue === null ? param : paramValue.toString();
-    })
-    .trim();
+    return paramValue === null ? param : paramValue.toString();
+  });
+
+  return trim ? formatted.trim() : formatted;
 }
 
 export function parseString<T>(string: string, format: string): { [key: string]: string | undefined | null } {
