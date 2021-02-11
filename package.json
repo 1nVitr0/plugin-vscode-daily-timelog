@@ -38,26 +38,6 @@
         "title": "Daily Time Log: Start a new Day"
       },
       {
-        "command": "daily-timelog.startWorkSegment",
-        "title": "Daily Time Log: Start a Work Segment"
-      },
-      {
-        "command": "daily-timelog.startBreakSegment",
-        "title": "Daily Time Log: Take a Break"
-      },
-      {
-        "command": "daily-timelog.completeWorkSegment",
-        "title": "Daily Time Log: Complete a Work Segment"
-      },
-      {
-        "command": "daily-timelog.completeBreakSegment",
-        "title": "Daily Time Log: Back to Work"
-      },
-      {
-        "command": "daily-timelog.completeTask",
-        "title": "Daily Time Log: Complete a Task"
-      },
-      {
         "command": "daily-timelog.generateTaskList",
         "title": "Daily Time Log: Generate Task List"
       },
