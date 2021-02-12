@@ -4,6 +4,7 @@ export default interface Task<T extends TaskTypeName = TaskTypeName> {
   description?: string;
   estimatedDuration: number | moment.Duration;
   name: string;
+  progress?: number;
   type: T;
 }
 

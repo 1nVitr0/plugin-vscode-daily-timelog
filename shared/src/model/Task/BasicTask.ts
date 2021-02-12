@@ -11,6 +11,7 @@ export default abstract class BasicTask<T extends TaskTypeName = TaskTypeName> i
   protected _actualDuration: moment.Duration = moment.duration(0);
   protected _completed: boolean = false;
   protected _estimatedDuration: moment.Duration = moment.duration(0);
+  protected _progress: number = 0;
 
   public constructor(declaration: TaskDeclaration);
   public constructor(name: string, estimatedDuration?: number | moment.Duration);
@@ -52,7 +53,16 @@ export default abstract class BasicTask<T extends TaskTypeName = TaskTypeName> i
     this._estimatedDuration = newEstimation;
   }
 
-  public complete() {
+  public get progress() {
+    return this._progress;
+  }
+
+  public set progress(progress: number) {
+    if (this._progress < progress) this._progress = progress;
+  }
+
+  public complete(updateProgress?: boolean) {
+    if (updateProgress) this.setProgress(1);
     this._completed = true;
   }
 
@@ -62,5 +72,12 @@ export default abstract class BasicTask<T extends TaskTypeName = TaskTypeName> i
 
   public getTimeDifference() {
     return this.actualDuration.clone().subtract(this.estimatedDuration);
+  }
+
+  public setProgress(_progress: number | string) {
+    const progress = typeof _progress == 'string' ? parseInt(_progress) / 100 : _progress;
+
+    this.progress = progress;
+    if (progress >= 1) this.complete(false);
   }
 }

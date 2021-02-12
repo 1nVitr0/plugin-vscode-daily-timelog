@@ -5,6 +5,7 @@ import DurationApproximation from '../model/RoundingScheme/DurationApproximation
 import RoundingScheme from '../model/RoundingScheme/RoundingScheme';
 import StructuredLog from '../model/StructuredLog/StructuredLog';
 import TimeLog, {
+  LogEntry,
   LogEntryEndTimeDeclaration,
   LogEntryStyleEnd,
   LogEntryStyleStart,
@@ -58,15 +59,15 @@ export default class BasicDayLog implements DayLog {
   }
 
   public addBreak(_break: Break) {
-    this.addTask(_break);
+    return this.addTask(_break);
   }
 
   public addTask(task: BasicTask<TaskTypeName>) {
-    this.tasks[task.name] = task;
+    return (this.tasks[task.name] = task);
   }
 
   public addWorkTask(task: WorkTask) {
-    this.addTask(task);
+    return this.addTask(task);
   }
 
   public applyLog(_log: TimeLog, addMissing = false) {
@@ -179,6 +180,19 @@ export default class BasicDayLog implements DayLog {
     return this.getTasks().filter((task) => task.type === 'task') as WorkTask[];
   }
 
+  private addOrUpdateTask(logEntry: LogEntry, duration: number = 0, addMissing = false): BasicTask | null {
+    let existingTask = this.getTask(logEntry.task);
+
+    if (addMissing && !this.getTask(logEntry.task)) {
+      if (isBreak(logEntry.task)) existingTask = this.addTask(new Break(logEntry.task));
+      else existingTask = this.addTask(new WorkTask(logEntry.task));
+    }
+    existingTask?.execute(duration);
+    if (logEntry.progress) existingTask?.setProgress(logEntry.progress);
+
+    return existingTask;
+  }
+
   private applyLogStyleEnd(_log: LogEntryStyleEnd[], addMissing = false) {
     if (!_log.length) return;
 
@@ -188,11 +202,8 @@ export default class BasicDayLog implements DayLog {
 
     while ((current = log.shift())) {
       const duration = parseTime(current.end).diff(parseTime(previous?.end || current.end), 'm');
-      if (addMissing && !this.getTask(current.task)) {
-        if (isBreak(current.task)) this.addTask(new Break(current.task));
-        else this.addTask(new WorkTask(current.task));
-      }
-      this.getTask(current.task)?.execute(duration);
+      this.addOrUpdateTask(current, duration, addMissing);
+
       previous = current;
     }
   }
@@ -206,11 +217,8 @@ export default class BasicDayLog implements DayLog {
 
     while ((next = log.shift())) {
       const duration = parseTime(current?.end || next.start).diff(parseTime(current?.start || next.start), 'm');
-      if (addMissing && current && !this.getTask(current.task)) {
-        if (isBreak(current.task)) this.addTask(new Break(current.task));
-        else this.addTask(new WorkTask(current.task));
-      }
-      if (current) this.getTask(current.task)?.execute(duration);
+      if (current) this.addOrUpdateTask(current, duration, addMissing);
+
       current = next;
     }
 
