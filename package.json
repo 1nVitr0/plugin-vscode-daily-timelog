@@ -188,16 +188,6 @@
           "default": "{{h}}h? {{m}}m?",
           "description": "duration format - params are enclosed in {{}}, when followed by '?', the param and all the text following it until the next param will be hidden if param resolves to a falsy value. Possible values are H: total hours (float), M: total minutes, h: floored hours, m: remaining minutes"
         },
-        "daily-timelog.decimalSeparator": {
-          "scope": "resources",
-          "type": "string",
-          "enum": [
-            ".",
-            ","
-          ],
-          "default": ".",
-          "description": "decimal separator"
-        },
         "daily-timelog.durationPrecision": {
           "scope": "resources",
           "type": "integer",
@@ -249,7 +239,7 @@
           "scope": "resources",
           "type": "string",
           "format": "HH:mm",
-          "pattern": "((0\\d)|(1[0-2])|(2[0-3])):([0-5]\\d)",
+          "pattern": "((0\\d)|(1[0-9])|(2[0-3])):([0-5]\\d)",
           "default": "08:00",
           "description": "usual start of work day"
         },
@@ -257,7 +247,7 @@
           "scope": "resources",
           "type": "string",
           "format": "HH:mm",
-          "pattern": "((0\\d)|(1[0-2])|(2[0-3])):([0-5]\\d)",
+          "pattern": "((0\\d)|(1[0-9])|(2[0-3])):([0-5]\\d)",
           "default": "17:00",
           "description": "usual end of work day"
         },
@@ -323,9 +313,9 @@
             "################################### TIME LOG ###################################",
             "",
             "timeLog:",
-            "  -"
+            "  - \"{{workDayHoursStart}}\": !begin {{beginDayMessage}}"
           ],
-          "description": "structure of task list. Parameters include all the settings of this extension as well as {{ date }}: the date supplied, {{ durations }}: list of task durations, {{ estimatedDurations }}: list of estimated task durations, {{ totals }}: formatted totals, {{ estimatedTotals }}: formatted estimated totals"
+          "description": "structure of new day. Parameters include all the settings of this extension as well as {{currentDate}} and {{currentTime}}"
         },
         "daily-timelog.summaryTitle": {
           "scope": "resources",

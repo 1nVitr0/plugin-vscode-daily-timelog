@@ -17,7 +17,6 @@ export const defaultBasicSettings: BasicSettings = {
   summaryDateFormat: 'YYYY-MM-DD',
   timeFormat: 'HH:mm',
   durationFormat: '{{h}}h? {{m}}m?',
-  decimalSeparator: '.',
   durationPrecision: 15,
   durationRounding: 'round',
   minimumDuration: 15,
@@ -26,8 +25,8 @@ export const defaultBasicSettings: BasicSettings = {
   approximateTotals: true,
   combineBreaks: true,
   includeBreaks: true,
-  workHoursStart: '08:00',
-  workHoursEnd: '17:00',
+  workDayHoursStart: '08:00',
+  workDayHoursEnd: '17:00',
 };
 
 export const defaultSettings: Settings = {
@@ -50,7 +49,7 @@ export const defaultSettings: Settings = {
     '################################### TIME LOG ###################################',
     '',
     'timeLog:',
-    '  -',
+    '  -  "{{workDayHoursStart}}": !begin {{beginDayMessage}}',
   ],
   overviewTitle: '',
   overviewStructure: ['{{overviewTitle}} -? {{ date }}', '', '{{taskList}}', '{{summary}}'],
