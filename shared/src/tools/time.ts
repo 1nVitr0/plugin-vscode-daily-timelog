@@ -36,6 +36,19 @@ export function formatTime(time: Moment, settings = defaultBasicSettings): strin
   return time.format(settings.timeFormat);
 }
 
+export function formatProgress(progress: number, settings = defaultBasicSettings): string {
+  const percentageOnly = Math.round(progress * 100).toString();
+  const params = {
+    value: progress.toString(),
+    percentageOnly,
+    percentage: `${percentageOnly}%`,
+    percentageOrText: progress >= 1 ? settings.progressCompleteText : `${percentageOnly}%`,
+    percentageOnlyOrText: progress >= 1 ? settings.progressCompleteText : percentageOnly,
+  };
+
+  return formatString(settings.progressFormat, params);
+}
+
 export function formatDuration(_duration: Duration | number, settings = defaultBasicSettings) {
   const duration = typeof _duration === 'number' ? moment.duration(_duration, 'm') : _duration;
   const H = duration.asHours();

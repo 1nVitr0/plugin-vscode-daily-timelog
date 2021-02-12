@@ -11,7 +11,7 @@ export default abstract class BasicTask<T extends TaskTypeName = TaskTypeName> i
   protected _actualDuration: moment.Duration = moment.duration(0);
   protected _completed: boolean = false;
   protected _estimatedDuration: moment.Duration = moment.duration(0);
-  protected _progress: number = 0;
+  protected _progress?: number;
 
   public constructor(declaration: TaskDeclaration);
   public constructor(name: string, estimatedDuration?: number | moment.Duration);
@@ -57,8 +57,9 @@ export default abstract class BasicTask<T extends TaskTypeName = TaskTypeName> i
     return this._progress;
   }
 
-  public set progress(progress: number) {
-    if (this._progress < progress) this._progress = progress;
+  public set progress(progress: number | undefined) {
+    if (!progress) return;
+    if (!this._progress || this._progress < progress) this._progress = progress;
   }
 
   public complete(updateProgress?: boolean) {

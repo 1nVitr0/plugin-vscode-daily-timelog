@@ -12,6 +12,7 @@ import {
   ParamType,
   formatList,
   formatCustomParams,
+  formatProgress,
 } from '../../../shared/out';
 import moment from 'moment';
 import { getConfiguration, getCustomParam } from './tools/configuration';
@@ -61,6 +62,7 @@ export default class SummaryGenerator {
         const duration = {
           index,
           nextIndex: index + 1,
+          progress: durationInfo.task.progress ? formatProgress(durationInfo.task.progress, this.settings) : null,
           duration: formatDuration(durationInfo.duration, this.settings),
           error: (durationInfo.error > 0 ? '+' : '') + formatDuration(durationInfo.error, this.settings),
           task: durationInfo.task,
