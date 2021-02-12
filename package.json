@@ -135,7 +135,7 @@
             },
             {
               "name": "achievements",
-              "type": "ParamType.Array",
+              "type": "array",
               "template": "{{nextIndex}}. {{value}}"
             }
           ]
