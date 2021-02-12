@@ -38,7 +38,7 @@ export const defaultSettings: Settings = {
   taskListDurationFormat: '{{nextIndex}}. {{task.name}}: {{duration}}',
   taskListStructure: ['*{{taskListTitle}} - {{date}}*', '', '{{estimatedDurations}}', '', '={{estimatedTotals}}'],
   summaryTitle: "Today's Summary",
-  summaryDurationFormat: '{{nextIndex}}. {{task.name}}: {{duration}} ({{error}})',
+  summaryDurationFormat: '{{nextIndex}}. {{task.name}}: {{duration}} {{?:progress}}(?{{progress}})?',
   summaryStructure: ['*{{summaryTitle}} - {{date}}*', '', '{{durations}}', '', '={{totals}}'],
   newDayTemplate: [
     'date: {{currentDate}}',
