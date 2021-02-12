@@ -3,7 +3,7 @@ import { isBreak } from '../../tools/string';
 import { ParamType } from '../Settings/Params';
 import Settings, { BasicSettings } from '../Settings/Settings';
 export const defaultBasicSettings: BasicSettings = {
-  commonTasks: ['Organisation', 'Daily', 'Meeting', 'Refactoring', 'Code Review', 'Checking Mails'],
+  commonTasks: ['Organization', 'Daily', 'Meeting', 'Refactoring', 'Code Review', 'Checking Mails'],
   commonBreaks: ['Lunch', 'Breakfast', 'Coffee', 'Personal'],
   customParams: [
     { name: 'goals', type: ParamType.Array, template: '{{index}} {{value}}' },
