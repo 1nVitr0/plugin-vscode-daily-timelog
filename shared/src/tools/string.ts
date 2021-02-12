@@ -50,12 +50,13 @@ export function formatString<T>(
   params: T extends StructuredParams<infer R> ? StructuredParams<R> : any,
   trim = true
 ): string {
-  const formatted = format.replace(/{{(.+?)}}([^{]*\?)?/g, (_, g1, g2) => {
-    const param: string = g1.trim();
+  const formatted = format.replace(/{{(\?:)?(.+?)}}([^{]*\?)?/g, (_, checkOnly, paramName, optionalString) => {
+    const param: string = paramName.trim();
     const paramTree = param.split('.');
-    const optional: string = g2 ? g2.slice(0, -1) : null;
+    const optional: string = optionalString ? optionalString.slice(0, -1) : null;
     const paramValue = traverseParamTree(paramTree, params);
 
+    if (checkOnly) return paramValue ? optional : '';
     if (optional) return paramValue ? `${paramValue}${optional}` : '';
 
     return paramValue === null ? param : paramValue.toString();
