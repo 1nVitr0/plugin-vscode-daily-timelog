@@ -28,7 +28,7 @@ export default class SummaryGenerator {
 
   public generateOverview(): string {
     const formatParams: OverviewParams = {
-      ...this.getFormatParams(),
+      ...this.getFormatParams('summary'),
       taskList: this.generateTaskList(),
       summary: this.generateSummary(),
     };
@@ -38,7 +38,7 @@ export default class SummaryGenerator {
   }
 
   public generateSummary(): string {
-    const formatParams = this.getFormatParams();
+    const formatParams = this.getFormatParams('summary');
     const lines = this.settings.summaryStructure.map((line, index) =>
       formatString(line, { ...formatParams, index, nextIndex: index + 1 })
     );
@@ -47,7 +47,7 @@ export default class SummaryGenerator {
   }
 
   public generateTaskList(): string {
-    const formatParams = this.getFormatParams();
+    const formatParams = this.getFormatParams('taskList');
     const lines = this.settings.taskListStructure.map((line, index) =>
       formatString(line, { ...formatParams, index, nextIndex: index + 1 })
     );
@@ -55,8 +55,8 @@ export default class SummaryGenerator {
     return lines.join('\n');
   }
 
-  private formatDurationList(durations: DurationApproximation<TaskTypeName>[], separator = '\n'): string {
-    const { taskListDurationFormat } = this.settings;
+  private formatDurationList(durations: DurationApproximation<TaskTypeName>[], _durationFormat?: string): string {
+    const durationFormat = _durationFormat || this.settings.taskListDurationFormat;
     return durations
       .map((durationInfo, index) => {
         const duration = {
@@ -67,13 +67,14 @@ export default class SummaryGenerator {
           error: (durationInfo.error > 0 ? '+' : '') + formatDuration(durationInfo.error, this.settings),
           task: durationInfo.task,
         };
-        return formatString(taskListDurationFormat, duration);
+        return formatString(durationFormat, duration);
       })
       .join('\n');
   }
 
-  private getFormatParams(): DurationListParams {
-    const { customParams } = this.settings;
+  private getFormatParams(type: 'taskList' | 'summary' = 'taskList'): DurationListParams {
+    const { customParams, taskListDurationFormat, summaryDurationFormat } = this.settings;
+    const durationFormat = type == 'taskList' ? taskListDurationFormat : summaryDurationFormat;
 
     const durations = this.dayLog.getApproximateTaskDurations(BasicRoundingScheme, this.settings);
     const estimatedDurations = this.dayLog.getApproximateEstimatedTaskDurations(BasicRoundingScheme, this.settings);
@@ -84,7 +85,7 @@ export default class SummaryGenerator {
       ...this.settings,
       ...formatCustomParams(this.dayLog.customParams, customParams),
       date: formatDate(moment(this.dayLog.date), this.settings, true),
-      durations: this.formatDurationList(durations),
+      durations: this.formatDurationList(durations, durationFormat),
       estimatedDurations: this.formatDurationList(estimatedDurations),
       totals: formatDuration(totals),
       estimatedTotals: formatDuration(estimatedTotals),
