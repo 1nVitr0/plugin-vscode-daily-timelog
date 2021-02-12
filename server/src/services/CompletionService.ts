@@ -362,7 +362,7 @@ export default class CompletionService extends TextDocumentService {
   }
 
   protected getTimeCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
-    const { durationPrecision, workHoursStart } = this.currentConfiguration || defaultBasicSettings;
+    const { durationPrecision, workDayHoursStart: workHoursStart } = this.currentConfiguration || defaultBasicSettings;
     const currentTime = moment().seconds(0).milliseconds(0);
     const lastTime =
       this.getTimeLogUntil(position).pop()?.add(durationPrecision, 'm') || moment(workHoursStart, 'HH:mm');
