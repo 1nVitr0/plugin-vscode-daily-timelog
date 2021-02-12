@@ -2,7 +2,7 @@ import { defaultsDeep } from 'lodash';
 import { workspace } from 'vscode';
 import { CustomParams, defaultSettings, Settings } from '../../../../shared/out';
 
-let configuration: Settings = defaultSettings;
+let configuration: Settings = defaultsDeep(workspace.getConfiguration('daily-timelog'), defaultSettings);
 
 workspace.onDidChangeConfiguration((e) => {
   if (e.affectsConfiguration('daily-timelog')) {
@@ -14,7 +14,7 @@ export function getConfiguration(): Settings {
   return configuration;
 }
 
-export function getCustomParam(name): CustomParams | null {
+export function getCustomParam(name: string): CustomParams | null {
   for (const param of configuration.customParams) {
     if (param.name == name) return param;
   }
