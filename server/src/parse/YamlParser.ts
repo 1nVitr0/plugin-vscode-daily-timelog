@@ -201,16 +201,9 @@ export default class YamlParser {
 
     const offsetPosition = this.document.positionAt(offset);
     const pairPosition = lineOffset !== undefined ? this.document.positionAt(lineOffset) : undefined;
-    if (pairPosition !== undefined && offsetPosition.line == pairPosition.line) {
+    if (pairPosition !== undefined && offsetPosition.line == pairPosition.line)
       return key ? { type: YamlType.EmptyValue, context: [...context, key] } : { type: YamlType.EmptyKey, context };
-    }
-    if (
-      pairPosition !== undefined &&
-      offsetPosition.line == pairPosition.line + 1 &&
-      this.getIndent(offsetPosition) > this.getIndent(pairPosition)
-    ) {
-      return key ? { type: YamlType.EmptyKey, context: [...context, key] } : { type: YamlType.None, context };
-    }
+
     return { type: YamlType.None, context };
   }
 
@@ -223,6 +216,15 @@ export default class YamlParser {
 
     const { start, origStart } = cstNode.range;
     return offset > (origStart || start);
+  }
+
+  private isContentInLine(position: Position): boolean {
+    const line = this.document.getText({
+      start: { line: position.line, character: 0 },
+      end: { line: position.line, character: Infinity },
+    });
+
+    return !!line.trim();
   }
 
   private isInLine(offset: number, node: Node | CST.Node): boolean;
@@ -245,6 +247,14 @@ export default class YamlParser {
 
     const { start, end, origStart, origEnd } = cstNode.range;
     return offset >= (origStart || start) && offset <= (origEnd || end) + 1;
+  }
+
+  private isNewPairAt(position: Position, parentPosition: Position): boolean {
+    return (
+      position.line == parentPosition.line + 1 &&
+      !this.isContentInLine(position) &&
+      this.getIndent(position) > this.getIndent(parentPosition)
+    );
   }
 
   private parseDocument(): Document.Parsed {
