@@ -2,7 +2,6 @@ import { RoundingType } from '../RoundingScheme/RoundingScheme';
 import { CustomParams } from './Params';
 
 export interface BasicSettings {
-  approximateTotals: boolean;
   beginDayMessage: string;
   combineBreaks: boolean;
   commonBreaks: string[];

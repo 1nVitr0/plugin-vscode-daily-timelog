@@ -223,17 +223,23 @@
           "default": true,
           "description": "force tasks to have minimum duration (mutually exclusive to floorBelowMinimumDuration)"
         },
-        "daily-timelog.approximateTotals": {
-          "scope": "resources",
-          "type": "boolean",
-          "default": true,
-          "description": "enable approximation of totals"
-        },
         "daily-timelog.includeTotals": {
           "scope": "resources",
           "type": "boolean",
           "default": true,
           "description": "include totals"
+        },
+        "daily-timelog.progressCompleteText": {
+          "scope": "resources",
+          "type": "string",
+          "default": "DONE",
+          "description": "text shown at 100% progress if {{percentageOrText}} is specified in progressFormat"
+        },
+        "daily-timelog.progressFormat": {
+          "scope": "resources",
+          "type": "string",
+          "default": "{{percentageOrText}}",
+          "description": "progress - available params are {{value}}, {{percentage}}, {{percentageOnly}}, {{percentageOrText}} and {{percentageOnlyOrText}}"
         },
         "daily-timelog.workHoursStart": {
           "scope": "resources",
