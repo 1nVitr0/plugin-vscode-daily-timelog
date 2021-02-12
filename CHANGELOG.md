@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0](https://github.com/1nVitr0/plugin-vscode-daily-timelog/compare/v0.0.12...v0.1.0) (2021-02-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* :wastebasket: clean up unused commands
+
+### Features
+
+* :sparkles: add completion for task params ([f7a3cdf](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/f7a3cdfbb49a528c5e5e341c3867fbf6ad25e22a))
+* :sparkles: add optional strings in formatting ([64ff354](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/64ff3540d38de1769c2d505c23ec2bae04192899))
+* :sparkles: add parsing of progress updates ([132f3a8](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/132f3a8cb6c5c552bd12677a91c3d2cb635dcc0d))
+* :sparkles: add progress formatting ([02ae985](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/02ae98567e100309c6a71f8994e57266b8fd1917))
+* :sparkles: add progress in summary generation ([1e17db5](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/1e17db5fa64391cd59d7a3ddfcdb55ebbe2f3f88))
+* :wastebasket: clean up unused commands ([e40b259](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/e40b259f89330cc2f32194623276b9255ef0713c))
+* add configuration for new day ([e258328](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/e258328bc14e68888feec57a02443f169bbeebbf))
+* add create new day command ([7876ed7](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/7876ed74d476b1ea56032c4f5568d61f44fdb6ae))
+
+
+### Bug Fixes
+
+* :bug: fix mismatch between default settings and manifest ([5e630ae](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/5e630ae9f444fda605ad6306dd1506de32441ef5))
+* fix yaml parse node type ([b680b2f](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/b680b2feb6eeba56e38f8778994613a46de87f1e))
+
 ### [0.0.12](https://github.com/1nVitr0/plugin-vscode-daily-timelog/compare/v0.0.11...v0.0.12) (2021-02-10)
 
 
