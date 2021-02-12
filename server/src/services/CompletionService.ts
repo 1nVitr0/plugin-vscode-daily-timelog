@@ -1,3 +1,4 @@
+import { last } from 'lodash';
 import moment from 'moment';
 import {
   CompletionItem,
@@ -22,7 +23,14 @@ import {
   parseDuration,
 } from '../../../shared/out';
 import YamlParser from '../parse/YamlParser';
-import { YamlKeyDescriptor, YamlNodeDescriptor, YamlSingleDescriptor, YamlType, YamlValueDescriptor } from '../types';
+import {
+  YamlKeyDescriptor,
+  YamlNode,
+  YamlNodeDescriptor,
+  YamlSingleDescriptor,
+  YamlType,
+  YamlValueDescriptor,
+} from '../types';
 import TextDocumentService from './TextDocumentService';
 
 export default class CompletionService extends TextDocumentService {
@@ -170,36 +178,34 @@ export default class CompletionService extends TextDocumentService {
   protected completeKey({ node, context }: YamlKeyDescriptor, position: Position): CompletionItem[] {
     let completions: CompletionItem[] = [];
 
-    if (CompletionService.matchContext(['timeLog'], context))
-      completions = this.getTimeCompletion(position, Type.QUOTE_DOUBLE);
     if (CompletionService.matchContext(['plannedTasks'], context))
-      completions = this.getPlannedTaskCompletion(position);
+      completions = this.getPlannedTaskParamsCompletion(position);
+    else if (CompletionService.matchContext(['timeLog'], context))
+      completions = this.getTimeLogParamsCompletion(position);
 
     return this.addTextEdit(completions, position, node?.cstNode?.range, YamlParser.isQuoted(node));
   }
 
-  protected completeSingle(node: YamlSingleDescriptor, position: Position): CompletionItem[] {
-    const { context } = node;
-    if (
-      CompletionService.matchContext(['plannedTasks'], context) ||
-      CompletionService.matchContext(['timeLog'], context)
-    )
-      return this.completeKey(node, position);
+  protected completeSingle({ node, context }: YamlSingleDescriptor, position: Position): CompletionItem[] {
+    let completions: CompletionItem[] = [];
 
-    return [];
+    if (CompletionService.matchContext(['plannedTasks'], context))
+      completions = this.getPlannedTaskCompletion(position);
+    else if (CompletionService.matchContext(['timeLog'], context))
+      completions = this.getTimeCompletion(position, Type.QUOTE_DOUBLE);
+
+    return this.addTextEdit(completions, position, node?.cstNode?.range, YamlParser.isQuoted(node));
   }
 
-  protected completeValue({ node, context }: YamlValueDescriptor, position: Position): CompletionItem[] {
+  protected completeValue(_node: YamlValueDescriptor, position: Position): CompletionItem[] {
+    const { node, context } = _node;
+
     let completions: CompletionItem[] = [];
     if (CompletionService.matchContext(['date'], context)) completions = this.getDateCompletion(position);
-    else if (CompletionService.matchContext(['timeLog', '*'], context)) {
-      if (/\!b?r?e?a?k?/.test(node?.tag || '')) completions = this.getTimelogBreakCompletion(position);
-      if (/\!b?e?g?i?n?/.test(node?.tag || '')) completions.push(...this.getTimelogBeginCompletion(position));
-      if (!completions.length) completions = this.getTimelogTaskCompletion(position);
-    } else if (CompletionService.matchContext(['plannedTasks', '*'], context)) {
-      if (/\!b?r?e?a?k?/.test(node?.tag || '')) completions = this.getBreakDurationCompletion(position);
-      else completions = this.getDurationCompletion(position);
-    }
+    else if (CompletionService.matchContext(['timeLog', '*'], context))
+      completions = this.getTimeLogValueCompletion(position, _node);
+    else if (CompletionService.matchContext(['plannedTasks', '*'], context))
+      completions = this.getPlannedTasksValueCompletion(position, _node);
 
     return this.addTextEdit(completions, position, node?.cstNode?.range, YamlParser.isQuoted(node));
   }
@@ -293,6 +299,15 @@ export default class CompletionService extends TextDocumentService {
     return [...items, ...this.postfixCompletions(breakItems, ': !break')];
   }
 
+  protected getPlannedTaskParamsCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
+    const params = ['description'];
+
+    return params.map((param) => ({
+      label: param,
+      insertText: `${param}:`,
+    }));
+  }
+
   protected getPlannedTasksUntil(position: Position, type?: TaskTypeName): string[] {
     if (!this.parser) return [];
 
@@ -311,6 +326,26 @@ export default class CompletionService extends TextDocumentService {
     });
 
     return tasks.filter((task) => !!task) as string[];
+  }
+
+  protected getPlannedTasksValueCompletion(
+    position: Position,
+    { node, context }: YamlValueDescriptor,
+    quote?: Scalar.Type
+  ): CompletionItem[] {
+    let completions: CompletionItem[] = [];
+
+    if (/\!b?r?e?a?k?/.test(node?.tag || '')) completions = this.getBreakDurationCompletion(position);
+    else completions = this.getDurationCompletion(position);
+
+    return completions;
+  }
+
+  protected getProgressCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
+    const items: CompletionItem[] = [];
+    for (let i = 10; i <= 100; i += 10) items.push({ label: `${i}%`, sortText: `${i}`.padStart(3, '0s') });
+
+    return items;
   }
 
   protected getQuoteOffset(type?: Scalar.Type): number {
@@ -365,6 +400,15 @@ export default class CompletionService extends TextDocumentService {
     };
   }
 
+  protected getTimeLogParamsCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
+    const params = ['comment', 'progress'];
+
+    return params.map((param) => ({
+      label: param,
+      insertText: `${param}:`,
+    }));
+  }
+
   protected getTimeLogUntil(position: Position): moment.Moment[] {
     if (!this.parser) return [];
 
@@ -379,6 +423,24 @@ export default class CompletionService extends TextDocumentService {
     return times
       .map((time) => moment(time, this.currentConfiguration?.timeFormat || defaultBasicSettings.timeFormat))
       .filter((time) => time.isValid());
+  }
+
+  protected getTimeLogValueCompletion(
+    position: Position,
+    { node, context }: YamlValueDescriptor,
+    quote?: Scalar.Type
+  ): CompletionItem[] {
+    let completions: CompletionItem[] = [];
+    const localContext = last(context)?.toString();
+
+    if (localContext == 'comment') return [];
+    if (localContext == 'progress') return this.getProgressCompletion(position);
+
+    if (/\!b?r?e?a?k?/.test(node?.tag || '')) completions = this.getTimelogBreakCompletion(position);
+    if (/\!b?e?g?i?n?/.test(node?.tag || '')) completions.push(...this.getTimelogBeginCompletion(position));
+    if (completions.length) return completions;
+
+    return this.getTimelogTaskCompletion(position);
   }
 
   protected getTimelogBeginCompletion(position: Position, quote?: Scalar.Type, preselect = false): CompletionItem[] {
