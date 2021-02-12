@@ -22,6 +22,8 @@ export const defaultBasicSettings: BasicSettings = {
   minimumDuration: 15,
   floorBelowMinimumDuration: false,
   forceMinimumDuration: true,
+  progressFormat: '{{percentageOrText}}',
+  progressCompleteText: 'DONE',
   approximateTotals: true,
   combineBreaks: true,
   includeBreaks: true,

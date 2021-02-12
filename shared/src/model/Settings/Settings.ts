@@ -18,6 +18,8 @@ export interface BasicSettings {
   includeBreaks: boolean;
   includeBreaksInTotal: boolean;
   minimumDuration: number;
+  progressFormat: string;
+  progressCompleteText: string;
   summaryDateFormat: string;
   timeFormat: string;
   workDayHours: 8;
