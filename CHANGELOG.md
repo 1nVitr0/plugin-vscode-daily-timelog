@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.1](https://github.com/1nVitr0/plugin-vscode-daily-timelog/compare/v0.2.0...v0.2.1) (2021-03-19)
+
+
+### Features
+
+* running tasks can be created by prepending '~' ([2eda4ad](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/2eda4adebd0a5b954ca952599d03e4e91c9cc1ae))
+
+
+### Bug Fixes
+
+* fix duration parsing errors ([d41f20a](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/d41f20a2b38b61fb0f55496af3bccb4d229beabc))
+* fix time completion errors + invalid suggestions ([71cbee1](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/71cbee1115f1b80be40d03661752cb3fe2cdb000))
+
 ## [0.2.0](https://github.com/1nVitr0/plugin-vscode-daily-timelog/compare/v0.1.2...v0.2.0) (2021-03-19)
 
 
