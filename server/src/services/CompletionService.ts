@@ -15,17 +15,14 @@ import {
   formatDate,
   formatDuration,
   formatTime,
-  mixin,
   ParamType,
   parseDuration,
-  Path,
-  StructuredLog,
   TaskTypeName,
 } from '../../../shared/out';
 import YamlParser from '../parse/YamlParser';
 import { YamlKeyDescriptor, YamlNodeDescriptor, YamlSingleDescriptor, YamlType, YamlValueDescriptor } from '../types';
-import TextDocumentService from './TextDocumentService';
 import { addQuotes, matchContext, postfixCompletions, prefixCompletions } from './completion/completionModification';
+import TextDocumentService from './TextDocumentService';
 
 export default class CompletionService extends TextDocumentService {
   public doComplete(position: Position): CompletionItem[] {
@@ -320,6 +317,7 @@ export default class CompletionService extends TextDocumentService {
 
     const items: CompletionItem[] = [];
     if (!nextTime || currentTime < nextTime) items.push(this.getTimeCompletionItem(currentTime, age, quote, true));
+    if (!nextTime) items.push(this.getRunningTimeCompletionItem(quote));
     for (let i = 0; i < (24 * 60) / durationPrecision; i++) {
       items.push(this.getTimeCompletionItem(lastTime, (i + 1) * durationPrecision, quote));
       lastTime.add(durationPrecision, 'm');
@@ -346,6 +344,20 @@ export default class CompletionService extends TextDocumentService {
       detail: formatDuration(diffMinutes, this.currentConfiguration),
       sortText: sortIndex.toString().padStart(9, '0'),
       insertText: text,
+      preselect,
+    };
+  }
+
+  protected getRunningTimeCompletionItem(quote?: Scalar.Type, preselect?: boolean): CompletionItem {
+    const label = '~' + formatTime(moment(), this.currentConfiguration);
+    const text = addQuotes(label, quote);
+    return {
+      kind: CompletionItemKind.Unit,
+      label,
+      data: 'Currently ongoing task',
+      filterText: text,
+      detail: 'ongoing...',
+      insertText: text + ': !running',
       preselect,
     };
   }
@@ -411,6 +423,8 @@ export default class CompletionService extends TextDocumentService {
         return this.getProgressCompletion(position);
     }
 
+    if (/\!running/.test(node?.tag || ''))
+      return prefixCompletions(this.getTimelogTaskCompletion(position), '!running ');
     if (/\!b?r?e?a?k?/.test(node?.tag || '')) completions = this.getTimelogBreakCompletion(position);
     if (/\!b?e?g?i?n?/.test(node?.tag || '')) completions.push(...this.getTimelogBeginCompletion(position));
     if (completions.length) return completions;
