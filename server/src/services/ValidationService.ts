@@ -73,7 +73,7 @@ export default class ValidationService extends TextDocumentService {
     const diagnostics: Diagnostic[] = [];
     for (const node of timeLogNodes.items) {
       if (firstItem) diagnostics.push(...this.getTimeLogFirstEntryDiagnostics(node));
-      if (YamlParser.containsNodeWithTag(node, ['!break', '!begin'])) {
+      if (YamlParser.containsNodeWithTag(node, ['!break', '!begin', '!running'])) {
         diagnostics.push(...this.getDeprecateDiagnosticsFromNode(node, 'Break or Beginning of day'));
       }
 
