@@ -18,3 +18,10 @@ export type PathLeafesTree<T> = {
   [P in keyof T]: PathLeafes<T[P]> extends undefined ? [P?] : [P?, ...PathLeafes<T[P]>];
 };
 export type PathLeafes<T> = Exclude<PathLeafesTree<T>[keyof T], undefined>;
+
+export type Constructor<T = {}> = new (...args: any[]) => T;
+export type MixinFunction<T extends Constructor = Constructor, R extends T = T & Constructor> = (Base: T) => R;
+type UnionToIntersection<T> = (T extends any ? (x: T) => any : never) extends (x: infer R) => any ? R : never;
+export type MixinReturnValue<T extends MixinFunction<any, any>[]> = UnionToIntersection<
+  { [K in keyof T]: T[K] extends MixinFunction<any, infer U> ? U : never }[number]
+>;

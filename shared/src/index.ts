@@ -25,6 +25,7 @@ export * from './tools/approximateDurations';
 export * from './tools/math';
 export * from './tools/string';
 export * from './tools/time';
+export * from './tools/mixin';
 
 export {
   BasicDayLog,
