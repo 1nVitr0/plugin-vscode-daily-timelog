@@ -15,6 +15,10 @@ export interface TaskDeclaration {
   description?: string;
   estimatedDuration: Duration;
   name: TaskName;
+  group?: string;
+  ticket?: string;
+  comment?: string;
+  link?: string;
   type?: TaskTypeName;
 }
 
