@@ -48,7 +48,16 @@ export default class TaskFactory {
       return task;
     }
 
-    const dummyKeys: Record<keyof TaskDeclaration, any> = { name: 1, estimatedDuration: 1, description: 1, type: 1 };
+    const dummyKeys: Record<keyof TaskDeclaration, any> = {
+      name: 1,
+      estimatedDuration: 1,
+      description: 1,
+      comment: 1,
+      group: 1,
+      link: 1,
+      ticket: 1,
+      type: 1,
+    };
     const task: Partial<Task> = {};
     for (const key of Object.keys(declaration)) {
       // @ts-ignore: Needed due to declaration[key]
@@ -69,7 +78,19 @@ export default class TaskFactory {
     _data: Task<T> | TaskDeclaration | TaskDurationDeclaration
   ): BasicTask<TaskTypeName> {
     const declaration = TaskFactory.taskFromDeclaration(_data);
-    const { type, name, description, estimatedDuration, actualDuration, completed } = declaration;
+    const {
+      type,
+      name,
+      description,
+      estimatedDuration,
+      actualDuration,
+      completed,
+      comment,
+      group,
+      link,
+      progress,
+      ticket,
+    } = declaration;
 
     let task: BasicTask<T | TaskTypeName>;
     switch (type) {
@@ -83,6 +104,11 @@ export default class TaskFactory {
         throw new Error(`unknown task type: ${type}`);
     }
 
+    task.comment = comment;
+    task.group = group;
+    task.link = link;
+    task.progress = progress;
+    task.ticket = ticket;
     task.execute(actualDuration);
     if (completed) task.complete();
 
