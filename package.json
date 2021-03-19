@@ -81,6 +81,31 @@
           ],
           "description": "List of common break types"
         },
+        "daily-timelog.taskGroups": {
+          "scope": "resources",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "organisation",
+            "review",
+            "evaluation",
+            "meeting",
+            "reseach",
+            "programming"
+          ],
+          "description": "Common task groups"
+        },
+        "daily-timelog.ticketPrefixes": {
+          "scope": "resources",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "List of common ticket prefixes (e.g. Jira Style board ids)"
+        },
         "daily-timelog.customParams": {
           "scope": "resources",
           "type": "array",
@@ -185,8 +210,8 @@
         "daily-timelog.durationFormat": {
           "scope": "resources",
           "type": "string",
-          "default": "{{h}}h? {{m}}m?",
-          "description": "duration format - params are enclosed in {{}}, when followed by '?', the param and all the text following it until the next param will be hidden if param resolves to a falsy value. Possible values are H: total hours (float), M: total minutes, h: floored hours, m: remaining minutes"
+          "default": "h\\h ?m\\m?",
+          "description": "duration format - standard double curly braces notation. Possible values are H: total hours (float), M: total minutes, h: floored hours, m: remaining minutes"
         },
         "daily-timelog.durationPrecision": {
           "scope": "resources",
@@ -284,8 +309,8 @@
         "daily-timelog.taskListDurationFormat": {
           "scope": "resources",
           "type": "string",
-          "default": "- {{task.name}} - {{duration}}",
-          "description": "duration format - params are enclosed in {{}}, when followed by '?', the param and all the text following it until the next param will be hidden if param resolves to a falsy value. Possible values are task.name: task name, duration: duration, error: rounding error"
+          "default": "- {{task.ticket ? '[' + task.ticket + '] ' : ''}}{{task.name}}: {{duration}}",
+          "description": "duration format - standard double curly braces notation. Possible values are task.name: task name, duration: duration, error: rounding error"
         },
         "daily-timelog.taskListStructure": {
           "scope": "resources",
@@ -332,8 +357,8 @@
         "daily-timelog.summaryDurationFormat": {
           "scope": "resources",
           "type": "string",
-          "default": "- {{task.name}}: {{duration}} {{?:progress}}(?{{progress}})?",
-          "description": "duration format - params are enclosed in {{}}, when followed by '?', the param and all the text following it until the next param will be hidden if param resolves to a falsy value. Possible values are {{ task.name }}: task name, {{ task.type }}: task type, {{ duration }}: duration, {{ error }}: rounding error"
+          "default": "- {{task.ticket ? '[' + task.ticket + '] ' : ''}}{{task.name}}: {{duration}} {{progress ? '(' + progress + ')' : ''}}",
+          "description": "duration format - standard double curly braces notation. Possible values are {{ task.name }}: task name, {{ task.type }}: task type, {{ duration }}: duration, {{ error }}: rounding error"
         },
         "daily-timelog.summaryStructure": {
           "scope": "resources",
@@ -363,7 +388,7 @@
             "type": "string"
           },
           "default": [
-            "{{overviewTitle}} -? {{ date }}",
+            "'{{overviewTitle ? overviewTitle + ' - '' : ''}}{{ date }}'",
             "",
             "{{taskList}}",
             "{{summary}}"
