@@ -6,64 +6,28 @@ import {
   CompletionItemTag,
   InsertReplaceEdit,
   Position,
-  TextEdit,
 } from 'vscode-languageserver';
 import { CST } from 'yaml';
 import { Pair, Scalar, YAMLMap } from 'yaml/types';
 import { Type } from 'yaml/util';
 import {
+  defaultBasicSettings,
   formatDate,
   formatDuration,
   formatTime,
-  Path,
-  StructuredLog,
-  defaultBasicSettings,
-  TaskTypeName,
+  mixin,
   ParamType,
   parseDuration,
+  Path,
+  StructuredLog,
+  TaskTypeName,
 } from '../../../shared/out';
 import YamlParser from '../parse/YamlParser';
-import {
-  YamlKeyDescriptor,
-  YamlNode,
-  YamlNodeDescriptor,
-  YamlSingleDescriptor,
-  YamlType,
-  YamlValueDescriptor,
-} from '../types';
+import { YamlKeyDescriptor, YamlNodeDescriptor, YamlSingleDescriptor, YamlType, YamlValueDescriptor } from '../types';
 import TextDocumentService from './TextDocumentService';
+import { addQuotes, matchContext, postfixCompletions, prefixCompletions } from './completion/completionModification';
 
 export default class CompletionService extends TextDocumentService {
-  protected static quote(text: string, type?: Scalar.Type, keepEndQuote = true): string {
-    switch (type) {
-      case Type.QUOTE_DOUBLE:
-        return `"${text}` + (keepEndQuote ? '"' : '');
-      case Type.QUOTE_SINGLE:
-        return `'${text}` + (keepEndQuote ? "'" : '');
-      case Type.BLOCK_FOLDED:
-      case Type.BLOCK_LITERAL:
-      case Type.PLAIN:
-      case undefined:
-        return text;
-    }
-  }
-
-  private static matchContext(
-    match: Path<StructuredLog>,
-    context: (string | Scalar | null)[],
-    matchDepth = true
-  ): boolean {
-    for (let i = 0; i < match.length; i++) {
-      if (match[i] == '*') continue; // match arbitrary context
-      const currentContext = context[i];
-      const parsedContext = typeof currentContext == 'string' ? currentContext : currentContext?.value;
-      if (match[i] != parsedContext) return false;
-    }
-
-    if (!matchDepth || match.length == context.length) return true;
-    return false;
-  }
-
   public doComplete(position: Position): CompletionItem[] {
     if (!this.parser) return [];
 
@@ -87,6 +51,7 @@ export default class CompletionService extends TextDocumentService {
   }
 
   public resolveCompletion(completion: CompletionItem): CompletionItem {
+    // TODO: Enrich with more information
     return completion;
   }
 
@@ -96,54 +61,21 @@ export default class CompletionService extends TextDocumentService {
     range?: CST.Range | null,
     hasQuote = false
   ): CompletionItem[] {
-    const offset = this.offsetAt(position);
-    const quoteOffset = hasQuote ? 1 : 0;
-
     const [startOffset, endOffset] = [range?.origStart || range?.start, range?.origEnd || range?.end];
 
-    if (startOffset !== undefined && endOffset !== undefined) {
-      const [start, end] = [this.positionAt(startOffset - quoteOffset), this.positionAt(endOffset + quoteOffset)];
-      const offsetPosition = this.positionAt(offset);
+    if (startOffset == undefined || endOffset == undefined) return completions;
 
-      const insertRange = { start, end: offsetPosition };
-      const replaceRange = { start, end };
+    const quoteOffset = hasQuote ? 1 : 0;
+    const [start, end] = [this.positionAt(startOffset - quoteOffset), this.positionAt(endOffset + quoteOffset)];
+    const insertRange = { start, end: position };
+    const replaceRange = { start, end };
 
-      for (const completion of completions) {
-        const newText = completion.insertText || completion.label;
-        completion.textEdit = InsertReplaceEdit.create(newText, insertRange, replaceRange);
-      }
+    for (const completion of completions) {
+      const newText = completion.insertText || completion.label;
+      completion.textEdit = InsertReplaceEdit.create(newText, insertRange, replaceRange);
     }
 
     return completions;
-  }
-
-  protected alterInsertReplaceEdit(edit: TextEdit | InsertReplaceEdit, newText: string) {
-    const prefixLength = edit.newText.indexOf(newText);
-    const postfixLength = newText.length - edit.newText.length - prefixLength;
-    if ('range' in edit) {
-      const { range } = edit;
-      return {
-        newText,
-        range: {
-          start: { line: range.start.line, character: range.start.character - prefixLength },
-          end: range.end,
-        },
-      };
-    } else {
-      const { insert, replace } = edit;
-
-      return InsertReplaceEdit.create(
-        newText,
-        {
-          start: { line: insert.start.line, character: insert.start.character - prefixLength },
-          end: insert.end,
-        },
-        {
-          start: { line: insert.start.line, character: insert.start.character - prefixLength },
-          end: { line: insert.end.line, character: insert.end.character + postfixLength },
-        }
-      );
-    }
   }
 
   protected completeEmpty(_node: YamlNodeDescriptor, position: Position): CompletionItem[] {
@@ -157,15 +89,12 @@ export default class CompletionService extends TextDocumentService {
       else defaultPairKeys.push(param.name);
     }
 
-    if (
-      CompletionService.matchContext(['timeLog'], context) ||
-      CompletionService.matchContext(['plannedTasks'], context)
-    )
+    if (matchContext(['timeLog'], context) || matchContext(['plannedTasks'], context))
       return this.completeKey(_node as YamlKeyDescriptor, position);
     else if (context.length == 0 && position.character == 0) {
       return [
         ...defaultPairKeys.map((label) => ({ kind, label })),
-        ...this.postfixCompletions(
+        ...postfixCompletions(
           defaultKeys.map((label) => ({ kind, label })),
           ':\n  '
         ),
@@ -178,10 +107,8 @@ export default class CompletionService extends TextDocumentService {
   protected completeKey({ node, context }: YamlKeyDescriptor, position: Position): CompletionItem[] {
     let completions: CompletionItem[] = [];
 
-    if (CompletionService.matchContext(['plannedTasks'], context))
-      completions = this.getPlannedTaskParamsCompletion(position);
-    else if (CompletionService.matchContext(['timeLog'], context))
-      completions = this.getTimeLogParamsCompletion(position);
+    if (matchContext(['plannedTasks'], context)) completions = this.getPlannedTaskParamsCompletion(position);
+    else if (matchContext(['timeLog'], context)) completions = this.getTimeLogParamsCompletion(position);
 
     return this.addTextEdit(completions, position, node?.cstNode?.range, YamlParser.isQuoted(node));
   }
@@ -189,10 +116,8 @@ export default class CompletionService extends TextDocumentService {
   protected completeSingle({ node, context }: YamlSingleDescriptor, position: Position): CompletionItem[] {
     let completions: CompletionItem[] = [];
 
-    if (CompletionService.matchContext(['plannedTasks'], context))
-      completions = this.getPlannedTaskCompletion(position);
-    else if (CompletionService.matchContext(['timeLog'], context))
-      completions = this.getTimeCompletion(position, Type.QUOTE_DOUBLE);
+    if (matchContext(['plannedTasks'], context)) completions = this.getPlannedTaskCompletion(position);
+    else if (matchContext(['timeLog'], context)) completions = this.getTimeCompletion(position, Type.QUOTE_DOUBLE);
 
     return this.addTextEdit(completions, position, node?.cstNode?.range, YamlParser.isQuoted(node));
   }
@@ -201,17 +126,16 @@ export default class CompletionService extends TextDocumentService {
     const { node, context } = _node;
 
     let completions: CompletionItem[] = [];
-    if (CompletionService.matchContext(['date'], context)) completions = this.getDateCompletion(position);
-    else if (CompletionService.matchContext(['timeLog', '*'], context))
-      completions = this.getTimeLogValueCompletion(position, _node);
-    else if (CompletionService.matchContext(['plannedTasks', '*'], context))
+    if (matchContext(['date'], context)) completions = this.getDateCompletion(position);
+    else if (matchContext(['timeLog', '*'], context)) completions = this.getTimeLogValueCompletion(position, _node);
+    else if (matchContext(['plannedTasks', '*'], context))
       completions = this.getPlannedTasksValueCompletion(position, _node);
 
     return this.addTextEdit(completions, position, node?.cstNode?.range, YamlParser.isQuoted(node));
   }
 
   protected getBreakDurationCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
-    return this.prefixCompletions(this.getDurationCompletion(position, quote), '!break ', true);
+    return prefixCompletions(this.getDurationCompletion(position, quote), '!break ', true);
   }
 
   protected getDateCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
@@ -220,7 +144,7 @@ export default class CompletionService extends TextDocumentService {
       {
         kind: CompletionItemKind.Unit,
         label: date,
-        insertText: CompletionService.quote(date, quote),
+        insertText: addQuotes(date, quote),
       },
     ];
   }
@@ -237,7 +161,7 @@ export default class CompletionService extends TextDocumentService {
     for (let duration = precision; duration < end; duration += precision) {
       const label = formatDuration(duration, this.currentConfiguration);
       const detail = `Total: ${formatDuration(currentTotal.clone().add(duration, 'm'), this.currentConfiguration)}`;
-      const text = CompletionService.quote(label, quote);
+      const text = addQuotes(label, quote);
       items.push({
         kind: CompletionItemKind.Unit,
         label,
@@ -279,13 +203,13 @@ export default class CompletionService extends TextDocumentService {
 
     const items: CompletionItem[] = [];
     for (const task of commonTasks) {
-      const text = CompletionService.quote(task, quote);
+      const text = addQuotes(task, quote);
       if (planned.indexOf(task) < 0) items.push({ kind, label: task, filterText: text, insertText: text });
     }
 
     const breakItems: CompletionItem[] = [];
     for (const task of commonBreaks) {
-      const text = CompletionService.quote(task, quote);
+      const text = addQuotes(task, quote);
       if (planned.indexOf(task) < 0)
         breakItems.push({
           kind,
@@ -296,11 +220,11 @@ export default class CompletionService extends TextDocumentService {
         });
     }
 
-    return [...items, ...this.postfixCompletions(breakItems, ': !break')];
+    return [...items, ...postfixCompletions(breakItems, ': !break')];
   }
 
   protected getPlannedTaskParamsCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
-    const params = ['description'];
+    const params = ['group', 'ticket', 'description', 'comment', 'link'];
 
     return params.map((param) => ({
       label: param,
@@ -334,11 +258,49 @@ export default class CompletionService extends TextDocumentService {
     quote?: Scalar.Type
   ): CompletionItem[] {
     let completions: CompletionItem[] = [];
+    const localContext = last(context)?.toString();
+
+    switch (localContext) {
+      case 'comment':
+        return this.getCommentCompletion(position);
+      case 'group':
+        return this.getGroupCompletion(position);
+      case 'ticket':
+        return this.getTicketCompletion(position);
+      case 'description':
+        return this.getDescriptionCompletion(position);
+      case 'link':
+        return this.getLinkCompletion(position);
+    }
 
     if (/\!b?r?e?a?k?/.test(node?.tag || '')) completions = this.getBreakDurationCompletion(position);
     else completions = this.getDurationCompletion(position);
 
     return completions;
+  }
+
+  protected getCommentCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
+    return [];
+  }
+
+  protected getDescriptionCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
+    return [];
+  }
+
+  protected getLinkCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
+    return [];
+  }
+
+  protected getGroupCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
+    return (this.currentConfiguration?.taskGroups || defaultBasicSettings.taskGroups).map((label) => ({
+      label,
+    }));
+  }
+
+  protected getTicketCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
+    return (this.currentConfiguration?.ticketPrefixes || defaultBasicSettings.ticketPrefixes).map((label) => ({
+      label,
+    }));
   }
 
   protected getProgressCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
@@ -348,33 +310,21 @@ export default class CompletionService extends TextDocumentService {
     return items;
   }
 
-  protected getQuoteOffset(type?: Scalar.Type): number {
-    switch (type) {
-      case Type.QUOTE_DOUBLE:
-      case Type.QUOTE_SINGLE:
-        return 1;
-      case Type.BLOCK_FOLDED:
-      case Type.BLOCK_LITERAL:
-      case Type.PLAIN:
-      case undefined:
-        return 0;
-    }
-  }
-
   protected getTimeCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
     const { durationPrecision, workDayHoursStart: workHoursStart } = this.currentConfiguration || defaultBasicSettings;
     const currentTime = moment().seconds(0).milliseconds(0);
     const lastTime =
       this.getTimeLogUntil(position).pop()?.add(durationPrecision, 'm') || moment(workHoursStart, 'HH:mm');
+    const nextTime = this.getNextTime(position);
     const age = currentTime.diff(lastTime, 'm');
 
     const items: CompletionItem[] = [];
+    items.push(this.getTimeCompletionItem(currentTime, age, quote, true));
     for (let i = 0; i < (24 * 60) / durationPrecision; i++) {
       items.push(this.getTimeCompletionItem(lastTime, (i + 1) * durationPrecision, quote));
       lastTime.add(durationPrecision, 'm');
+      if (nextTime && lastTime >= nextTime) break;
     }
-
-    items.push(this.getTimeCompletionItem(currentTime, age, quote, true));
 
     return items;
   }
@@ -386,7 +336,7 @@ export default class CompletionService extends TextDocumentService {
     preselect?: boolean
   ): CompletionItem {
     const label = formatTime(time, this.currentConfiguration);
-    const text = CompletionService.quote(label, quote);
+    const text = addQuotes(label, quote);
     const sortIndex = Math.floor(24 * 60 + diffMinutes);
     return {
       kind: CompletionItemKind.Unit,
@@ -425,6 +375,27 @@ export default class CompletionService extends TextDocumentService {
       .filter((time) => time.isValid());
   }
 
+  protected getNextTime(position: Position): moment.Moment | null {
+    if (!this.parser) return null;
+
+    const after = this.parser.getListNodeAfter(position, ['timelog']);
+    if (!after) return null;
+
+    const text: string | null = YamlParser.isScalar(after)
+      ? after.toString()
+      : after.type == Pair.Type.PAIR || after.type == Pair.Type.MERGE_PAIR
+      ? after.key
+        ? after.key.toString()
+        : null
+      : after.type == Type.MAP || after.type == Type.FLOW_MAP
+      ? YamlParser.getFirstKey(after as YAMLMap)
+      : null;
+
+    const time = moment(text, this.currentConfiguration?.timeFormat || defaultBasicSettings.timeFormat);
+    if (time.isValid()) return time;
+    else return null;
+  }
+
   protected getTimeLogValueCompletion(
     position: Position,
     { node, context }: YamlValueDescriptor,
@@ -433,8 +404,12 @@ export default class CompletionService extends TextDocumentService {
     let completions: CompletionItem[] = [];
     const localContext = last(context)?.toString();
 
-    if (localContext == 'comment') return [];
-    if (localContext == 'progress') return this.getProgressCompletion(position);
+    switch (localContext) {
+      case 'comment':
+        return this.getCommentCompletion(position);
+      case 'progress':
+        return this.getProgressCompletion(position);
+    }
 
     if (/\!b?r?e?a?k?/.test(node?.tag || '')) completions = this.getTimelogBreakCompletion(position);
     if (/\!b?e?g?i?n?/.test(node?.tag || '')) completions.push(...this.getTimelogBeginCompletion(position));
@@ -446,7 +421,7 @@ export default class CompletionService extends TextDocumentService {
   protected getTimelogBeginCompletion(position: Position, quote?: Scalar.Type, preselect = false): CompletionItem[] {
     const message = this.currentConfiguration?.beginDayMessage || defaultBasicSettings.beginDayMessage;
     const label = `!begin ${message}`;
-    const text = `!begin ${CompletionService.quote(message, quote)}`;
+    const text = `!begin ${addQuotes(message, quote)}`;
 
     return [
       {
@@ -470,7 +445,7 @@ export default class CompletionService extends TextDocumentService {
     const items: CompletionItem[] = [];
     for (const task of planned) {
       const label = `!break ${task}`;
-      const text = `!break ${CompletionService.quote(task, quote)}`;
+      const text = `!break ${addQuotes(task, quote)}`;
       items.push({
         kind,
         label,
@@ -497,7 +472,7 @@ export default class CompletionService extends TextDocumentService {
     const items: CompletionItem[] = [];
     if (firstTask) items.push(...this.getTimelogBeginCompletion(position, quote, true));
     for (const task of planned) {
-      const text = CompletionService.quote(task, quote);
+      const text = addQuotes(task, quote);
       items.push({
         kind,
         label: task,
@@ -509,44 +484,5 @@ export default class CompletionService extends TextDocumentService {
     }
 
     return items;
-  }
-
-  protected postfixCompletions(completions: CompletionItem[], postfix: string, changeLabels = false): CompletionItem[] {
-    return completions.map((completion) => {
-      const altered = { ...completion };
-      altered.label = changeLabels ? `${completion.label}${postfix}` : completion.label;
-      altered.insertText = completion.insertText
-        ? `${completion.insertText}${postfix}`
-        : `${completion.label}${postfix}`;
-      altered.textEdit = altered.textEdit
-        ? this.alterInsertReplaceEdit(altered.textEdit, `${altered.textEdit}${postfix}`)
-        : altered.textEdit;
-
-      return altered;
-    });
-  }
-
-  protected prefixCompletions(completions: CompletionItem[], prefix: string, changeLabels = false): CompletionItem[] {
-    return completions.map((completion) => {
-      const altered = { ...completion };
-      altered.label = changeLabels ? `${prefix}${completion.label}` : completion.label;
-      altered.insertText = completion.insertText ? `${prefix}${completion.insertText}` : `${prefix}${completion.label}`;
-      altered.filterText = completion.filterText ? `${prefix}${completion.filterText}` : undefined;
-      altered.textEdit = altered.textEdit
-        ? this.alterInsertReplaceEdit(altered.textEdit, `${prefix}${altered.textEdit}`)
-        : altered.textEdit;
-
-      return altered;
-    });
-  }
-
-  protected prepostfixCompletions(
-    completions: CompletionItem[],
-    prefix: string,
-    postfix: string,
-    changeLabels = false
-  ): CompletionItem[] {
-    const prefixed = this.prefixCompletions(completions, prefix, changeLabels);
-    return this.postfixCompletions(prefixed, postfix, changeLabels);
   }
 }

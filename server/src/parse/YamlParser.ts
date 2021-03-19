@@ -96,6 +96,20 @@ export default class YamlParser {
     return before;
   }
 
+  public getListNodeAfter(position: Position, targetContext: string[]): YamlNode | null {
+    const list: YamlNode = this.parsed.getIn(targetContext);
+
+    if (list.type !== Type.SEQ || !list.items[0]) return null;
+
+    let after: YamlNode | undefined = list.items.pop();
+    let current: YamlNode | undefined;
+    while ((current = list.items.pop())) {
+      if (after && this.isInLine(position.line, current)) return after;
+    }
+
+    return null;
+  }
+
   public getListNodesExcept(position: Position, targetContext: string[]): YamlNode[] {
     const list: YamlNode = this.parsed.getIn(targetContext);
     const others: YamlNode[] = [];
