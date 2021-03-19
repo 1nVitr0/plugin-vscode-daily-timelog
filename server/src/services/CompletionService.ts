@@ -319,7 +319,7 @@ export default class CompletionService extends TextDocumentService {
     const age = currentTime.diff(lastTime, 'm');
 
     const items: CompletionItem[] = [];
-    items.push(this.getTimeCompletionItem(currentTime, age, quote, true));
+    if (!nextTime || currentTime < nextTime) items.push(this.getTimeCompletionItem(currentTime, age, quote, true));
     for (let i = 0; i < (24 * 60) / durationPrecision; i++) {
       items.push(this.getTimeCompletionItem(lastTime, (i + 1) * durationPrecision, quote));
       lastTime.add(durationPrecision, 'm');
@@ -378,7 +378,7 @@ export default class CompletionService extends TextDocumentService {
   protected getNextTime(position: Position): moment.Moment | null {
     if (!this.parser) return null;
 
-    const after = this.parser.getListNodeAfter(position, ['timelog']);
+    const after = this.parser.getListNodeAfter(position, ['timeLog']);
     if (!after) return null;
 
     const text: string | null = YamlParser.isScalar(after)

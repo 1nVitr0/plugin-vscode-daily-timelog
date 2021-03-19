@@ -86,7 +86,7 @@ export default class YamlParser {
     const list: YamlNode = this.parsed.getIn(targetContext);
     const before: YamlNode[] = [];
 
-    if (list.type == Type.SEQ && list.items[0]) {
+    if (list && list.type == Type.SEQ && list.items[0]) {
       for (const item of list.items) {
         if (item && this.isBefore(position, item)) before.push(item);
         else return before;
@@ -99,12 +99,14 @@ export default class YamlParser {
   public getListNodeAfter(position: Position, targetContext: string[]): YamlNode | null {
     const list: YamlNode = this.parsed.getIn(targetContext);
 
-    if (list.type !== Type.SEQ || !list.items[0]) return null;
+    if (!list || list.type !== Type.SEQ || !list.items[0]) return null;
 
     let after: YamlNode | undefined = list.items.pop();
     let current: YamlNode | undefined;
-    while ((current = list.items.pop())) {
-      if (after && this.isInLine(position.line, current)) return after;
+    while ((current = list.items.pop()) !== undefined) {
+      if (after && this.isBefore(position, after)) return null;
+      if (after && current && (this.isBefore(position, current) || this.isInLine(position, current))) return after;
+      if (current) after = current;
     }
 
     return null;
