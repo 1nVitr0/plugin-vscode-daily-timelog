@@ -4,13 +4,11 @@
  * ------------------------------------------------------------------------------------------ */
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import {
-  CompletionItem,
   createConnection,
   DidChangeConfigurationNotification,
   InitializeParams,
   InitializeResult,
   ProposedFeatures,
-  TextDocumentPositionParams,
   TextDocuments,
   TextDocumentSyncKind,
 } from 'vscode-languageserver/node';
@@ -52,7 +50,7 @@ connection.onInitialize((params: InitializeParams) => {
       // Tell the client that this server supports code completion.
       completionProvider: {
         resolveProvider: true,
-        triggerCharacters: ["'", '"', ' ', '\n'],
+        triggerCharacters: ["'", '"', ' ', '\t'],
       },
     },
   };
