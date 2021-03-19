@@ -1,4 +1,11 @@
+import { template, TemplateSettings } from 'lodash';
 import { CustomParams, ParamType } from '../model/Settings/Params';
+
+const templateSettings: TemplateSettings = {
+  evaluate: /{{([\s\S]+?)}}/g,
+  interpolate: /{{([\s\S]+?)}}/g,
+  escape: /{{-([\s\S]+?)}}/g,
+};
 
 export type StructuredParams<T> = { [P in keyof T]: string | number | boolean | StructuredParams<T[P]> };
 
@@ -32,53 +39,12 @@ export function formatCustomParams(
   return result;
 }
 
-function traverseParamTree<T>(paramTree: (keyof T)[], params: StructuredParams<T>): string | number | boolean | null {
-  const node = [...paramTree].shift();
-  if (!node) return null; // should not happen
-
-  const param = params[node];
-
-  if (params[node] == undefined) return null;
-  if (isStructuredParams(param) && paramTree.length >= 1) return traverseParamTree(paramTree.slice(1), param);
-  return ['number', 'string', 'boolean'].includes(typeof param)
-    ? (param as string | number | boolean)
-    : param.toString();
-}
-
 export function formatString<T>(
   format: string,
-  params: T extends StructuredParams<infer R> ? StructuredParams<R> : any,
-  trim = true
+  params: T extends StructuredParams<infer R> ? StructuredParams<R> : any
 ): string {
-  const formatted = format.replace(/{{(\?:)?(.+?)}}([^{]*\?)?/g, (_, checkOnly, paramName, optionalString) => {
-    const param: string = paramName.trim();
-    const paramTree = param.split('.');
-    const optional: string = optionalString ? optionalString.slice(0, -1) : null;
-    const paramValue = traverseParamTree(paramTree, params);
-
-    if (checkOnly) return paramValue ? optional : '';
-    if (optional) return paramValue ? `${paramValue}${optional}` : '';
-
-    return paramValue === null ? param : paramValue.toString();
-  });
-
-  return trim ? formatted.trim() : formatted;
-}
-
-export function parseString<T>(string: string, format: string): { [key: string]: string | undefined | null } {
-  const params: { [key: string]: string | undefined | null } = {};
-  const keys: string[] = [];
-  const regex = format
-    .replace(/{{(.+?)}}([^{?]*)?(\?)?/g, (_, g1, g2, g3) => {
-      keys.push(g1.trim());
-      return `((.+?)${g2 || '$'})${g3 ? '?' : ''}`;
-    })
-    .replace(/\s+/, '\\s*');
-  const matches = string.match(new RegExp(regex));
-
-  for (let i = 2; i < (matches?.length || 0); i += 2) params[keys[(i - 2) / 2]] = matches ? matches[i] : null;
-
-  return params;
+  const builder = template(format, templateSettings);
+  return builder(params);
 }
 
 export function isBreak(breakName?: string): boolean {
