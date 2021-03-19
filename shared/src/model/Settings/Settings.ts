@@ -6,6 +6,8 @@ export interface BasicSettings {
   combineBreaks: boolean;
   commonBreaks: string[];
   commonTasks: string[];
+  taskGroups: string[];
+  ticketPrefixes: string[];
   customParams: CustomParams[];
   dateFormat: string;
   defaultBreakName: string;
