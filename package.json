@@ -266,7 +266,7 @@
           "default": "{{percentageOrText}}",
           "description": "progress - available params are {{value}}, {{percentage}}, {{percentageOnly}}, {{percentageOrText}} and {{percentageOnlyOrText}}"
         },
-        "daily-timelog.workHoursStart": {
+        "daily-timelog.workDayHoursStart": {
           "scope": "resources",
           "type": "string",
           "format": "HH:mm",
@@ -274,7 +274,7 @@
           "default": "08:00",
           "description": "usual start of work day"
         },
-        "daily-timelog.workHoursEnd": {
+        "daily-timelog.workDayHoursEnd": {
           "scope": "resources",
           "type": "string",
           "format": "HH:mm",
