@@ -30,7 +30,6 @@ function parseDurationString(duration: string, format: string) {
       current = parts[char as keyof DurationParams] as { content: string };
       mapped = true;
     } else if (char === '?' && !escaped && mapped) {
-      current.content += char;
       current = { content: '' };
       nextPrefix = '';
       mapped = false;
@@ -46,7 +45,7 @@ function parseDurationString(duration: string, format: string) {
     const part = parts[key as keyof DurationParams];
     if (!part) continue;
 
-    const regex = new RegExp(part.content);
+    const regex = new RegExp(part.content.trim());
     const [_, match] = duration.match(regex) || ['', '0'];
     result[key as keyof DurationParams] = parseFloat(match);
   }
