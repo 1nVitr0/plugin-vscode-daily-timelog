@@ -1,8 +1,8 @@
-# Daily Time Log 0.1.2 (Alpha)
+# Daily Time Log (Beta)
 
 Basic IntelliSense and tools for planning Tasks and keeping a daily time log.
 
-*This is a very early alpha version! Expect bugs, inefficient code and more goodies.*
+*The extension is now in beta! (But still expect bugs, inefficient code and more goodies.)*
 
 ## Usage
 
@@ -82,26 +82,28 @@ timeLog:
 
 IntelliSense should offer you reasonably good predictions of durations, times and task names. It keeps track of the task names used in the `plannedTasks` section as well as the tasks already listed in the `timeLog` section.
 
+Since Verison 2.1 a new feature "Running Tasks" was added. This enables the creation of a running tasks that automatically resolves to the current time when pressing Enter. This does mean, you can only add parameters to the task task after it's time has been stopped.
+
+```
+timeLog:
+  - "08:00": !begin Let's Start!
+  - "~08:45": !running Task 1 (When pressing Enter, this task will be automatically stopped)
+```
+
 ## Commands
 
 `Daily Timelog: Generate Task List` will generate a human-readable list of your planned Tasks for the active file. The result will be put into your clipboard - ready to paste. Customization is already half-implemented.
 
 `Daily Timelog: Generate Summary` will generate a list of your completed tasks including ones that weren't planned. Same deal as `Generate Task List`.
 
+`Daily Timelog: Generate Overview` will generate a combination of your task list and timelog.
+
+`Daily Timelog: Start new Day` will create a new daylog file based on the template defined in the settings. You will have to save the file as a '*.daylog.yml' before completions will be available.
+
 ## Settings
 
 The extension offers a variety of settings. The most important ones configure the format of the task List.
-Generally, the format for these settings is a string containing the standard double braces notation for params:
-
-```
-Params like {{this}} or {{ this }} will be expanded
-{{ params }} followed by ?, will only be expanded when the param expand to something truthy
-They and all the text following them until '?' will be hidden if falsy
-sub-objects will also be expanded when using the dot-notation {{ param.deep.inner }}
-params that are not strings, numbers or boolean will be stringified using the object's toString() method
-In list renderings the parameters {{index}} and {{nextIndex}} are available as well
-To render conditional text without rendering params use {{?:param}} conditional text?
-```
+Generally, the format for these settings is a string containing the standard double braces notation for params.
 
 Available params will be supplied in the setting's documentation.
 
