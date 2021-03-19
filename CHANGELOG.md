@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0](https://github.com/1nVitr0/plugin-vscode-daily-timelog/compare/v0.1.2...v0.2.0) (2021-03-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* Setting WorkHoursStart / End have been renamed
+* new templatings syntax(double curly braces)
+* changed duration template syntax
+
+### Features
+
+* add mixin typings ([0581c36](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/0581c36581d5b5c91241a55caef9df0d6b3dd939))
+* add more parameters  to tasks ([c763e04](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/c763e04df3dae048e95316b434080a586aa5e316))
+* add parameter completion for taskList ([77ab15f](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/77ab15f4306303d44f6917d2a4bcb9a31a740dfe))
+* proper error messages for commands ([c8d4d8f](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/c8d4d8fd2b26868b9ff857bfd8eb13f0d242cbce))
+* support full template syntax in templates ([da05feb](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/da05febc99c89a420477a7b3b4c3d50aff558288))
+
+
+### Bug Fixes
+
+* fix setting for workday hours ([c7e9daf](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/c7e9daf797debca1736f6bfd8d668cdb3c8174c9))
+
 ### [0.1.2](https://github.com/1nVitr0/plugin-vscode-daily-timelog/compare/v0.1.1...v0.1.2) (2021-02-12)
 
 
