@@ -24,7 +24,7 @@
     "time tracker"
   ],
   "engines": {
-    "vscode": "^1.52.0"
+    "vscode": "^1.60.0"
   },
   "activationEvents": [
     "onLanguage:yaml",
