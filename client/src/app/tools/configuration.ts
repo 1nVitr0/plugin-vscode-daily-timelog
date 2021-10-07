@@ -15,9 +15,9 @@ export function getConfiguration(): Settings {
 }
 
 export function getCustomParam(name: string): CustomParams | null {
-  for (const param of configuration.customParams) {
-    if (param.name == name) return param;
-  }
+  return configuration.customParams.find((param) => param.name == name) || null;
+}
 
-  return null;
+export function getCustomTaskParam(name: string): CustomParams | null {
+  return configuration.customTaskParams.find((param) => param.name == name) || null;
 }
