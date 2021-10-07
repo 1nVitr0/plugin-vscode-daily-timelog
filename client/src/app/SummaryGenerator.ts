@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { getConfiguration } from './tools/configuration';
 import {
   BasicDayLog,
   BasicRoundingScheme,
@@ -10,8 +11,11 @@ import {
   formatProgress,
   formatString,
   OverviewParams,
+  ParamType,
   Settings,
+  Task,
   TaskTypeName,
+  formatList,
 } from '../../../shared/out';
 
 export default class SummaryGenerator {
@@ -62,11 +66,22 @@ export default class SummaryGenerator {
           progress: durationInfo.task.progress ? formatProgress(durationInfo.task.progress, this.settings) : null,
           duration: formatDuration(durationInfo.duration, this.settings),
           error: (durationInfo.error > 0 ? '+' : '') + formatDuration(durationInfo.error, this.settings),
-          task: durationInfo.task,
+          task: this.formatTaskParams(durationInfo.task),
         };
         return formatString(durationFormat, duration);
       })
       .join('\n');
+  }
+
+  private formatTaskParams(task: Task): Task {
+    const result: Task = { ...task };
+    for (const param of getConfiguration().customTaskParams) {
+      const { name, type, template = '{{value}}' } = param;
+      if (type == ParamType.Array && task[name]) result[name] = formatList(template, task[name] || [], ', ');
+      else if (task[name]) result[name] = formatString(template, { value: task[name] });
+    }
+
+    return result;
   }
 
   private getFormatParams(type: 'taskList' | 'summary' = 'taskList'): DurationListParams {

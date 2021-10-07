@@ -3,6 +3,8 @@ import DayLog from '../model/DayLog/DayLog';
 import { defaultBasicSettings } from '../model/Defaults';
 import DurationApproximation from '../model/RoundingScheme/DurationApproximation';
 import RoundingScheme from '../model/RoundingScheme/RoundingScheme';
+import { CustomParams } from '../model/Settings/Params';
+import { BasicSettings } from '../model/Settings/Settings';
 import StructuredLog from '../model/StructuredLog/StructuredLog';
 import TimeLog, {
   LogEntry,
@@ -10,7 +12,6 @@ import TimeLog, {
   LogEntryStyleEnd,
   LogEntryStyleStart,
 } from '../model/StructuredLog/TimeLog';
-import { BasicSettings } from '../model/Settings/Settings';
 import BasicTask from '../model/Task/BasicTask';
 import Break from '../model/Task/Break';
 import Task, { TaskTypeName } from '../model/Task/Task';
@@ -43,8 +44,12 @@ export default class BasicDayLog implements DayLog {
     for (const task of tasks) this.addTask(task);
   }
 
-  public static fromStructuredLog(log: StructuredLog, includeUnplanned = false): BasicDayLog {
-    const factory = new TaskFactory();
+  public static fromStructuredLog(
+    log: StructuredLog,
+    customTaskParams: CustomParams[],
+    includeUnplanned = false
+  ): BasicDayLog {
+    const factory = new TaskFactory(customTaskParams);
     const tasks = log.plannedTasks?.map((task) => factory.fromData(task));
     const customParams: { [key: string]: string | string[] } = {};
 
@@ -53,7 +58,7 @@ export default class BasicDayLog implements DayLog {
     }
 
     const result = new BasicDayLog(new Date(), tasks, customParams);
-    if (log.timeLog) result.applyLog(log.timeLog, includeUnplanned);
+    if (log.timeLog) result.applyLog(log.timeLog, customTaskParams, includeUnplanned);
 
     return result;
   }
@@ -70,20 +75,20 @@ export default class BasicDayLog implements DayLog {
     return this.addTask(task);
   }
 
-  public applyLog(_log: TimeLog, addMissing = false) {
+  public applyLog(_log: TimeLog, customTaskParams: CustomParams[], addMissing = false) {
     if (!_log.length) return;
     const first = _log[0];
 
     if ('start' in first) {
       const log = _log as LogEntryStyleStart[];
       this.applyLogStyleStart(
-        log.map((entry) => TaskFactory.logEntryFromDeclaration<LogEntryStyleStart>(entry)),
+        log.map((entry) => TaskFactory.logEntryFromDeclaration<LogEntryStyleStart>(entry, customTaskParams)),
         addMissing
       );
     } else {
       const log = _log as (LogEntryStyleEnd | LogEntryEndTimeDeclaration)[];
       this.applyLogStyleEnd(
-        log.map((entry) => TaskFactory.logEntryFromDeclaration<LogEntryStyleEnd>(entry)),
+        log.map((entry) => TaskFactory.logEntryFromDeclaration<LogEntryStyleEnd>(entry, customTaskParams)),
         addMissing
       );
     }

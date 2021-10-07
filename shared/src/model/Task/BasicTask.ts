@@ -5,9 +5,7 @@ import Task, { TaskTypeName } from './Task';
 
 export default abstract class BasicTask<T extends TaskTypeName = TaskTypeName> implements Task<T> {
   public group?: string;
-  public ticket?: string;
   public comment?: string;
-  public link?: string;
   public readonly description?: string;
   public readonly name: string;
   public abstract readonly type: T;
