@@ -13,8 +13,8 @@ export function isStructuredParams(params: any): params is StructuredParams<any>
   return typeof params === 'object';
 }
 
-export function formatList(format: string, list: string[]): string {
-  return list.map((value, index) => formatString(format, { value, index, nextIndex: index + 1 })).join('\n');
+export function formatList(format: string, list: string[], delimiter = '\n'): string {
+  return list.map((value, index) => formatString(format, { value, index, nextIndex: index + 1 })).join(delimiter);
 }
 
 export function formatCustomParams(
@@ -23,12 +23,13 @@ export function formatCustomParams(
 ): { [P: string]: string } {
   const result: { [P: string]: string } = {};
 
-  for (const { name, template, type } of paramSettings) {
+  for (const { name, template, type, delimiter } of paramSettings) {
     switch (type) {
       case ParamType.Array:
         result[name] = formatList(
           template || '{{value}}',
-          (name in paramValues ? paramValues[name] || [] : []) as string[]
+          (name in paramValues ? paramValues[name] || [] : []) as string[],
+          delimiter
         );
         break;
       default:
