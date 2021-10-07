@@ -9,8 +9,23 @@ export const defaultBasicSettings: BasicSettings = {
   taskGroups: ['organisation', 'review', 'evaluation', 'meeting', 'reseach', 'programming'],
   ticketPrefixes: [],
   customParams: [
-    { name: 'goals', type: ParamType.Array, template: '{{nextIndex}}. {{value}}' },
-    { name: 'achievements', type: ParamType.Array, template: '{{nextIndex}}. {{value}}' },
+    {
+      name: 'goals',
+      type: ParamType.Array,
+      template: '{{nextIndex}}. {{value}}',
+      suggestions: ["{{task.ticket ? '[' + task.ticket + '] ' : ''}}{{task.name}}"],
+    },
+    {
+      name: 'achievements',
+      type: ParamType.Array,
+      template: '{{nextIndex}}. {{value}}',
+      suggestions: ["{{task.ticket ? '[' + task.ticket + '] ' : ''}}{{task.name}}"],
+    },
+  ],
+  customTaskParams: [
+    { name: 'tickets', type: ParamType.Array },
+    { name: 'participants', type: ParamType.Array, template: '@{{value}}' },
+    { name: 'link', type: ParamType.String },
   ],
   beginDayMessage: "Let's start!",
   defaultBreakName: 'Breaks',
@@ -37,11 +52,12 @@ export const defaultSettings: Settings = {
   ...defaultBasicSettings,
   autoGenerateOverview: true,
   taskListTitle: "Today's Tasks",
-  taskListDurationFormat: '- {{task.ticket ? "[" + task.ticket + "] " : ""}}{{task.name}}: {{duration}}',
+  taskListDurationFormat:
+    '- {{task.ticket ? "[" + task.ticket + "] " : ""}}{{task.name}}{{task.participants ? "with " + task.participants + " " : ""}}: {{duration}}',
   taskListStructure: ['*{{taskListTitle}} - {{date}}*', '', '{{estimatedDurations}}', '', '= {{estimatedTotals}}'],
   summaryTitle: "Today's Summary",
   summaryDurationFormat:
-    '- {{task.ticket ? "[" + task.ticket + "] " : ""}}{{task.name}}: {{duration}} {{progress ? "(" + progress + ")" : ""}}',
+    '- {{task.ticket ? "[" + task.ticket + "] " : ""}}{{task.name}}{{task.participants ? "with " + task.participants + " " : ""}}: {{duration}} {{progress ? "(" + progress + ")" : ""}}',
   summaryStructure: ['*{{summaryTitle}} - {{date}}*', '', '{{durations}}', '', '= {{totals}}'],
   newDayTemplate: [
     'date: {{currentDate}}',

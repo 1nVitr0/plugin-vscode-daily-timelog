@@ -9,6 +9,7 @@ export interface BasicSettings {
   taskGroups: string[];
   ticketPrefixes: string[];
   customParams: CustomParams[];
+  customTaskParams: CustomParams[];
   dateFormat: string;
   defaultBreakName: string;
   durationFormat: string;

@@ -1,21 +1,18 @@
+import moment from 'moment';
 import {
   BasicDayLog,
-  Settings,
-  formatString,
   BasicRoundingScheme,
   DurationApproximation,
   DurationListParams,
+  formatCustomParams,
   formatDate,
   formatDuration,
-  OverviewParams,
-  TaskTypeName,
-  ParamType,
-  formatList,
-  formatCustomParams,
   formatProgress,
+  formatString,
+  OverviewParams,
+  Settings,
+  TaskTypeName,
 } from '../../../shared/out';
-import moment from 'moment';
-import { getConfiguration, getCustomParam } from './tools/configuration';
 
 export default class SummaryGenerator {
   private dayLog: BasicDayLog;

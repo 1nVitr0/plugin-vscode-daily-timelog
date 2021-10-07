@@ -1,6 +1,12 @@
 import { Settings } from 'http2';
 import { SummarySettings, TaskListSettings } from './Settings';
 
+export enum ParamLocation {
+  PlannedTasks = 'plannedTasks',
+  TimeLog = 'timeLog',
+  Everywhere = 'everywhere',
+}
+
 export enum ParamType {
   Array = 'array',
   String = 'string',
@@ -38,6 +44,7 @@ export interface OverviewParams extends DurationListParams {
 export interface CustomParams {
   items?: ParamType;
   name: string;
+  location?: ParamLocation;
   required?: boolean;
   suggestions?: string[];
   template?: string;
