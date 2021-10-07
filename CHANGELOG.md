@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.2](https://github.com/1nVitr0/plugin-vscode-daily-timelog/compare/v0.2.1...v0.2.2) (2021-10-07)
+
+
+### Features
+
+* add completion for custom params ([005300c](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/005300c411e334baa71c9d1a63ac52844f235af2))
+* add generation of custom task parames ([f96900a](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/f96900a4e01ce78f7f09669b632f2549c2cff867))
+* add support for custom task params ([074d864](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/074d86400f2606e0efbeed9128b46423e2079c7a))
+
+
+### Bug Fixes
+
+* remove space before duration suggestion ([5b1b889](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/5b1b889917f99e0f09e9d5d7a58350ec75351ab2))
+* use actual date instead of current one ([2b3aa1a](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/2b3aa1a7111b37ada9bdac8e8e32633902afeff4))
+
 ### [0.2.1](https://github.com/1nVitr0/plugin-vscode-daily-timelog/compare/v0.2.0...v0.2.1) (2021-03-19)
 
 
