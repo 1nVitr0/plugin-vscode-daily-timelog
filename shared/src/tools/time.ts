@@ -128,5 +128,5 @@ export function formatDuration(_duration: Duration | number, settings = defaultB
   }
   if (current) result += current;
 
-  return result;
+  return result.trim();
 }
