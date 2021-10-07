@@ -54,11 +54,11 @@ export default abstract class TextDocumentService {
     return this.currentDocument?.positionAt(offset) || { line: 0, character: 0 };
   }
 
-  private getDocument(uri: string): TextDocument | undefined {
-    return this.documents.get(uri);
+  protected getLineCount(): number | undefined {
+    return this.currentDocument?.lineCount;
   }
 
-  private getLineCount(): number | undefined {
-    return this.currentDocument?.lineCount;
+  private getDocument(uri: string): TextDocument | undefined {
+    return this.documents.get(uri);
   }
 }

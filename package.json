@@ -160,12 +160,85 @@
             {
               "name": "goals",
               "type": "array",
+              "suggestions": [
+                "{{task.tickets ? '[' + task.tickets + '] ' : ''}}{{task.name}}"
+              ],
               "template": "{{nextIndex}}. {{value}}"
             },
             {
               "name": "achievements",
               "type": "array",
+              "suggestions": [
+                "{{task.tickets ? '[' + task.tickets + '] ' : ''}}{{task.name}}"
+              ],
               "template": "{{nextIndex}}. {{value}}"
+            }
+          ]
+        },
+        "daily-timelog.customTaskParams": {
+          "scope": "resources",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "description": "the declaration of a custom prop",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "name (or key) of the task"
+              },
+              "location": {
+                "type": "string",
+                "description": "Location the task param is allowed. One of 'plannedTasks', 'timeLog' or 'always'",
+                "default": "always"
+              },
+              "required": {
+                "type": "boolean",
+                "description": "wether the prop is required"
+              },
+              "suggestions": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "list of suggestions displayed for values inside the param"
+              },
+              "template": {
+                "type": "string",
+                "description": "rendering template used when generating"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "array",
+                  "string",
+                  "date",
+                  "time",
+                  "duration",
+                  "task"
+                ],
+                "description": "the type of the custom prop"
+              }
+            },
+            "required": [
+              "name",
+              "type"
+            ],
+            "additionalProperties": false
+          },
+          "description": "list of custom properties that can be included in the timelog",
+          "default": [
+            {
+              "name": "tickets",
+              "type": "array"
+            },
+            {
+              "name": "participants",
+              "type": "array",
+              "template": "@{{value}}"
+            },
+            {
+              "name": "link",
+              "type": "string"
             }
           ]
         },
@@ -313,7 +386,7 @@
         "daily-timelog.taskListDurationFormat": {
           "scope": "resources",
           "type": "string",
-          "default": "- {{task.ticket ? '[' + task.ticket + '] ' : ''}}{{task.name}}: {{duration}}",
+          "default": "- {{task.tickets ? '[' + task.tickets + '] ' : ''}}{{task.name}}{{task.participants ? ' with ' + task.participants : ''}}: {{duration}}",
           "description": "duration format - standard double curly braces notation. Possible values are task.name: task name, duration: duration, error: rounding error"
         },
         "daily-timelog.taskListStructure": {
@@ -361,7 +434,7 @@
         "daily-timelog.summaryDurationFormat": {
           "scope": "resources",
           "type": "string",
-          "default": "- {{task.ticket ? '[' + task.ticket + '] ' : ''}}{{task.name}}: {{duration}} {{progress ? '(' + progress + ')' : ''}}",
+          "default": "- {{task.tickets ? '[' + task.tickets + '] ' : ''}}{{task.name}}{{task.participants ? ' with ' + task.participants : ''}}: {{duration}} {{progress ? '(' + progress + ')' : ''}}",
           "description": "duration format - standard double curly braces notation. Possible values are {{ task.name }}: task name, {{ task.type }}: task type, {{ duration }}: duration, {{ error }}: rounding error"
         },
         "daily-timelog.summaryStructure": {
@@ -415,27 +488,27 @@
     "schemas": "node scripts/schemas.js"
   },
   "devDependencies": {
-    "@types/glob": "^7.1.3",
-    "@types/lodash": "^4.14.168",
-    "@types/mocha": "^8.0.3",
-    "@types/module-alias": "^2.0.0",
-    "@types/node": "^12.12.0",
-    "@types/vscode": "^1.52.0",
-    "@typescript-eslint/parser": "^2.3.0",
-    "eslint": "^6.4.0",
+    "@types/glob": "^7.1.4",
+    "@types/lodash": "^4.14.175",
+    "@types/mocha": "^9.0.0",
+    "@types/module-alias": "^2.0.1",
+    "@types/node": "^16.10.3",
+    "@types/vscode": "^1.60.0",
+    "@typescript-eslint/parser": "^4.33.0",
+    "eslint": "^7.32.0",
     "merge-options": "^3.0.4",
-    "mocha": "^8.1.1",
-    "rimraf": "^2.6.3",
-    "ts-loader": "^8.0.15",
-    "typescript": "^4.0.2",
-    "webpack": "^5.20.2",
-    "webpack-cli": "^4.5.0"
+    "mocha": "^9.1.2",
+    "rimraf": "^3.0.2",
+    "ts-loader": "^9.2.6",
+    "typescript": "^4.4.3",
+    "webpack": "^5.57.1",
+    "webpack-cli": "^4.9.0"
   },
   "dependencies": {
-    "glob": "^7.1.6",
+    "glob": "^7.2.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
-    "typescript-json-schema": "^0.48.0",
+    "typescript-json-schema": "^0.51.0",
     "yaml": "https://github.com/1nVitr0/yaml/releases/download/v2.0.0-4/yaml.tar.gz"
   }
 }
