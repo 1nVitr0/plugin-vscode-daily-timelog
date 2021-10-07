@@ -1,5 +1,5 @@
 import { Position } from 'vscode-languageserver';
-import { TextDocument } from 'vscode-languageserver-textdocument';
+import { Range, TextDocument } from 'vscode-languageserver-textdocument';
 import { CST, defaultOptions, Document, parseDocument } from 'yaml';
 import { Scalar, Pair, Collection, Node, YAMLMap } from 'yaml/types';
 import { YAMLError, Type } from 'yaml/util';
@@ -184,6 +184,8 @@ export default class YamlParser {
   private getNodeFromCollection(node: Collection, offset: number, context: (Scalar | null)[] = []): YamlNodeDescriptor {
     const offsetPosition = this.document.positionAt(offset);
     const nodePosition = this.document.positionAt(node.cstNode?.range?.origStart || node.cstNode?.range?.start || 0);
+    const nodeEnd = this.document.positionAt(node.cstNode?.range?.origEnd || node.cstNode?.range?.end || 0);
+
     let lineOffset = 0;
     for (const item of node.items as YamlNode[]) {
       if (!item && nodePosition.line + lineOffset == offsetPosition.line)
@@ -201,7 +203,20 @@ export default class YamlParser {
       }
     }
 
-    return { type: YamlType.None, context };
+    if (this.document.offsetAt(nodePosition) > offset || this.document.offsetAt(nodeEnd) < offset)
+      return { type: YamlType.None, context };
+
+    switch (node.type) {
+      case Type.DOCUMENT:
+      case Type.FLOW_MAP:
+      case Type.MAP:
+        return { type: YamlType.EmptyKey, context };
+      case Type.SEQ:
+      case Type.FLOW_SEQ:
+        return { type: YamlType.Single, context };
+      default:
+        return { type: YamlType.None, context };
+    }
   }
 
   private getNodeFromPair(node: Pair, offset: number, context: (Scalar | null)[] = []): YamlNodeDescriptor {

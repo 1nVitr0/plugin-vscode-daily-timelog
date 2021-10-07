@@ -18,6 +18,10 @@ import {
   ParamType,
   parseDuration,
   TaskTypeName,
+  ParamLocation,
+  CustomParams,
+  formatString,
+  Task,
 } from '../../../shared/out';
 import YamlParser from '../parse/YamlParser';
 import { YamlKeyDescriptor, YamlNodeDescriptor, YamlSingleDescriptor, YamlType, YamlValueDescriptor } from '../types';
@@ -88,9 +92,12 @@ export default class CompletionService extends TextDocumentService {
 
     if (matchContext(['timeLog'], context) || matchContext(['plannedTasks'], context))
       return this.completeKey(_node as YamlKeyDescriptor, position);
-    else if (context.length == 0 && position.character == 0) {
+    else if (context.length == 0) {
       return [
-        ...defaultPairKeys.map((label) => ({ kind, label })),
+        ...postfixCompletions(
+          defaultPairKeys.map((label) => ({ kind, label })),
+          ':'
+        ),
         ...postfixCompletions(
           defaultKeys.map((label) => ({ kind, label })),
           ':\n  '
@@ -101,11 +108,13 @@ export default class CompletionService extends TextDocumentService {
     return [];
   }
 
-  protected completeKey({ node, context }: YamlKeyDescriptor, position: Position): CompletionItem[] {
+  protected completeKey(descriptor: YamlKeyDescriptor, position: Position): CompletionItem[] {
+    const { node, context } = descriptor;
     let completions: CompletionItem[] = [];
 
     if (matchContext(['plannedTasks'], context)) completions = this.getPlannedTaskParamsCompletion(position);
     else if (matchContext(['timeLog'], context)) completions = this.getTimeLogParamsCompletion(position);
+    else completions = this.completeEmpty(descriptor, position);
 
     return this.addTextEdit(completions, position, node?.cstNode?.range, YamlParser.isQuoted(node));
   }
@@ -115,6 +124,9 @@ export default class CompletionService extends TextDocumentService {
 
     if (matchContext(['plannedTasks'], context)) completions = this.getPlannedTaskCompletion(position);
     else if (matchContext(['timeLog'], context)) completions = this.getTimeCompletion(position, Type.QUOTE_DOUBLE);
+    else if (matchContext(['plannedTasks', '*'], context) || matchContext(['timeLog', '*'], context))
+      completions = this.getCustomTaskParamValueCompletion(context) || [];
+    else completions = this.getCustomParamValueCompletion(context) || [];
 
     return this.addTextEdit(completions, position, node?.cstNode?.range, YamlParser.isQuoted(node));
   }
@@ -217,11 +229,11 @@ export default class CompletionService extends TextDocumentService {
         });
     }
 
-    return [...items, ...postfixCompletions(breakItems, ': !break')];
+    return [...postfixCompletions(items, ':'), ...postfixCompletions(breakItems, ': !break')];
   }
 
   protected getPlannedTaskParamsCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
-    const params = ['group', 'ticket', 'description', 'comment', 'link'];
+    const params = ['group', 'description', 'comment', ...this.getCustomTaskParamNames(ParamLocation.PlannedTasks)];
 
     return params.map((param) => ({
       label: param,
@@ -235,7 +247,7 @@ export default class CompletionService extends TextDocumentService {
     const previousLogs = this.parser.getListNodesBefore(position, ['plannedTasks']);
     const tasks: (string | null)[] = previousLogs.map((log) => {
       const isBreak = YamlParser.containsNodeWithTag(log, '!break');
-      if ((type == 'task' && isBreak) || (type == 'task' && !isBreak)) return null;
+      if ((type == 'task' && isBreak) || (type == 'break' && !isBreak)) return null;
       const prefix = isBreak ? '!break ' : '';
 
       if (YamlParser.isScalar(log)) return `${prefix}${log.toString()}`;
@@ -262,12 +274,11 @@ export default class CompletionService extends TextDocumentService {
         return this.getCommentCompletion(position);
       case 'group':
         return this.getGroupCompletion(position);
-      case 'ticket':
-        return this.getTicketCompletion(position);
       case 'description':
         return this.getDescriptionCompletion(position);
-      case 'link':
-        return this.getLinkCompletion(position);
+      default:
+        const paramCompletions = this.getCustomTaskParamValueCompletion(context);
+        if (paramCompletions) return paramCompletions;
     }
 
     if (/\!b?r?e?a?k?/.test(node?.tag || '')) completions = this.getBreakDurationCompletion(position);
@@ -281,10 +292,6 @@ export default class CompletionService extends TextDocumentService {
   }
 
   protected getDescriptionCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
-    return [];
-  }
-
-  protected getLinkCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
     return [];
   }
 
@@ -324,7 +331,7 @@ export default class CompletionService extends TextDocumentService {
       if (nextTime && lastTime >= nextTime) break;
     }
 
-    return items;
+    return postfixCompletions(items, ':');
   }
 
   protected getTimeCompletionItem(
@@ -363,12 +370,33 @@ export default class CompletionService extends TextDocumentService {
   }
 
   protected getTimeLogParamsCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
-    const params = ['comment', 'progress'];
+    const params = ['comment', 'progress', ...this.getCustomTaskParamNames(ParamLocation.TimeLog)];
 
     return params.map((param) => ({
       label: param,
       insertText: `${param}:`,
     }));
+  }
+
+  protected getAllTasks(type?: TaskTypeName): string[] {
+    if (!this.parser) return [];
+    const position = Position.create(this.getLineCount() || Infinity, 0);
+
+    const previousLogs = this.parser.getListNodesBefore(position, ['timeLog']);
+    const logged: string[] = previousLogs
+      .map((log) => {
+        if (YamlParser.isScalar(log)) return log.toString();
+        else if (log.type == Pair.Type.PAIR || log.type == Pair.Type.MERGE_PAIR)
+          return log.value ? log.value.toString() : null;
+        else if (log.type == Type.MAP || log.type == Type.FLOW_MAP) return YamlParser.getFirstValue(log as YAMLMap);
+      })
+      .filter((task) => !!task);
+    const planned = this.getPlannedTasksUntil(position, type);
+
+    const merged = logged.filter((task) => !/\[(begin|break|end)\]/.test(task));
+    for (const task of planned) if (merged.indexOf(task) < 0) merged.push(task);
+
+    return merged;
   }
 
   protected getTimeLogUntil(position: Position): moment.Moment[] {
@@ -421,6 +449,9 @@ export default class CompletionService extends TextDocumentService {
         return this.getCommentCompletion(position);
       case 'progress':
         return this.getProgressCompletion(position);
+      default:
+        const paramCompletions = this.getCustomTaskParamValueCompletion(context);
+        if (paramCompletions) return paramCompletions;
     }
 
     if (/\!running/.test(node?.tag || ''))
@@ -498,5 +529,56 @@ export default class CompletionService extends TextDocumentService {
     }
 
     return items;
+  }
+
+  protected getCustomParamValueCompletion(context: (Scalar | null)[]): CompletionItem[] | null {
+    const localContext = last(context)?.toString();
+    const param = this.currentConfiguration?.customParams.find(({ name }) => name == localContext);
+    return param ? this.getCustomParamValueCompletionItems(param) : null;
+  }
+
+  protected getCustomTaskParamValueCompletion(context: (Scalar | null)[]): CompletionItem[] | null {
+    const localContext = last(context)?.toString();
+    const param = this.currentConfiguration?.customTaskParams.find(({ name }) => name == localContext);
+    return param ? this.getCustomParamValueCompletionItems(param) : null;
+  }
+
+  protected getCustomParamValueCompletionItems(param: CustomParams): CompletionItem[] {
+    const kind = CompletionItemKind.Value;
+    const tasks: Partial<Task>[] = this.getAllTasks('task').map<Partial<Task>>((task) => ({ name: task }));
+    const paramData = {};
+
+    const completions: CompletionItem[] = [];
+    for (const suggestion of param.suggestions || []) {
+      if (/\{\{\s*task\./.test(suggestion)) {
+        const f = formatString;
+        for (const task of tasks) completions.push({ kind, label: formatString(suggestion, { ...paramData, task }) });
+      } else {
+        completions.push({ kind, label: formatString(suggestion, paramData) });
+      }
+    }
+
+    return completions;
+  }
+
+  protected getCustomParams(location?: ParamLocation): CustomParams[] {
+    return (
+      this.currentConfiguration?.customParams?.filter((param) => !param.location || param.location == location) || []
+    );
+  }
+
+  protected getCustomTaskParams(location?: ParamLocation): CustomParams[] {
+    return (
+      this.currentConfiguration?.customTaskParams?.filter((param) => !param.location || param.location == location) ||
+      []
+    );
+  }
+
+  protected getCustomParamNames(location?: ParamLocation): string[] {
+    return this.getCustomParams(location).map(({ name }) => name);
+  }
+
+  protected getCustomTaskParamNames(location?: ParamLocation): string[] {
+    return this.getCustomTaskParams(location).map(({ name }) => name);
   }
 }

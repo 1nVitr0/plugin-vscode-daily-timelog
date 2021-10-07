@@ -117,7 +117,7 @@ export function postfixCompletions(
   });
 }
 
-export function prepostfixCompletions(
+export function affixCompletions(
   completions: CompletionItem[],
   prefix: string,
   postfix: string,
