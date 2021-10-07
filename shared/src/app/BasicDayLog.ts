@@ -57,7 +57,7 @@ export default class BasicDayLog implements DayLog {
       if (!['timeLog', 'date', 'plannedTasks'].includes(param)) customParams[param] = log[param];
     }
 
-    const result = new BasicDayLog(new Date(), tasks, customParams);
+    const result = new BasicDayLog(new Date(log.date), tasks, customParams);
     if (log.timeLog) result.applyLog(log.timeLog, customTaskParams, includeUnplanned);
 
     return result;
