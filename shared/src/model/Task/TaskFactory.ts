@@ -6,29 +6,33 @@ import {
   LogEntryEndTimeDeclaration,
   LogEntryStyleEnd,
   LogEntryStyleStart,
+  Settings,
   TaskDeclaration,
   TaskDurationDeclaration,
+  CustomParams,
 } from '../..';
 import { isKeyOf } from '../../tools/typings';
 import { parseDuration } from '../../tools/time';
 import { extractBreak, isBreak } from '../../tools/string';
 
 export default class TaskFactory {
-  public constructor() {}
+  public constructor(protected customParams: CustomParams[]) {}
 
   public static logEntryFromDeclaration<T extends LogEntryStyleEnd | LogEntryStyleStart>(
-    declaration: T extends LogEntryStyleStart ? LogEntryStyleStart : LogEntryStyleEnd | LogEntryEndTimeDeclaration
+    declaration: T extends LogEntryStyleStart ? LogEntryStyleStart : LogEntryStyleEnd | LogEntryEndTimeDeclaration,
+    customParams?: Settings['customTaskParams']
   ): T extends LogEntryStyleStart ? LogEntryStyleStart : LogEntryStyleEnd {
     if ('task' in declaration)
       return declaration as T extends LogEntryStyleStart ? LogEntryStyleStart : LogEntryStyleEnd;
 
-    const dummyKeys: Record<keyof LogEntryStyleStart | keyof LogEntryStyleEnd, any> = {
+    const dummyKeys: Record<keyof LogEntryStyleStart | keyof LogEntryStyleEnd, any> & Record<string, any> = {
       task: 1,
       comment: 1,
       end: 1,
       progress: 1,
       start: 1,
     };
+    if (customParams) for (const { name } of customParams) dummyKeys[name] = 1;
     const logEntry: Partial<LogEntryStyleStart | LogEntryStyleEnd> = {};
     for (const key of Object.keys(declaration)) {
       // @ts-ignore: Needed due to declaration[key]
@@ -40,7 +44,10 @@ export default class TaskFactory {
     return logEntry as T extends LogEntryStyleStart ? LogEntryStyleStart : LogEntryStyleEnd;
   }
 
-  private static taskFromDeclaration(declaration: TaskDeclaration | TaskDurationDeclaration | Task): Task {
+  private static taskFromDeclaration(
+    declaration: TaskDeclaration | TaskDurationDeclaration | Task,
+    customParams?: Settings['customTaskParams']
+  ): Task {
     if ('actualDuration' in declaration) return declaration as Task;
     if ('name' in declaration && 'estimatedDuration' in declaration) {
       const task: Task = { ...declaration, actualDuration: 0, completed: false } as Task;
@@ -48,7 +55,7 @@ export default class TaskFactory {
       return task;
     }
 
-    const dummyKeys: Record<keyof TaskDeclaration, any> = {
+    const dummyKeys: Record<keyof TaskDeclaration, any> & Record<string, any> = {
       name: 1,
       estimatedDuration: 1,
       description: 1,
@@ -58,6 +65,7 @@ export default class TaskFactory {
       ticket: 1,
       type: 1,
     };
+    if (customParams) for (const { name } of customParams) dummyKeys[name] = 1;
     const task: Partial<Task> = {};
     for (const key of Object.keys(declaration)) {
       // @ts-ignore: Needed due to declaration[key]
@@ -65,7 +73,6 @@ export default class TaskFactory {
       else {
         // @ts-ignore: Needed due to declaration[key]
         const duration: string = declaration[key];
-        const extracted = extractBreak(duration);
         task.type = isBreak(duration || '') ? 'break' : 'task';
         [task.name, task.estimatedDuration] = [key, parseDuration(extractBreak(duration))];
       }
@@ -77,20 +84,9 @@ export default class TaskFactory {
   public fromData<T extends TaskTypeName>(
     _data: Task<T> | TaskDeclaration | TaskDurationDeclaration
   ): BasicTask<TaskTypeName> {
-    const declaration = TaskFactory.taskFromDeclaration(_data);
-    const {
-      type,
-      name,
-      description,
-      estimatedDuration,
-      actualDuration,
-      completed,
-      comment,
-      group,
-      link,
-      progress,
-      ticket,
-    } = declaration;
+    const declaration = TaskFactory.taskFromDeclaration(_data, this.customParams);
+    const { type, name, description, estimatedDuration, actualDuration, completed, comment, group, progress } =
+      declaration;
 
     let task: BasicTask<T | TaskTypeName>;
     switch (type) {
@@ -106,9 +102,9 @@ export default class TaskFactory {
 
     task.comment = comment;
     task.group = group;
-    task.link = link;
     task.progress = progress;
-    task.ticket = ticket;
+    // @ts-ignore Untyped dynamic properties
+    for (const { name } of this.customParams) task[name] = declaration[name];
     task.execute(actualDuration);
     if (completed) task.complete();
 

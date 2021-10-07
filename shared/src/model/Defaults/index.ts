@@ -13,13 +13,13 @@ export const defaultBasicSettings: BasicSettings = {
       name: 'goals',
       type: ParamType.Array,
       template: '{{nextIndex}}. {{value}}',
-      suggestions: ["{{task.ticket ? '[' + task.ticket + '] ' : ''}}{{task.name}}"],
+      suggestions: ["{{task.tickets ? '[' + task.tickets + '] ' : ''}}{{task.name}}"],
     },
     {
       name: 'achievements',
       type: ParamType.Array,
       template: '{{nextIndex}}. {{value}}',
-      suggestions: ["{{task.ticket ? '[' + task.ticket + '] ' : ''}}{{task.name}}"],
+      suggestions: ["{{task.tickets ? '[' + task.tickets + '] ' : ''}}{{task.name}}"],
     },
   ],
   customTaskParams: [
@@ -53,11 +53,11 @@ export const defaultSettings: Settings = {
   autoGenerateOverview: true,
   taskListTitle: "Today's Tasks",
   taskListDurationFormat:
-    '- {{task.ticket ? "[" + task.ticket + "] " : ""}}{{task.name}}{{task.participants ? "with " + task.participants + " " : ""}}: {{duration}}',
+    '- {{task.tickets ? "[" + task.tickets + "] " : ""}}{{task.name}}{{task.participants ? " with " + task.participants : ""}}: {{duration}}',
   taskListStructure: ['*{{taskListTitle}} - {{date}}*', '', '{{estimatedDurations}}', '', '= {{estimatedTotals}}'],
   summaryTitle: "Today's Summary",
   summaryDurationFormat:
-    '- {{task.ticket ? "[" + task.ticket + "] " : ""}}{{task.name}}{{task.participants ? "with " + task.participants + " " : ""}}: {{duration}} {{progress ? "(" + progress + ")" : ""}}',
+    '- {{task.tickets ? "[" + task.tickets + "] " : ""}}{{task.name}}{{task.participants ? " with " + task.participants : ""}}: {{duration}} {{progress ? "(" + progress + ")" : ""}}',
   summaryStructure: ['*{{summaryTitle}} - {{date}}*', '', '{{durations}}', '', '= {{totals}}'],
   newDayTemplate: [
     'date: {{currentDate}}',

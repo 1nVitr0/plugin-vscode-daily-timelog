@@ -49,4 +49,5 @@ export interface CustomParams {
   suggestions?: string[];
   template?: string;
   type: ParamType;
+  delimiter?: string;
 }

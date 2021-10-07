@@ -161,7 +161,7 @@
               "name": "goals",
               "type": "array",
               "suggestions": [
-                "{{task.ticket ? '[' + task.ticket + '] ' : ''}}{{task.name}}"
+                "{{task.tickets ? '[' + task.tickets + '] ' : ''}}{{task.name}}"
               ],
               "template": "{{nextIndex}}. {{value}}"
             },
@@ -169,7 +169,7 @@
               "name": "achievements",
               "type": "array",
               "suggestions": [
-                "{{task.ticket ? '[' + task.ticket + '] ' : ''}}{{task.name}}"
+                "{{task.tickets ? '[' + task.tickets + '] ' : ''}}{{task.name}}"
               ],
               "template": "{{nextIndex}}. {{value}}"
             }
@@ -386,7 +386,7 @@
         "daily-timelog.taskListDurationFormat": {
           "scope": "resources",
           "type": "string",
-          "default": "- {{task.ticket ? '[' + task.ticket + '] ' : ''}}{{task.name}}{{task.participants ? 'with ' + task.participants + ' ' : ''}}: {{duration}}",
+          "default": "- {{task.tickets ? '[' + task.tickets + '] ' : ''}}{{task.name}}{{task.participants ? ' with ' + task.participants : ''}}: {{duration}}",
           "description": "duration format - standard double curly braces notation. Possible values are task.name: task name, duration: duration, error: rounding error"
         },
         "daily-timelog.taskListStructure": {
@@ -434,7 +434,7 @@
         "daily-timelog.summaryDurationFormat": {
           "scope": "resources",
           "type": "string",
-          "default": "- {{task.ticket ? '[' + task.ticket + '] ' : ''}}{{task.name}}{{task.participants ? 'with ' + task.participants + ' ' : ''}}: {{duration}} {{progress ? '(' + progress + ')' : ''}}",
+          "default": "- {{task.tickets ? '[' + task.tickets + '] ' : ''}}{{task.name}}{{task.participants ? ' with ' + task.participants : ''}}: {{duration}} {{progress ? '(' + progress + ')' : ''}}",
           "description": "duration format - standard double curly braces notation. Possible values are {{ task.name }}: task name, {{ task.type }}: task type, {{ duration }}: duration, {{ error }}: rounding error"
         },
         "daily-timelog.summaryStructure": {

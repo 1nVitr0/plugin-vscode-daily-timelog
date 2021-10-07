@@ -9,7 +9,7 @@ function getSummaryGenerator(includeUnplanned = false) {
     const text = window.activeTextEditor.document.getText();
     const config = getConfiguration();
     const log: StructuredLog = parseYaml(text);
-    const dayLog = BasicDayLog.fromStructuredLog(log, includeUnplanned);
+    const dayLog = BasicDayLog.fromStructuredLog(log, config.customTaskParams, includeUnplanned);
 
     return new SummaryGenerator(dayLog, config);
   } catch (e) {
