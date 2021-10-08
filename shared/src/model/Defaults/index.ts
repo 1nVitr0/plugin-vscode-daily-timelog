@@ -2,6 +2,7 @@ import { CST, Document, Options } from 'yaml';
 import { isBreak } from '../../tools/string';
 import { ParamType } from '../Settings/Params';
 import Settings, { BasicSettings } from '../Settings/Settings';
+import { JiraSettings } from '../Settings/Settings';
 
 export const defaultBasicSettings: BasicSettings = {
   commonTasks: ['Organization', 'Daily', 'Meeting', 'Refactoring', 'Code Review', 'Checking Mails'],
@@ -48,8 +49,18 @@ export const defaultBasicSettings: BasicSettings = {
   workDayHoursEnd: '17:00',
 };
 
+export const defaultJiraSettings: JiraSettings = {
+  jiraAccountId: '',
+  jiraDomain: '',
+  jiraToken: '',
+  jiraUserEmail: '',
+  jiraFetchInterval: 30 * 60 * 1000,
+  jiraMaxTasks: 50,
+};
+
 export const defaultSettings: Settings = {
   ...defaultBasicSettings,
+  ...defaultJiraSettings,
   autoGenerateOverview: true,
   taskListTitle: "Today's Tasks",
   taskListDurationFormat:

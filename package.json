@@ -28,7 +28,10 @@
   },
   "activationEvents": [
     "onLanguage:yaml",
-    "onCommand:daily-timelog.startNewDay"
+    "onCommand:daily-timelog.startNewDay",
+    "onCommand:daily-timelog.setupJira",
+    "onCommand:daily-timelog.setupJiraToken",
+    "onCommand:daily-timelog.setupJiraUser"
   ],
   "preview": true,
   "main": "./client/out/extension",
@@ -49,6 +52,18 @@
       {
         "command": "daily-timelog.generateOverview",
         "title": "Daily Time Log: Generate Overview"
+      },
+      {
+        "command": "daily-timelog.setupJira",
+        "title": "Daily Time Log: Set up Jira"
+      },
+      {
+        "command": "daily-timelog.setupJiraToken",
+        "title": "Daily Time Log: Set up Jira Token"
+      },
+      {
+        "command": "daily-timelog.setupJiraUser",
+        "title": "Daily Time Log: Select Jira User"
       }
     ],
     "configuration": {
@@ -241,6 +256,45 @@
               "type": "string"
             }
           ]
+        },
+        "daily-timelog.askForJira": {
+          "type": "boolean",
+          "default": "true"
+        },
+        "daily-timelog.jiraAccountId": {
+          "scope": "resources",
+          "type": "string",
+          "default": "",
+          "description": "Current User accountId"
+        },
+        "daily-timelog.jiraToken": {
+          "scope": "resources",
+          "type": "string",
+          "default": "",
+          "description": "Jira API Token"
+        },
+        "daily-timelog.jiraUserEmail": {
+          "scope": "resources",
+          "type": "string",
+          "description": "Jira API email"
+        },
+        "daily-timelog.jiraDomain": {
+          "scope": "resources",
+          "type": "string",
+          "default": "",
+          "description": "Jira API Domain"
+        },
+        "daily-timelog.jiraFetchInterval": {
+          "scope": "resources",
+          "type": "number",
+          "default": 1800000,
+          "description": "Interval in which to fetch Jira tasks"
+        },
+        "daily-timelog.jiraMaxTasks": {
+          "scope": "resources",
+          "type": "number",
+          "default": 50,
+          "description": "Maximum Jira tasks to suggest"
         },
         "daily-timelog.beginDayMessage": {
           "scope": "resource",
