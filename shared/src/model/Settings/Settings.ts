@@ -46,7 +46,16 @@ export interface OverviewSettings extends TaskListSettings, SummarySettings {
   overviewTitle: string;
 }
 
-export default interface Settings extends TaskListSettings, SummarySettings, OverviewSettings {
+export interface JiraSettings {
+  jiraAccountId: string;
+  jiraDomain: string;
+  jiraToken: string;
+  jiraUserEmail: string;
+  jiraFetchInterval: number;
+  jiraMaxTasks: number;
+}
+
+export default interface Settings extends TaskListSettings, SummarySettings, OverviewSettings, JiraSettings {
   autoGenerateOverview: boolean;
   newDayTemplate: string[];
 }

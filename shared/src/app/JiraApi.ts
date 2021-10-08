@@ -27,17 +27,28 @@ export default class JiraApi {
     return response.data;
   }
 
-  public setUser(user: JiraUser) {
-    this._currentUser = user;
+  public setUser(user: JiraUser | string) {
+    this._currentUser =
+      typeof user == 'object'
+        ? user
+        : {
+            accountId: user,
+            accountType: 'atlassian',
+            active: true,
+            avatarUrls: {},
+            displayName: 'You',
+            locale: 'en-US',
+            self: '',
+          };
   }
 
   public async getAssignedTasks(maxResults = 100): Promise<JiraTask[]> {
     const jql = (this.accountId ? `assignee in (${this.accountId}) ` : '') + `ORDER BY updated DESC, created DESC`;
-    const response = await axios.get<JiraTask[]>('https://konsolenkost.atlassian.net/rest/api/2/search', {
+    const response = await axios.get<{ issues: JiraTask[] }>('https://konsolenkost.atlassian.net/rest/api/2/search', {
       params: { jql, fields: 'summary', maxResults },
       headers: this.headers,
     });
 
-    return response.data;
+    return response.data.issues;
   }
 }
