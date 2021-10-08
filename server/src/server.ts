@@ -14,6 +14,7 @@ import {
 } from 'vscode-languageserver/node';
 import CompletionService from './services/CompletionService';
 import ConfigurationService from './services/ConfigurationService';
+import JiraTaskService from './services/JiraTaskService';
 import ValidationService from './services/ValidationService';
 
 // Create a connection for the server, using Node's IPC as a transport.
@@ -23,7 +24,8 @@ let connection = createConnection(ProposedFeatures.all);
 // Create a simple text document manager.
 let documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 let configurationService = new ConfigurationService(connection);
-let completionService = new CompletionService(documents, configurationService);
+let taskService = new JiraTaskService(configurationService);
+let completionService = new CompletionService(documents, configurationService, taskService);
 let validationService = new ValidationService(documents, configurationService);
 
 let hasConfigurationCapability: boolean = false;
@@ -68,6 +70,7 @@ connection.onInitialized(() => {
   if (hasConfigurationCapability) {
     // Register for all configuration changes.
     connection.client.register(DidChangeConfigurationNotification.type, undefined);
+    configurationService.updateConfiguration();
   }
   if (hasWorkspaceFolderCapability) {
     connection.workspace.onDidChangeWorkspaceFolders((_event) => {
@@ -76,8 +79,8 @@ connection.onInitialized(() => {
   }
 });
 
-connection.onDidChangeConfiguration((change) => {
-  configurationService.changeConfiguration(change);
+connection.onDidChangeConfiguration(async (change) => {
+  await configurationService.changeConfiguration(change);
   documents.all().forEach((document) => {
     validationService.for(document).then((validate) => {
       connection.sendDiagnostics({
