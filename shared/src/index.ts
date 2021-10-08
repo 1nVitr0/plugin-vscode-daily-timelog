@@ -13,6 +13,7 @@ import Break from './model/Task/Break';
 import Task from './model/Task/Task';
 import TaskFactory from './model/Task/TaskFactory';
 import WorkTask from './model/Task/WorkTask';
+import JiraApi from '../out/app/JiraApi';
 
 export * from './model/Defaults';
 export * from './model/StructuredLog/TaskList';
@@ -42,4 +43,5 @@ export {
   WorkTask,
   Task,
   TaskFactory,
+  JiraApi,
 };
