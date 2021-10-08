@@ -6,7 +6,10 @@ import {
   CompletionItemTag,
   InsertReplaceEdit,
   Position,
+  TextDocument,
+  TextDocuments,
 } from 'vscode-languageserver';
+import { TextEdit } from 'vscode-languageserver-textdocument';
 import { CST } from 'yaml';
 import { Pair, Scalar, YAMLMap } from 'yaml/types';
 import { Type } from 'yaml/util';
@@ -26,9 +29,19 @@ import {
 import YamlParser from '../parse/YamlParser';
 import { YamlKeyDescriptor, YamlNodeDescriptor, YamlSingleDescriptor, YamlType, YamlValueDescriptor } from '../types';
 import { addQuotes, matchContext, postfixCompletions, prefixCompletions } from './completion/completionModification';
+import ConfigurationService from './ConfigurationService';
+import JiraTaskService from './JiraTaskService';
 import TextDocumentService from './TextDocumentService';
 
 export default class CompletionService extends TextDocumentService {
+  public constructor(
+    documents: TextDocuments<TextDocument>,
+    configurationService: ConfigurationService,
+    private jiraService: JiraTaskService
+  ) {
+    super(documents, configurationService);
+  }
+
   public doComplete(position: Position): CompletionItem[] {
     if (!this.parser) return [];
 
@@ -229,7 +242,9 @@ export default class CompletionService extends TextDocumentService {
         });
     }
 
-    return [...postfixCompletions(items, ':'), ...postfixCompletions(breakItems, ': !break')];
+    const jiraItems = this.getJiraTaskCompletion(position, true, quote);
+
+    return [...postfixCompletions(items, ':'), ...postfixCompletions(breakItems, ': !break'), ...jiraItems];
   }
 
   protected getPlannedTaskParamsCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
@@ -515,6 +530,7 @@ export default class CompletionService extends TextDocumentService {
 
     let priority = 0;
     const items: CompletionItem[] = [];
+    items.push(...this.getJiraTaskCompletion(position, false, quote));
     if (firstTask) items.push(...this.getTimelogBeginCompletion(position, quote, true));
     for (const task of planned) {
       const text = addQuotes(task, quote);
@@ -529,6 +545,35 @@ export default class CompletionService extends TextDocumentService {
     }
 
     return items;
+  }
+
+  protected getJiraTaskCompletion(
+    position: Position,
+    asKey = false,
+    quote: Scalar.Type = Type.QUOTE_SINGLE
+  ): CompletionItem[] {
+    const previousTasks = this.getAllTasks();
+    const jiraTasks = this.jiraService.tasks.filter(({ fields: { summary } }) => previousTasks.indexOf(summary) < 0);
+    let i = 0;
+
+    return jiraTasks.map<CompletionItem>(({ fields: { summary }, key }) => {
+      const task = addQuotes(summary, quote);
+      const insertText = asKey ? `${task}:` : `${task}`;
+      const ticketProp: TextEdit = {
+        newText: `    tickets: [ ${addQuotes(key, quote)} ]\n`,
+        range: {
+          start: { line: position.line + 1, character: 0 },
+          end: { line: position.line + 1, character: 0 },
+        },
+      };
+
+      return {
+        label: summary,
+        filterText: task,
+        insertText,
+        additionalTextEdits: [ticketProp],
+      };
+    });
   }
 
   protected getCustomParamValueCompletion(context: (Scalar | null)[]): CompletionItem[] | null {

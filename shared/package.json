@@ -11,5 +11,11 @@
 	},
 	"engines": {
 		"vscode": "^1.52.0"
+	},
+	"devDependencies": {
+		"@types/axios": "^0.14.0"
+	},
+	"dependencies": {
+		"axios": "^0.22.0"
 	}
 }
