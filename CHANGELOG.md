@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.3](https://github.com/1nVitr0/plugin-vscode-daily-timelog/compare/v0.2.2...v0.2.3) (2021-10-08)
+
+
+### Features
+
+* add base integration for jira ([5fdbf86](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/5fdbf86f6dfd8aaaa0cfc7584581dc34f687f32e))
+* add configuration for jira integration ([8e61d9d](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/8e61d9d4b7818c1f34e081a3128d2473efd48de1))
+* add prompt for jira on initial update / install ([29afe6b](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/29afe6b3813a116896a47a1bce839ccef4018c5d))
+* completion for jira tasks ([be801e6](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/be801e611f9f9edc66e10ed2cd80831658d1e2b7))
+
+
+### Bug Fixes
+
+* make jira setup more user friendly ([4d5f6ea](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/4d5f6ea73eb5b7bdaa1b759aaa7b2cf978a0884d))
+
 ### [0.2.2](https://github.com/1nVitr0/plugin-vscode-daily-timelog/compare/v0.2.1...v0.2.2) (2021-10-07)
 
 
