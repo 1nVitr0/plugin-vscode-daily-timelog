@@ -28,7 +28,10 @@
   },
   "activationEvents": [
     "onLanguage:yaml",
-    "onCommand:daily-timelog.startNewDay"
+    "onCommand:daily-timelog.startNewDay",
+    "onCommand:daily-timelog.setupJira",
+    "onCommand:daily-timelog.setupJiraToken",
+    "onCommand:daily-timelog.setupJiraUser"
   ],
   "preview": true,
   "main": "./client/out/extension",
@@ -49,6 +52,18 @@
       {
         "command": "daily-timelog.generateOverview",
         "title": "Daily Time Log: Generate Overview"
+      },
+      {
+        "command": "daily-timelog.setupJira",
+        "title": "Daily Time Log: Set up Jira"
+      },
+      {
+        "command": "daily-timelog.setupJiraToken",
+        "title": "Daily Time Log: Set up Jira Token"
+      },
+      {
+        "command": "daily-timelog.setupJiraUser",
+        "title": "Daily Time Log: Select Jira User"
       }
     ],
     "configuration": {
