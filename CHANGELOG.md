@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.4](https://github.com/1nVitr0/plugin-vscode-daily-timelog/compare/v0.2.3...v0.2.4) (2021-10-09)
+
+
+### Features
+
+* add more ticket information ([af6d9f3](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/af6d9f3e5c912d1df56746614301c3f38c4582cc))
+* allow multiple jira users ([56bf616](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/56bf61623f7480d20ce8aa8a922fb041ab1a5966))
+
 ### [0.2.3](https://github.com/1nVitr0/plugin-vscode-daily-timelog/compare/v0.2.2...v0.2.3) (2021-10-08)
 
 
