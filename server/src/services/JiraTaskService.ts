@@ -19,12 +19,13 @@ export default class JiraTaskService {
   }
 
   protected setup() {
-    const { jiraAccountId, jiraDomain, jiraToken, jiraUserEmail, jiraFetchInterval } = this.configuration.configuration;
+    const { jiraAccountIds, jiraDomain, jiraToken, jiraUserEmail, jiraFetchInterval } =
+      this.configuration.configuration;
 
-    if (!jiraAccountId || !jiraDomain || !jiraToken || !jiraUserEmail) return;
+    if (!jiraAccountIds || !jiraDomain || !jiraToken || !jiraUserEmail) return;
 
     this.api = new JiraApi(jiraDomain, jiraUserEmail, jiraToken);
-    this.api.setUser(jiraAccountId);
+    this.api.setUsers(jiraAccountIds);
 
     if (this.interval) clearInterval(this.interval);
     this.interval = setInterval(() => this.loadTasks, jiraFetchInterval);

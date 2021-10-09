@@ -50,7 +50,7 @@ export const defaultBasicSettings: BasicSettings = {
 };
 
 export const defaultJiraSettings: JiraSettings = {
-  jiraAccountId: '',
+  jiraAccountIds: [],
   jiraDomain: '',
   jiraToken: '',
   jiraUserEmail: '',

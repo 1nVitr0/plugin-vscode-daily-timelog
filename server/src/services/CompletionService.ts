@@ -556,24 +556,34 @@ export default class CompletionService extends TextDocumentService {
     const jiraTasks = this.jiraService.tasks.filter(({ fields: { summary } }) => previousTasks.indexOf(summary) < 0);
     let i = 0;
 
-    return jiraTasks.map<CompletionItem>(({ fields: { summary }, key }) => {
-      const task = addQuotes(summary, quote);
-      const insertText = asKey ? `${task}:` : `${task}`;
-      const ticketProp: TextEdit = {
-        newText: `    tickets: [ ${addQuotes(key, quote)} ]\n`,
-        range: {
-          start: { line: position.line + 1, character: 0 },
-          end: { line: position.line + 1, character: 0 },
-        },
-      };
+    return jiraTasks.map<CompletionItem>(
+      ({ fields: { summary, assignee, creator, status, issuetype, parent }, key }) => {
+        const task = addQuotes(summary, quote);
+        const insertText = asKey ? `${task}:` : `${task}`;
+        const documentation = [
+          `Type: ${issuetype?.name}`,
+          `Assignee: ${assignee?.displayName}`,
+          `Author: ${creator?.displayName}`,
+        ];
+        if (parent) documentation.push(`Parent (${parent?.fields.issuetype?.name}): ${parent?.fields.summary}`);
+        const ticketProp: TextEdit = {
+          newText: `    tickets: [ ${addQuotes(key, quote)} ]\n`,
+          range: {
+            start: { line: position.line + 1, character: 0 },
+            end: { line: position.line + 1, character: 0 },
+          },
+        };
 
-      return {
-        label: summary,
-        filterText: task,
-        insertText,
-        additionalTextEdits: [ticketProp],
-      };
-    });
+        return {
+          kind: CompletionItemKind.File,
+          label: `[${key}] ${summary}`,
+          insertText,
+          detail: status.name,
+          documentation: documentation.join('\n'),
+          additionalTextEdits: [ticketProp],
+        };
+      }
+    );
   }
 
   protected getCustomParamValueCompletion(context: (Scalar | null)[]): CompletionItem[] | null {

@@ -1,32 +1,33 @@
 {
-	"editor.insertSpaces": false,
-	"tslint.enable": true,
-	"typescript.tsc.autoDetect": "off",
-	"typescript.preferences.quoteStyle": "single",
-	"editor.codeActionsOnSave": {
-		"source.fixAll.eslint": true
-	},
-	"workbench.colorCustomizations": {
-		"activityBar.activeBackground": "#964b00",
-		"activityBar.activeBorder": "#00bf60",
-		"activityBar.background": "#964b00",
-		"activityBar.foreground": "#e7e7e7",
-		"activityBar.inactiveForeground": "#e7e7e799",
-		"activityBarBadge.background": "#00bf60",
-		"activityBarBadge.foreground": "#e7e7e7",
-		"statusBar.background": "#633100",
-		"statusBar.foreground": "#e7e7e7",
-		"statusBarItem.hoverBackground": "#964a00",
-		"titleBar.activeBackground": "#964b00",
-		"titleBar.activeForeground": "#e7e7e7",
-		"titleBar.inactiveBackground": "#964b0099",
-		"titleBar.inactiveForeground": "#e7e7e799",
-		"editorGroup.border": "#964b00",
-		"panel.border": "#964b00",
-		"sash.hoverBorder": "#964b00",
-		"sideBar.border": "#964b00",
-		"statusBarItem.remoteBackground": "#633100",
-		"statusBarItem.remoteForeground": "#e7e7e7"
-	},
-	"peacock.color": "#964B00"
+  "editor.insertSpaces": false,
+  "tslint.enable": true,
+  "typescript.tsc.autoDetect": "off",
+  "typescript.preferences.quoteStyle": "single",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "workbench.colorCustomizations": {
+    "activityBar.activeBackground": "#964b00",
+    "activityBar.activeBorder": "#00bf60",
+    "activityBar.background": "#964b00",
+    "activityBar.foreground": "#e7e7e7",
+    "activityBar.inactiveForeground": "#e7e7e799",
+    "activityBarBadge.background": "#00bf60",
+    "activityBarBadge.foreground": "#e7e7e7",
+    "statusBar.background": "#633100",
+    "statusBar.foreground": "#e7e7e7",
+    "statusBarItem.hoverBackground": "#964a00",
+    "titleBar.activeBackground": "#964b00",
+    "titleBar.activeForeground": "#e7e7e7",
+    "titleBar.inactiveBackground": "#964b0099",
+    "titleBar.inactiveForeground": "#e7e7e799",
+    "editorGroup.border": "#964b00",
+    "panel.border": "#964b00",
+    "sash.hoverBorder": "#964b00",
+    "sideBar.border": "#964b00",
+    "statusBarItem.remoteBackground": "#633100",
+    "statusBarItem.remoteForeground": "#e7e7e7"
+  },
+  "peacock.color": "#964B00",
+  "cSpell.words": ["timelog"]
 }

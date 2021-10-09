@@ -47,7 +47,7 @@ export interface OverviewSettings extends TaskListSettings, SummarySettings {
 }
 
 export interface JiraSettings {
-  jiraAccountId: string;
+  jiraAccountIds: string[];
   jiraDomain: string;
   jiraToken: string;
   jiraUserEmail: string;
