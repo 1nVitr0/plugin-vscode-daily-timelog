@@ -4,31 +4,32 @@ import JiraUser from '../model/Jira/User';
 
 export default class JiraApi {
   protected headers: Record<string, string>;
-  protected _currentUser: JiraUser | null = null;
+  protected _currentUsers: JiraUser[] = [];
 
   public constructor(public readonly domain: string, protected user: string, protected token: string) {
     const auth = Buffer.from(`${user}:${token}`).toString('base64');
     this.headers = { Authorization: `Basic ${auth}`, Accept: 'application/json' };
   }
 
-  public get currentUser(): JiraUser | null {
-    return this._currentUser;
+  public get currentUsers(): JiraUser[] {
+    return this._currentUsers;
   }
 
-  protected get accountId(): string | null {
-    return this._currentUser?.accountId || null;
+  protected get accountIds(): string[] {
+    return this._currentUsers.map(({ accountId }) => accountId);
   }
 
   public async getUsers(): Promise<JiraUser[]> {
     const response = await axios.get<JiraUser[]>('https://konsolenkost.atlassian.net/rest/api/2/users/search', {
+      params: { maxResults: 0 },
       headers: this.headers,
     });
 
     return response.data;
   }
 
-  public setUser(user: JiraUser | string) {
-    this._currentUser =
+  public setUsers(users: JiraUser[] | string[]) {
+    this._currentUsers = users.map((user) =>
       typeof user == 'object'
         ? user
         : {
@@ -36,16 +37,19 @@ export default class JiraApi {
             accountType: 'atlassian',
             active: true,
             avatarUrls: {},
-            displayName: 'You',
+            displayName: 'Unknown',
             locale: 'en-US',
             self: '',
-          };
+          }
+    );
   }
 
   public async getAssignedTasks(maxResults = 100): Promise<JiraTask[]> {
-    const jql = (this.accountId ? `assignee in (${this.accountId}) ` : '') + `ORDER BY updated DESC, created DESC`;
+    const jql =
+      (this.accountIds.length ? `assignee in (${this.accountIds.join(',')}) ` : '') +
+      `ORDER BY updated DESC, created DESC`;
     const response = await axios.get<{ issues: JiraTask[] }>('https://konsolenkost.atlassian.net/rest/api/2/search', {
-      params: { jql, fields: 'summary', maxResults },
+      params: { jql, fields: 'summary,status,assignee,creator,parent,priority,issuetype', maxResults },
       headers: this.headers,
     });
 
