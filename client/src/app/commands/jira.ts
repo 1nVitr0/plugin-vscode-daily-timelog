@@ -73,21 +73,23 @@ export async function setupJiraUser(domain?: string, email?: string, token?: str
   const api = new JiraApi(domain, email, token);
   const users = await api.getUsers();
 
-  const selectedUser = await window.showQuickPick(
+  const selectedUsers = await window.showQuickPick(
     users.map(({ displayName }) => displayName),
     {
       title: 'Select current Jira user',
       placeHolder: 'USER',
       ignoreFocusOut: true,
+      canPickMany: true,
     }
   );
-  const accountId = users.find(({ displayName }) => displayName == selectedUser)?.accountId;
+  if (!selectedUsers) return null;
+  const accountIds = users
+    .filter(({ displayName }) => selectedUsers.indexOf(displayName) >= 0)
+    .map(({ accountId }) => accountId);
 
-  if (!accountId) return null;
+  await configuration.update('jiraAccountIds', accountIds);
 
-  await configuration.update('jiraAccountId', accountId);
-
-  return accountId;
+  return accountIds;
 }
 
 export async function setupJira() {

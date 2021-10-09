@@ -261,11 +261,14 @@
           "type": "boolean",
           "default": "true"
         },
-        "daily-timelog.jiraAccountId": {
+        "daily-timelog.jiraAccountIds": {
           "scope": "resources",
-          "type": "string",
-          "default": "",
-          "description": "Current User accountId"
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Jira User accountIds from which to select tickets"
         },
         "daily-timelog.jiraToken": {
           "scope": "resources",
