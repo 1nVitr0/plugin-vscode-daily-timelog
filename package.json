@@ -299,6 +299,49 @@
           "default": 50,
           "description": "Maximum Jira tasks to suggest"
         },
+        "daily-timelog.jiraStatus": {
+          "scope": "resources",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "icon": {
+                "type": "string"
+              },
+              "priority": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          },
+          "default": {
+            "To Do": {
+              "icon": "📋",
+              "priority": 1
+            },
+            "In Progress": {
+              "icon": "🚧",
+              "priority": 0
+            },
+            "Blocked": {
+              "icon": "🛑",
+              "priority": 9
+            },
+            "Review": {
+              "icon": "💬",
+              "priority": 2
+            },
+            "Ready for Deployment": {
+              "icon": "⏯",
+              "priority": 3
+            },
+            "Done": {
+              "icon": "✅",
+              "priority": 2
+            }
+          },
+          "description": "Jira status shortcodes (symbols) "
+        },
         "daily-timelog.beginDayMessage": {
           "scope": "resource",
           "type": "string",

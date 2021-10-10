@@ -29,5 +29,16 @@
     "statusBarItem.remoteForeground": "#e7e7e7"
   },
   "peacock.color": "#964B00",
-  "cSpell.words": ["timelog"]
+  "cSpell.words": ["timelog"],
+  "daily-timelog.jiraToken": "Qgd8btGMcjr9rWWDZ0j2266E",
+  "daily-timelog.jiraDomain": "konsolenkost",
+  "daily-timelog.jiraUserEmail": "aram@konsolenkost.de",
+  "daily-timelog.jiraAccountIds": [
+    "557058:b8e40521-49e4-4d6c-bec2-c43f400f0252",
+    "5e384b1757660a0e56fe4687",
+    "60ba1a1f48b8950069a1586a",
+    "60ed9c41649111006907e546",
+    "611bcbd5c6021e00693a982a",
+    "614dd6edfac3ce006906db4a"
+  ]
 }
