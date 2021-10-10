@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.5](https://github.com/1nVitr0/plugin-vscode-daily-timelog/compare/v0.2.4...v0.2.5) (2021-10-10)
+
+
+### Features
+
+* add icons for jira Status ([0dea708](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/0dea7080b14fe444d6e43cf53840d93116d0df2e))
+
 ### [0.2.4](https://github.com/1nVitr0/plugin-vscode-daily-timelog/compare/v0.2.3...v0.2.4) (2021-10-09)
 
 
