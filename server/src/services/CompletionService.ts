@@ -557,7 +557,7 @@ export default class CompletionService extends TextDocumentService {
     let i = 0;
 
     return jiraTasks.map<CompletionItem>(
-      ({ fields: { summary, assignee, creator, status, issuetype, parent }, key }) => {
+      ({ fields: { summary, assignee, creator, status, issuetype, parent }, key }, i) => {
         const task = addQuotes(summary, quote);
         const insertText = asKey ? `${task}:` : `${task}`;
         const documentation = [
@@ -573,14 +573,17 @@ export default class CompletionService extends TextDocumentService {
             end: { line: position.line + 1, character: 0 },
           },
         };
+        const { icon = '', priority = 0 } =
+          this.configurationService.configuration.jiraStatus[status?.name || ''] || {};
 
         return {
           kind: CompletionItemKind.File,
-          label: `[${key}] ${summary}`,
+          label: `${icon ? icon + ' ' : ''}[${key}] ${summary}`,
           insertText,
           detail: status.name,
           documentation: documentation.join('\n'),
           additionalTextEdits: [ticketProp],
+          sortText: priority.toString() + i.toString().padStart(8, '0'),
         };
       }
     );

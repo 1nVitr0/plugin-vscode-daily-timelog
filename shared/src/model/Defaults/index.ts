@@ -56,6 +56,7 @@ export const defaultJiraSettings: JiraSettings = {
   jiraUserEmail: '',
   jiraFetchInterval: 30 * 60 * 1000,
   jiraMaxTasks: 50,
+  jiraStatus: {},
 };
 
 export const defaultSettings: Settings = {
