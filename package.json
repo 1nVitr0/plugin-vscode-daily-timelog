@@ -313,7 +313,7 @@
                 "type": "string"
               },
               "priority": {
-                "type": "string"
+                "type": "number"
               }
             },
             "additionalProperties": false
