@@ -97,3 +97,13 @@ export async function setupJira() {
   if (!domain || !user || !token) return;
   await setupJiraUser(domain, user, token);
 }
+
+
+export async function updateJiraTasks() {
+  const configuration = workspace.getConfiguration('daily-timelog');
+  const previous = configuration.get('jiraFetchInterval', 1800000);
+
+  // Force reset of JiraTaskService
+  await configuration.update('jiraFetchInterval', Infinity);
+  await configuration.update('jiraFetchInterval', previous);
+}

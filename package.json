@@ -64,6 +64,10 @@
       {
         "command": "daily-timelog.setupJiraUser",
         "title": "Daily Time Log: Select Jira User"
+      },
+      {
+        "command": "daily-timelog.updateJiraTasks",
+        "title": "Daily Time Log: Update Jira Tasks now"
       }
     ],
     "configuration": {
