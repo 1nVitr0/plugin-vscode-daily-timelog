@@ -14,8 +14,13 @@ export default class JiraTaskService {
 
   public async loadTasks() {
     if (!this.api) this.setup();
-    const tasks = (await this.api?.getAssignedTasks()) || [];
-    this.tasks = (await this.api?.getAssignedTasks()) || [];
+
+    const amount = this.configuration.configuration.jiraMaxTasks || 50;
+    this.tasks = (await this.api?.getAssignedTasks(amount)) || [];
+  }
+
+  public destroy() {
+    if (this.interval) clearInterval(this.interval);
   }
 
   protected setup() {
