@@ -34,6 +34,13 @@ export default class BasicDayLog implements DayLog {
 
   private tasks: Record<string, BasicTask<TaskTypeName>> = {};
 
+  private static ignoreLogEntryKeys: (keyof LogEntryStyleStart | keyof LogEntryStyleEnd)[] = [
+    'start',
+    'end',
+    'task',
+    'progress',
+  ];
+
   public constructor(
     date: Date = new Date(),
     tasks: BasicTask<TaskTypeName>[] = [],
@@ -192,8 +199,17 @@ export default class BasicDayLog implements DayLog {
       if (isBreak(logEntry.task)) existingTask = this.addTask(new Break(logEntry.task));
       else existingTask = this.addTask(new WorkTask(logEntry.task));
     }
-    existingTask?.execute(duration);
-    if (logEntry.progress) existingTask?.setProgress(logEntry.progress);
+
+    if (!existingTask) return null;
+
+    // Copy custom params over
+    for (const k of Object.keys(logEntry)) {
+      const key = k as keyof LogEntry & keyof BasicTask;
+      if (!BasicDayLog.ignoreLogEntryKeys.includes(key)) existingTask[key] = logEntry[key] as any;
+    }
+
+    existingTask.execute(duration);
+    if (logEntry.progress) existingTask.setProgress(logEntry.progress);
 
     return existingTask;
   }

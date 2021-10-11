@@ -3,9 +3,7 @@ export default interface Task<T extends TaskTypeName = TaskTypeName> {
   completed: boolean;
   group?: string;
   description?: string;
-  ticket?: string;
   comment?: string;
-  link?: string;
   estimatedDuration: number | moment.Duration;
   name: string;
   progress?: number;
