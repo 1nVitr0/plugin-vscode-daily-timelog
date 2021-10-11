@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.7](https://github.com/1nVitr0/plugin-vscode-daily-timelog/compare/v0.2.6...v0.2.7) (2021-10-11)
+
+
+### Features
+
+* include custom params from Task log in summary ([60a7ba7](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/60a7ba7b892d5e05b9237cd31dbe79b609f647a8))
+
 ### [0.2.6](https://github.com/1nVitr0/plugin-vscode-daily-timelog/compare/v0.2.5...v0.2.6) (2021-10-11)
 
 
