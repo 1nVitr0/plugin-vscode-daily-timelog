@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.6](https://github.com/1nVitr0/plugin-vscode-daily-timelog/compare/v0.2.5...v0.2.6) (2021-10-11)
+
+
+### Features
+
+* add command to force refetching Jira Tasks ([518d3e8](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/518d3e84af9f7055af34d765a949ecc1c79209ad))
+
+
+### Bug Fixes
+
+* fix wrong type for jira Task settings ([25b74b6](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/25b74b61ee9f2637f5bead5b30dcff9dc1ff107c))
+
 ### [0.2.5](https://github.com/1nVitr0/plugin-vscode-daily-timelog/compare/v0.2.4...v0.2.5) (2021-10-10)
 
 
