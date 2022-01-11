@@ -605,7 +605,7 @@ export default class CompletionService extends TextDocumentService {
   ): CompletionItem[] {
     const previousTasks = this.getAllTasks();
     const incompleteTasks = this.historyService
-      .getIncompleteTasks(this.configurationService.configuration.historyMaxAge + 9999999999)
+      .getIncompleteTasks(this.configurationService.configuration.historyMaxAge)
       .filter(({ task: { name } }) => previousTasks.indexOf(name) < 0);
     let i = 0;
 
