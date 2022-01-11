@@ -14,29 +14,33 @@ import {
 } from 'vscode-languageserver/node';
 import CompletionService from './services/CompletionService';
 import ConfigurationService from './services/ConfigurationService';
+import HistoryService from './services/HistoryService';
 import JiraTaskService from './services/JiraTaskService';
 import ValidationService from './services/ValidationService';
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
-let connection = createConnection(ProposedFeatures.all);
+const connection = createConnection(ProposedFeatures.all);
 
 // Create a simple text document manager.
-let documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
-let configurationService = new ConfigurationService(connection);
-let taskService = new JiraTaskService(configurationService);
-let completionService = new CompletionService(documents, configurationService, taskService);
-let validationService = new ValidationService(documents, configurationService);
+const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
+const configurationService = new ConfigurationService(connection);
+const taskService = new JiraTaskService(configurationService);
+const historyService = new HistoryService(connection, configurationService)
+const completionService = new CompletionService(documents, configurationService, taskService, historyService);
+const validationService = new ValidationService(documents, configurationService);
 
+let rootPath: string | null | undefined = undefined;
 let hasConfigurationCapability: boolean = false;
 let hasWorkspaceFolderCapability: boolean = false;
 let hasDiagnosticRelatedInformationCapability: boolean = false;
 
 connection.onInitialize((params: InitializeParams) => {
-  let capabilities = params.capabilities;
+  const capabilities = params.capabilities;
 
   // Does the client support the `workspace/configuration` request?
   // If not, we fall back using global settings.
+  rootPath = params.rootPath;
   hasConfigurationCapability = !!(capabilities.workspace && !!capabilities.workspace.configuration);
   configurationService.setConfigurationCapability(hasConfigurationCapability);
   hasWorkspaceFolderCapability = !!(capabilities.workspace && !!capabilities.workspace.workspaceFolders);
@@ -74,9 +78,10 @@ connection.onInitialized(() => {
   }
   if (hasWorkspaceFolderCapability) {
     connection.workspace.onDidChangeWorkspaceFolders((_event) => {
-      connection.console.log('Workspace folder change event received.');
+      // historyService.init(rootPath);
     });
   }
+  historyService.init(rootPath);
 });
 
 connection.onDidChangeConfiguration(async (change) => {

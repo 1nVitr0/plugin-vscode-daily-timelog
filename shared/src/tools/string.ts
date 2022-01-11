@@ -55,3 +55,7 @@ export function isBreak(breakName?: string): boolean {
 export function extractBreak(breakName: string): string {
   return breakName.replace(/^\[(.*)\]$/, (_, name) => name);
 }
+
+export function uriToPath(uri: string) {
+  return uri.replace(/^[a-z]+:\/\//, '');;
+}

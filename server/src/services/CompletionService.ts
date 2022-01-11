@@ -1,5 +1,5 @@
-import { last } from 'lodash';
-import moment from 'moment';
+import { last } from "lodash";
+import moment from "moment";
 import {
   CompletionItem,
   CompletionItemKind,
@@ -8,11 +8,11 @@ import {
   Position,
   TextDocument,
   TextDocuments,
-} from 'vscode-languageserver';
-import { TextEdit } from 'vscode-languageserver-textdocument';
-import { CST } from 'yaml';
-import { Pair, Scalar, YAMLMap } from 'yaml/types';
-import { Type } from 'yaml/util';
+} from "vscode-languageserver";
+import { TextEdit } from "vscode-languageserver-textdocument";
+import { CST } from "yaml";
+import { Pair, Scalar, YAMLMap } from "yaml/types";
+import { Type } from "yaml/util";
 import {
   defaultBasicSettings,
   formatDate,
@@ -25,19 +25,21 @@ import {
   CustomParams,
   formatString,
   Task,
-} from '../../../shared/out';
-import YamlParser from '../parse/YamlParser';
-import { YamlKeyDescriptor, YamlNodeDescriptor, YamlSingleDescriptor, YamlType, YamlValueDescriptor } from '../types';
-import { addQuotes, matchContext, postfixCompletions, prefixCompletions } from './completion/completionModification';
-import ConfigurationService from './ConfigurationService';
-import JiraTaskService from './JiraTaskService';
-import TextDocumentService from './TextDocumentService';
+} from "../../../shared/out";
+import YamlParser from "../parse/YamlParser";
+import { YamlKeyDescriptor, YamlNodeDescriptor, YamlSingleDescriptor, YamlType, YamlValueDescriptor } from "../types";
+import { addQuotes, matchContext, postfixCompletions, prefixCompletions } from "./completion/completionModification";
+import ConfigurationService from "./ConfigurationService";
+import HistoryService from "./HistoryService";
+import JiraTaskService from "./JiraTaskService";
+import TextDocumentService from "./TextDocumentService";
 
 export default class CompletionService extends TextDocumentService {
   public constructor(
     documents: TextDocuments<TextDocument>,
     configurationService: ConfigurationService,
-    private jiraService: JiraTaskService
+    private jiraService: JiraTaskService,
+    private historyService: HistoryService
   ) {
     super(documents, configurationService);
   }
@@ -94,8 +96,8 @@ export default class CompletionService extends TextDocumentService {
 
   protected completeEmpty(_node: YamlNodeDescriptor, position: Position): CompletionItem[] {
     const { context } = _node;
-    const defaultPairKeys: string[] = ['date'];
-    const defaultKeys: string[] = ['plannedTasks', 'timeLog'];
+    const defaultPairKeys: string[] = ["date"];
+    const defaultKeys: string[] = ["plannedTasks", "timeLog"];
     const kind = CompletionItemKind.Property;
 
     for (const param of this.currentConfiguration?.customParams || []) {
@@ -103,17 +105,17 @@ export default class CompletionService extends TextDocumentService {
       else defaultPairKeys.push(param.name);
     }
 
-    if (matchContext(['timeLog'], context) || matchContext(['plannedTasks'], context))
+    if (matchContext(["timeLog"], context) || matchContext(["plannedTasks"], context))
       return this.completeKey(_node as YamlKeyDescriptor, position);
     else if (context.length == 0) {
       return [
         ...postfixCompletions(
           defaultPairKeys.map((label) => ({ kind, label })),
-          ':'
+          ":"
         ),
         ...postfixCompletions(
           defaultKeys.map((label) => ({ kind, label })),
-          ':\n  '
+          ":\n  "
         ),
       ];
     }
@@ -125,8 +127,8 @@ export default class CompletionService extends TextDocumentService {
     const { node, context } = descriptor;
     let completions: CompletionItem[] = [];
 
-    if (matchContext(['plannedTasks'], context)) completions = this.getPlannedTaskParamsCompletion(position);
-    else if (matchContext(['timeLog'], context)) completions = this.getTimeLogParamsCompletion(position);
+    if (matchContext(["plannedTasks"], context)) completions = this.getPlannedTaskParamsCompletion(position);
+    else if (matchContext(["timeLog"], context)) completions = this.getTimeLogParamsCompletion(position);
     else completions = this.completeEmpty(descriptor, position);
 
     return this.addTextEdit(completions, position, node?.cstNode?.range, YamlParser.isQuoted(node));
@@ -135,9 +137,9 @@ export default class CompletionService extends TextDocumentService {
   protected completeSingle({ node, context }: YamlSingleDescriptor, position: Position): CompletionItem[] {
     let completions: CompletionItem[] = [];
 
-    if (matchContext(['plannedTasks'], context)) completions = this.getPlannedTaskCompletion(position);
-    else if (matchContext(['timeLog'], context)) completions = this.getTimeCompletion(position, Type.QUOTE_DOUBLE);
-    else if (matchContext(['plannedTasks', '*'], context) || matchContext(['timeLog', '*'], context))
+    if (matchContext(["plannedTasks"], context)) completions = this.getPlannedTaskCompletion(position);
+    else if (matchContext(["timeLog"], context)) completions = this.getTimeCompletion(position, Type.QUOTE_DOUBLE);
+    else if (matchContext(["plannedTasks", "*"], context) || matchContext(["timeLog", "*"], context))
       completions = this.getCustomTaskParamValueCompletion(context) || [];
     else completions = this.getCustomParamValueCompletion(context) || [];
 
@@ -148,16 +150,16 @@ export default class CompletionService extends TextDocumentService {
     const { node, context } = _node;
 
     let completions: CompletionItem[] = [];
-    if (matchContext(['date'], context)) completions = this.getDateCompletion(position);
-    else if (matchContext(['timeLog', '*'], context)) completions = this.getTimeLogValueCompletion(position, _node);
-    else if (matchContext(['plannedTasks', '*'], context))
+    if (matchContext(["date"], context)) completions = this.getDateCompletion(position);
+    else if (matchContext(["timeLog", "*"], context)) completions = this.getTimeLogValueCompletion(position, _node);
+    else if (matchContext(["plannedTasks", "*"], context))
       completions = this.getPlannedTasksValueCompletion(position, _node);
 
     return this.addTextEdit(completions, position, node?.cstNode?.range, YamlParser.isQuoted(node));
   }
 
   protected getBreakDurationCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
-    return prefixCompletions(this.getDurationCompletion(position, quote), '!break ', true);
+    return prefixCompletions(this.getDurationCompletion(position, quote), "!break ", true);
   }
 
   protected getDateCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
@@ -176,19 +178,19 @@ export default class CompletionService extends TextDocumentService {
     const end = (this.currentConfiguration?.workDayHours || defaultBasicSettings.workDayHours) * 60;
     const currentTotal = this.getDurationsExcept(
       position,
-      this.currentConfiguration?.includeBreaksInTotal ? undefined : 'task'
+      this.currentConfiguration?.includeBreaksInTotal ? undefined : "task"
     ).reduce((sum, dur) => sum.add(dur), moment.duration(0));
 
     const items: CompletionItem[] = [];
     for (let duration = precision; duration < end; duration += precision) {
       const label = formatDuration(duration, this.currentConfiguration);
-      const detail = `Total: ${formatDuration(currentTotal.clone().add(duration, 'm'), this.currentConfiguration)}`;
+      const detail = `Total: ${formatDuration(currentTotal.clone().add(duration, "m"), this.currentConfiguration)}`;
       const text = addQuotes(label, quote);
       items.push({
         kind: CompletionItemKind.Unit,
         label,
         detail,
-        sortText: duration.toString().padStart(9, '0'),
+        sortText: duration.toString().padStart(9, "0"),
         filterText: text,
         insertText: text,
       });
@@ -200,10 +202,10 @@ export default class CompletionService extends TextDocumentService {
   protected getDurationsExcept(position: Position, type?: TaskTypeName): moment.Duration[] {
     if (!this.parser) return [];
 
-    const otherDurations = this.parser.getListNodesExcept(position, ['plannedTasks']);
+    const otherDurations = this.parser.getListNodesExcept(position, ["plannedTasks"]);
     const durations: (moment.Duration | null)[] = otherDurations.map((log) => {
-      const isBreak = YamlParser.containsNodeWithTag(log, '!break');
-      if ((type == 'task' && isBreak) || (type == 'break' && !isBreak)) return null;
+      const isBreak = YamlParser.containsNodeWithTag(log, "!break");
+      if ((type == "task" && isBreak) || (type == "break" && !isBreak)) return null;
 
       if (YamlParser.isScalar(log)) return parseDuration(log.toString(), this.currentConfiguration);
       else if ((log.type == Pair.Type.PAIR || log.type == Pair.Type.MERGE_PAIR) && log.value)
@@ -243,12 +245,18 @@ export default class CompletionService extends TextDocumentService {
     }
 
     const jiraItems = this.getJiraTaskCompletion(position, true, quote);
+    const historyItems = this.getHistoryTaskCompletion(position, true, quote);
 
-    return [...postfixCompletions(items, ':'), ...postfixCompletions(breakItems, ': !break'), ...jiraItems];
+    return [
+      ...postfixCompletions(items, ":"),
+      ...postfixCompletions(breakItems, ": !break"),
+      ...jiraItems,
+      ...historyItems,
+    ];
   }
 
   protected getPlannedTaskParamsCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
-    const params = ['group', 'description', 'comment', ...this.getCustomTaskParamNames(ParamLocation.PlannedTasks)];
+    const params = ["group", "description", "comment", ...this.getCustomTaskParamNames(ParamLocation.PlannedTasks)];
 
     return params.map((param) => ({
       label: param,
@@ -259,11 +267,11 @@ export default class CompletionService extends TextDocumentService {
   protected getPlannedTasksUntil(position: Position, type?: TaskTypeName): string[] {
     if (!this.parser) return [];
 
-    const previousLogs = this.parser.getListNodesBefore(position, ['plannedTasks']);
+    const previousLogs = this.parser.getListNodesBefore(position, ["plannedTasks"]);
     const tasks: (string | null)[] = previousLogs.map((log) => {
-      const isBreak = YamlParser.containsNodeWithTag(log, '!break');
-      if ((type == 'task' && isBreak) || (type == 'break' && !isBreak)) return null;
-      const prefix = isBreak ? '!break ' : '';
+      const isBreak = YamlParser.containsNodeWithTag(log, "!break");
+      if ((type == "task" && isBreak) || (type == "break" && !isBreak)) return null;
+      const prefix = isBreak ? "!break " : "";
 
       if (YamlParser.isScalar(log)) return `${prefix}${log.toString()}`;
       else if ((log.type == Pair.Type.PAIR || log.type == Pair.Type.MERGE_PAIR) && log.key)
@@ -285,18 +293,18 @@ export default class CompletionService extends TextDocumentService {
     const localContext = last(context)?.toString();
 
     switch (localContext) {
-      case 'comment':
+      case "comment":
         return this.getCommentCompletion(position);
-      case 'group':
+      case "group":
         return this.getGroupCompletion(position);
-      case 'description':
+      case "description":
         return this.getDescriptionCompletion(position);
       default:
         const paramCompletions = this.getCustomTaskParamValueCompletion(context);
         if (paramCompletions) return paramCompletions;
     }
 
-    if (/\!b?r?e?a?k?/.test(node?.tag || '')) completions = this.getBreakDurationCompletion(position);
+    if (/\!b?r?e?a?k?/.test(node?.tag || "")) completions = this.getBreakDurationCompletion(position);
     else completions = this.getDurationCompletion(position);
 
     return completions;
@@ -324,7 +332,7 @@ export default class CompletionService extends TextDocumentService {
 
   protected getProgressCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
     const items: CompletionItem[] = [];
-    for (let i = 10; i <= 100; i += 10) items.push({ label: `${i}%`, sortText: `${i}`.padStart(3, '0s') });
+    for (let i = 10; i <= 100; i += 10) items.push({ label: `${i}%`, sortText: `${i}`.padStart(3, "0s") });
 
     return items;
   }
@@ -333,20 +341,20 @@ export default class CompletionService extends TextDocumentService {
     const { durationPrecision, workDayHoursStart: workHoursStart } = this.currentConfiguration || defaultBasicSettings;
     const currentTime = moment().seconds(0).milliseconds(0);
     const lastTime =
-      this.getTimeLogUntil(position).pop()?.add(durationPrecision, 'm') || moment(workHoursStart, 'HH:mm');
+      this.getTimeLogUntil(position).pop()?.add(durationPrecision, "m") || moment(workHoursStart, "HH:mm");
     const nextTime = this.getNextTime(position);
-    const age = currentTime.diff(lastTime, 'm');
+    const age = currentTime.diff(lastTime, "m");
 
     const items: CompletionItem[] = [];
     if (!nextTime || currentTime < nextTime) items.push(this.getTimeCompletionItem(currentTime, age, quote, true));
     if (!nextTime) items.push(this.getRunningTimeCompletionItem(quote));
     for (let i = 0; i < (24 * 60) / durationPrecision; i++) {
       items.push(this.getTimeCompletionItem(lastTime, (i + 1) * durationPrecision, quote));
-      lastTime.add(durationPrecision, 'm');
+      lastTime.add(durationPrecision, "m");
       if (nextTime && lastTime >= nextTime) break;
     }
 
-    return postfixCompletions(items, ':');
+    return postfixCompletions(items, ":");
   }
 
   protected getTimeCompletionItem(
@@ -364,28 +372,28 @@ export default class CompletionService extends TextDocumentService {
       data: diffMinutes,
       filterText: text,
       detail: formatDuration(diffMinutes, this.currentConfiguration),
-      sortText: sortIndex.toString().padStart(9, '0'),
+      sortText: sortIndex.toString().padStart(9, "0"),
       insertText: text,
       preselect,
     };
   }
 
   protected getRunningTimeCompletionItem(quote?: Scalar.Type, preselect?: boolean): CompletionItem {
-    const label = '~' + formatTime(moment(), this.currentConfiguration);
+    const label = "~" + formatTime(moment(), this.currentConfiguration);
     const text = addQuotes(label, quote);
     return {
       kind: CompletionItemKind.Unit,
       label,
-      data: 'Currently ongoing task',
+      data: "Currently ongoing task",
       filterText: text,
-      detail: 'ongoing...',
-      insertText: text + ': !running',
+      detail: "ongoing...",
+      insertText: text + ": !running",
       preselect,
     };
   }
 
   protected getTimeLogParamsCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
-    const params = ['comment', 'progress', ...this.getCustomTaskParamNames(ParamLocation.TimeLog)];
+    const params = ["comment", "progress", ...this.getCustomTaskParamNames(ParamLocation.TimeLog)];
 
     return params.map((param) => ({
       label: param,
@@ -397,7 +405,7 @@ export default class CompletionService extends TextDocumentService {
     if (!this.parser) return [];
     const position = Position.create(this.getLineCount() || Infinity, 0);
 
-    const previousLogs = this.parser.getListNodesBefore(position, ['timeLog']);
+    const previousLogs = this.parser.getListNodesBefore(position, ["timeLog"]);
     const logged: string[] = previousLogs
       .map((log) => {
         if (YamlParser.isScalar(log)) return log.toString();
@@ -417,7 +425,7 @@ export default class CompletionService extends TextDocumentService {
   protected getTimeLogUntil(position: Position): moment.Moment[] {
     if (!this.parser) return [];
 
-    const previousLogs = this.parser.getListNodesBefore(position, ['timeLog']);
+    const previousLogs = this.parser.getListNodesBefore(position, ["timeLog"]);
     const times: (string | null)[] = previousLogs.map((log) => {
       if (YamlParser.isScalar(log)) return log.toString();
       else if (log.type == Pair.Type.PAIR || log.type == Pair.Type.MERGE_PAIR)
@@ -433,7 +441,7 @@ export default class CompletionService extends TextDocumentService {
   protected getNextTime(position: Position): moment.Moment | null {
     if (!this.parser) return null;
 
-    const after = this.parser.getListNodeAfter(position, ['timeLog']);
+    const after = this.parser.getListNodeAfter(position, ["timeLog"]);
     if (!after) return null;
 
     const text: string | null = YamlParser.isScalar(after)
@@ -460,19 +468,19 @@ export default class CompletionService extends TextDocumentService {
     const localContext = last(context)?.toString();
 
     switch (localContext) {
-      case 'comment':
+      case "comment":
         return this.getCommentCompletion(position);
-      case 'progress':
+      case "progress":
         return this.getProgressCompletion(position);
       default:
         const paramCompletions = this.getCustomTaskParamValueCompletion(context);
         if (paramCompletions) return paramCompletions;
     }
 
-    if (/\!running/.test(node?.tag || ''))
-      return prefixCompletions(this.getTimelogTaskCompletion(position), '!running ');
-    if (/\!b?r?e?a?k?/.test(node?.tag || '')) completions = this.getTimelogBreakCompletion(position);
-    if (/\!b?e?g?i?n?/.test(node?.tag || '')) completions.push(...this.getTimelogBeginCompletion(position));
+    if (/\!running/.test(node?.tag || ""))
+      return prefixCompletions(this.getTimelogTaskCompletion(position), "!running ");
+    if (/\!b?r?e?a?k?/.test(node?.tag || "")) completions = this.getTimelogBreakCompletion(position);
+    if (/\!b?e?g?i?n?/.test(node?.tag || "")) completions.push(...this.getTimelogBeginCompletion(position));
     if (completions.length) return completions;
 
     return this.getTimelogTaskCompletion(position);
@@ -496,7 +504,7 @@ export default class CompletionService extends TextDocumentService {
 
   protected getTimelogBreakCompletion(position: Position, quote?: Scalar.Type): CompletionItem[] {
     const kind = CompletionItemKind.Value;
-    const planned = this.getPlannedTasksUntil(position, 'break');
+    const planned = this.getPlannedTasksUntil(position, "break");
     for (const task of this.currentConfiguration?.commonBreaks || defaultBasicSettings.commonBreaks) {
       if (planned.indexOf(task) < 0) planned.push(task);
     }
@@ -512,7 +520,7 @@ export default class CompletionService extends TextDocumentService {
         filterText: text,
         insertText: text,
         tags: [CompletionItemTag.Deprecated],
-        sortText: (priority++).toString().padStart(9, '0'),
+        sortText: (priority++).toString().padStart(9, "0"),
       });
     }
 
@@ -531,6 +539,7 @@ export default class CompletionService extends TextDocumentService {
     let priority = 0;
     const items: CompletionItem[] = [];
     items.push(...this.getJiraTaskCompletion(position, false, quote));
+    items.push(...this.getHistoryTaskCompletion(position, false, quote));
     if (firstTask) items.push(...this.getTimelogBeginCompletion(position, quote, true));
     for (const task of planned) {
       const text = addQuotes(task, quote);
@@ -540,7 +549,7 @@ export default class CompletionService extends TextDocumentService {
         filterText: text,
         insertText: text,
         tags: /^\!break /.test(task) ? [CompletionItemTag.Deprecated] : [],
-        sortText: (priority++).toString().padStart(9, '0'),
+        sortText: (priority++).toString().padStart(9, "0"),
       });
     }
 
@@ -573,20 +582,65 @@ export default class CompletionService extends TextDocumentService {
             end: { line: position.line + 1, character: 0 },
           },
         };
-        const { icon = '', priority = 0 } =
-          this.configurationService.configuration.jiraStatus[status?.name || ''] || {};
+        const { icon = "", priority = 0 } =
+          this.configurationService.configuration.jiraStatus[status?.name || ""] || {};
 
         return {
           kind: CompletionItemKind.File,
-          label: `${icon ? icon + ' ' : ''}[${key}] ${summary}`,
+          label: `${icon ? icon + " " : ""}[${key}] ${summary}`,
           insertText,
           detail: status.name,
-          documentation: documentation.join('\n'),
+          documentation: documentation.join("\n"),
           additionalTextEdits: [ticketProp],
-          sortText: priority.toString() + i.toString().padStart(8, '0'),
+          sortText: priority.toString() + i.toString().padStart(8, "0"),
         };
       }
     );
+  }
+
+  protected getHistoryTaskCompletion(
+    position: Position,
+    asKey = false,
+    quote: Scalar.Type = Type.QUOTE_SINGLE
+  ): CompletionItem[] {
+    const previousTasks = this.getAllTasks();
+    const incompleteTasks = this.historyService
+      .getIncompleteTasks(this.configurationService.configuration.historyMaxAge + 9999999999)
+      .filter(({ task: { name } }) => previousTasks.indexOf(name) < 0);
+    let i = 0;
+
+    return incompleteTasks.map<CompletionItem>(({ task, date }, i) => {
+      const age = moment().diff(date, "hours");
+      const insertText = asKey ? `${addQuotes(task.name, quote)}:` : `${addQuotes(task.name, quote)}`;
+      const tickets = (task as any).tickets?.length
+        ? typeof (task as any).tickets === "string"
+          ? `[${(task as any).tickets}]`
+          : `[${(task as any).tickets.join(", ")}]`
+        : "";
+
+      const props = Object.entries(task)
+        .filter(([key, value]) => value && key[0] != "_" && ["name", "type"].indexOf(key) < 0)
+        .map(([key, value]) => `${key}: ${value}`);
+      if ((task as any)._progress) props.push(`progress: ${(task as any)._progress * 100}%`);
+      const documentation = props.join("\n");
+      const propsTextEdit: TextEdit = {
+        newText: props.map((prop) => `    ${prop}`).join("\n") + "\n",
+        range: {
+          start: { line: position.line + 1, character: 0 },
+          end: { line: position.line + 1, character: 0 },
+        },
+      };
+
+      return {
+        kind: CompletionItemKind.File,
+        label: `${tickets}${task.name}`,
+        insertText,
+        documentation,
+        detail: date.toLocaleDateString(),
+        additionalTextEdits: [propsTextEdit],
+        sortText: age.toString().padStart(4, "0") + task.name,
+      };
+    });
   }
 
   protected getCustomParamValueCompletion(context: (Scalar | null)[]): CompletionItem[] | null {
@@ -603,7 +657,7 @@ export default class CompletionService extends TextDocumentService {
 
   protected getCustomParamValueCompletionItems(param: CustomParams): CompletionItem[] {
     const kind = CompletionItemKind.Value;
-    const tasks: Partial<Task>[] = this.getAllTasks('task').map<Partial<Task>>((task) => ({ name: task }));
+    const tasks: Partial<Task>[] = this.getAllTasks("task").map<Partial<Task>>((task) => ({ name: task }));
     const paramData = {};
 
     const completions: CompletionItem[] = [];
