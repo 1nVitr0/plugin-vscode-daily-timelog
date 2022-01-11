@@ -48,6 +48,7 @@ export default class TaskFactory {
     declaration: TaskDeclaration | TaskDurationDeclaration | Task,
     customParams?: Settings['customTaskParams']
   ): Task {
+    if (!declaration) throw new Error('task declaration is missing');
     if ('actualDuration' in declaration) return declaration as Task;
     if ('name' in declaration && 'estimatedDuration' in declaration) {
       const task: Task = { ...declaration, actualDuration: 0, completed: false } as Task;

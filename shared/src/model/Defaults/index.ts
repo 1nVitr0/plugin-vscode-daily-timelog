@@ -1,8 +1,7 @@
 import { CST, Document, Options } from 'yaml';
 import { isBreak } from '../../tools/string';
 import { ParamType } from '../Settings/Params';
-import Settings, { BasicSettings } from '../Settings/Settings';
-import { JiraSettings } from '../Settings/Settings';
+import Settings, { BasicSettings, HistorySettings, JiraSettings, OverviewSettings } from '../Settings/Settings';
 
 export const defaultBasicSettings: BasicSettings = {
   commonTasks: ['Organization', 'Daily', 'Meeting', 'Refactoring', 'Code Review', 'Checking Mails'],
@@ -49,6 +48,19 @@ export const defaultBasicSettings: BasicSettings = {
   workDayHoursEnd: '17:00',
 };
 
+const defaultTaskListSettings: Omit<OverviewSettings, keyof BasicSettings> = {
+  taskListTitle: "Today's Tasks",
+  taskListDurationFormat:
+    '- {{task.tickets ? "[" + task.tickets + "] " : ""}}{{task.name}}{{task.participants ? " with " + task.participants : ""}}: {{duration}}',
+  taskListStructure: ['*{{taskListTitle}} - {{date}}*', '', '{{estimatedDurations}}', '', '= {{estimatedTotals}}'],
+  summaryTitle: "Today's Summary",
+  summaryDurationFormat:
+    '- {{task.tickets ? "[" + task.tickets + "] " : ""}}{{task.name}}{{task.participants ? " with " + task.participants : ""}}: {{duration}} {{progress ? "(" + progress + ")" : ""}}',
+  summaryStructure: ['*{{summaryTitle}} - {{date}}*', '', '{{durations}}', '', '= {{totals}}'],
+  overviewTitle: '',
+  overviewStructure: ['{{overviewTitle ? overviewTitle + " - " : ""}}{{ date }}', '', '{{taskList}}', '{{summary}}'],
+}
+
 export const defaultJiraSettings: JiraSettings = {
   jiraAccountIds: [],
   jiraDomain: '',
@@ -59,18 +71,16 @@ export const defaultJiraSettings: JiraSettings = {
   jiraStatus: {},
 };
 
+export const defaultHistorySettings: HistorySettings = {
+  historyMaxAge: 604800,
+};
+
 export const defaultSettings: Settings = {
   ...defaultBasicSettings,
+  ...defaultTaskListSettings,
   ...defaultJiraSettings,
+  ...defaultHistorySettings,
   autoGenerateOverview: true,
-  taskListTitle: "Today's Tasks",
-  taskListDurationFormat:
-    '- {{task.tickets ? "[" + task.tickets + "] " : ""}}{{task.name}}{{task.participants ? " with " + task.participants : ""}}: {{duration}}',
-  taskListStructure: ['*{{taskListTitle}} - {{date}}*', '', '{{estimatedDurations}}', '', '= {{estimatedTotals}}'],
-  summaryTitle: "Today's Summary",
-  summaryDurationFormat:
-    '- {{task.tickets ? "[" + task.tickets + "] " : ""}}{{task.name}}{{task.participants ? " with " + task.participants : ""}}: {{duration}} {{progress ? "(" + progress + ")" : ""}}',
-  summaryStructure: ['*{{summaryTitle}} - {{date}}*', '', '{{durations}}', '', '= {{totals}}'],
   newDayTemplate: [
     'date: {{currentDate}}',
     '',
@@ -84,8 +94,6 @@ export const defaultSettings: Settings = {
     'timeLog:',
     '  -  "{{workDayHoursStart}}": !begin {{beginDayMessage}}',
   ],
-  overviewTitle: '',
-  overviewStructure: ['{{overviewTitle ? overviewTitle + " - " : ""}}{{ date }}', '', '{{taskList}}', '{{summary}}'],
 };
 
 export const yamlCustomTags: Options['customTags'] = [
