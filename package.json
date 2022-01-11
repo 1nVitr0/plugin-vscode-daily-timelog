@@ -5,7 +5,7 @@
   "icon": "resources/icon.png",
   "author": "1nVitr0",
   "license": "MIT",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "repository": {
     "type": "git",
     "url": "https://github.com/1nVitr0/plugin-vscode-daily-timelog"
@@ -37,7 +37,8 @@
   "preview": true,
   "main": "./client/out/extension",
   "contributes": {
-    "commands": [{
+    "commands": [
+      {
         "command": "daily-timelog.startNewDay",
         "title": "Daily Time Log: Start a new Day"
       },
@@ -175,7 +176,8 @@
             "additionalProperties": false
           },
           "description": "list of custom properties that can be included in the timelog",
-          "default": [{
+          "default": [
+            {
               "name": "goals",
               "type": "array",
               "suggestions": [
@@ -244,7 +246,8 @@
             "additionalProperties": false
           },
           "description": "list of custom properties that can be included in the timelog",
-          "default": [{
+          "default": [
+            {
               "name": "tickets",
               "type": "array"
             },

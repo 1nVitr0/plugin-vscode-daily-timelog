@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.8](https://github.com/1nVitr0/plugin-vscode-daily-timelog/compare/v0.2.7...v0.2.8) (2022-01-11)
+
+
+### Features
+
+* add previous incomplete tasks history to suggestions ([771f0fc](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/771f0fc398935848feeaa58a9c9a8a546a248015))
+
+
+### Bug Fixes
+
+* make jira update callable ([b50e6dc](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/b50e6dca1012e1b86db3de38dbee212d611586c0))
+
 ### [0.2.7](https://github.com/1nVitr0/plugin-vscode-daily-timelog/compare/v0.2.6...v0.2.7) (2021-10-11)
 
 
