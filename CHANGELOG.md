@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.9](https://github.com/1nVitr0/plugin-vscode-daily-timelog/compare/v0.2.8...v0.2.9) (2022-01-12)
+
+
+### Bug Fixes
+
+* change history icon ([a4d5c97](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/a4d5c97af01fb306c7cae19ccf159ffd08a0d5fe))
+
 ### [0.2.8](https://github.com/1nVitr0/plugin-vscode-daily-timelog/compare/v0.2.7...v0.2.8) (2022-01-11)
 
 
