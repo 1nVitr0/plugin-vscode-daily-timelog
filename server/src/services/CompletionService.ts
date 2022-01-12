@@ -632,7 +632,7 @@ export default class CompletionService extends TextDocumentService {
       };
 
       return {
-        kind: CompletionItemKind.File,
+        kind: CompletionItemKind.Folder,
         label: `${tickets}${task.name}`,
         insertText,
         documentation,
