@@ -4,6 +4,10 @@ Basic IntelliSense and tools for planning Tasks and keeping a daily time log.
 
 *The extension is now in beta! (But still expect bugs, inefficient code and more goodies.)*
 
+## FEEDBACK WANTED
+
+This was originally an internally used extension. As our team has decided to no longer use text-based time logging, the direction of the extension is now more open. I would be glad for any feedback or other usecases to shape the future of this extension: [1nVitr0/plugin-vscode-daily-timelog#4](https://github.com/1nVitr0/plugin-vscode-daily-timelog/issues/4)
+
 ## Usage
 
 After installing the extension, it will offer basic IntelliSense for file of the format:
