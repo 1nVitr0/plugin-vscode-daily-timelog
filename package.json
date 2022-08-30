@@ -618,7 +618,7 @@
   "dependencies": {
     "glob": "^7.2.0",
     "lodash": "^4.17.21",
-    "moment": "^2.29.2",
+    "moment": "^2.29.4",
     "typescript-json-schema": "^0.53.0",
     "yaml": "https://github.com/1nVitr0/yaml/releases/download/v2.0.0-4/yaml.tar.gz"
   }
