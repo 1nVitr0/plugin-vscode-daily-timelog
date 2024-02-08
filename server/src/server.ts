@@ -2,21 +2,24 @@
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
-import { TextDocument } from 'vscode-languageserver-textdocument';
+import { TextDocument } from "vscode-languageserver-textdocument";
 import {
   createConnection,
   DidChangeConfigurationNotification,
   InitializeParams,
   InitializeResult,
+  NotificationType,
+  ParameterStructures,
   ProposedFeatures,
   TextDocuments,
   TextDocumentSyncKind,
-} from 'vscode-languageserver/node';
-import CompletionService from './services/CompletionService';
-import ConfigurationService from './services/ConfigurationService';
-import HistoryService from './services/HistoryService';
-import JiraTaskService from './services/JiraTaskService';
-import ValidationService from './services/ValidationService';
+} from "vscode-languageserver/node";
+import CompletionService from "./services/CompletionService";
+import ConfigurationService from "./services/ConfigurationService";
+import HistoryService from "./services/HistoryService";
+import JiraTaskService from "./services/JiraTaskService";
+import ValidationService from "./services/ValidationService";
+import { LanguageServerNotification } from "../../shared/out";
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -26,7 +29,7 @@ const connection = createConnection(ProposedFeatures.all);
 const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 const configurationService = new ConfigurationService(connection);
 const taskService = new JiraTaskService(configurationService);
-const historyService = new HistoryService(connection, configurationService)
+const historyService = new HistoryService(connection, configurationService);
 const completionService = new CompletionService(documents, configurationService, taskService, historyService);
 const validationService = new ValidationService(documents, configurationService);
 
@@ -56,7 +59,7 @@ connection.onInitialize((params: InitializeParams) => {
       // Tell the client that this server supports code completion.
       completionProvider: {
         resolveProvider: true,
-        triggerCharacters: ["'", '"', ' '],
+        triggerCharacters: ["'", '"', " "],
       },
     },
   };
@@ -95,6 +98,12 @@ connection.onDidChangeConfiguration(async (change) => {
     });
   });
 });
+
+connection.onNotification(
+  new NotificationType<string>(LanguageServerNotification.SetJiraToken, ParameterStructures.byPosition),
+  taskService.setToken.bind(taskService),
+);
+
 // Only keep settings for open documents
 documents.onDidClose((e) => {
   configurationService.removeDocumentSettings(e.document.uri);
@@ -102,11 +111,11 @@ documents.onDidClose((e) => {
 
 connection.onExit(() => {
   taskService.destroy();
-})
+});
 
 connection.onDidChangeWatchedFiles((_change) => {
   // Monitored files have change in VSCode
-  connection.console.log('We received an file change event');
+  connection.console.log("We received an file change event");
 });
 
 documents.onDidChangeContent(async (change) => {

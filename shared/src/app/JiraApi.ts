@@ -20,7 +20,7 @@ export default class JiraApi {
   }
 
   public async getUsers(): Promise<JiraUser[]> {
-    const response = await axios.get<JiraUser[]>('https://konsolenkost.atlassian.net/rest/api/2/users/search', {
+    const response = await axios.get<JiraUser[]>(`https://${this.domain}.atlassian.net/rest/api/2/users/search`, {
       params: { maxResults: 0 },
       headers: this.headers,
     });
@@ -48,7 +48,7 @@ export default class JiraApi {
     const jql =
       (this.accountIds.length ? `assignee in (${this.accountIds.join(',')}) ` : '') +
       `ORDER BY updated DESC, created DESC`;
-    const response = await axios.get<{ issues: JiraTask[] }>('https://konsolenkost.atlassian.net/rest/api/2/search', {
+    const response = await axios.get<{ issues: JiraTask[] }>(`https://${this.domain}.atlassian.net/rest/api/2/search`, {
       params: { jql, fields: 'summary,status,assignee,creator,parent,priority,issuetype', maxResults },
       headers: this.headers,
     });

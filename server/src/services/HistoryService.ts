@@ -2,13 +2,10 @@ import { statSync } from "fs";
 import { readFile } from "fs/promises";
 import { glob } from "glob";
 import { defaultsDeep } from "lodash";
-import { promisify } from "util";
 import { _Connection } from "vscode-languageserver";
 import { parseDocument } from "yaml";
 import { BasicDayLog, BasicTask, defaultSettings, Settings, StructuredLog, Task, uriToPath } from "../../../shared/out";
 import ConfigurationService from "./ConfigurationService";
-
-const asyncGlob = promisify(glob);
 
 interface DaylogFile {
   uri: string;
@@ -67,7 +64,7 @@ export default class HistoryService {
     await Promise.all(
       folders.map(async (folder) => {
         console.log(`Searching for daylog files in ${folder}`);
-        const files = await asyncGlob("**/*.daylog.yml", { cwd: folder });
+        const files = await glob("**/*.daylog.yml", { cwd: folder });
         console.log(`Found ${files.length} daylog files: ${files.join(", ")}`);
         await this.updateFiles(files.map((file) => `${folder}/${file}`));
       })

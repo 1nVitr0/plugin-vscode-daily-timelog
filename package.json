@@ -279,6 +279,7 @@
           "scope": "resources",
           "type": "string",
           "default": "",
+          "deprecated": true,
           "description": "Jira API Token"
         },
         "daily-timelog.jiraUserEmail": {
@@ -599,27 +600,26 @@
     "schemas": "node scripts/schemas.js"
   },
   "devDependencies": {
-    "@types/glob": "^7.2.0",
-    "@types/lodash": "^4.14.178",
-    "@types/mocha": "^9.1.0",
-    "@types/module-alias": "^2.0.1",
-    "@types/node": "^17.0.10",
-    "@types/vscode": "^1.60.0",
-    "@typescript-eslint/parser": "^5.10.0",
-    "eslint": "^8.7.0",
+    "@types/lodash": "^4.14.202",
+    "@types/mocha": "^10.0.6",
+    "@types/module-alias": "^2.0.4",
+    "@types/node": "^18.19.14",
+    "@types/vscode": "1.60",
+    "@typescript-eslint/parser": "^6.21.0",
+    "eslint": "^8.56.0",
     "merge-options": "^3.0.4",
-    "mocha": "^9.2.0",
-    "rimraf": "^3.0.2",
-    "ts-loader": "^9.2.6",
-    "typescript": "^4.5.5",
-    "webpack": "^5.76.0",
-    "webpack-cli": "^4.9.1"
+    "mocha": "^10.2.0",
+    "rimraf": "^5.0.5",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.3.3",
+    "webpack": "^5.90.1",
+    "webpack-cli": "^5.1.4"
   },
   "dependencies": {
-    "glob": "^7.2.0",
+    "glob": "^10.3.10",
     "lodash": "^4.17.21",
-    "moment": "^2.29.4",
-    "typescript-json-schema": "^0.53.0",
+    "moment": "^2.30.1",
+    "typescript-json-schema": "^0.62.0",
     "yaml": "https://github.com/1nVitr0/yaml/releases/download/v2.0.0-4/yaml.tar.gz"
   }
 }

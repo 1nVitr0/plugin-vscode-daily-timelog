@@ -1,9 +1,9 @@
-import { env, Uri, window, workspace, commands } from 'vscode';
-import { JiraApi } from '../../../../shared/out';
+import { env, Uri, window, workspace, commands, ExtensionContext, SecretStorage } from 'vscode';
+import { JiraApi, Secrets } from '../../../../shared/out';
 
 const JIRA_TOKEN_URL = 'https://id.atlassian.com/manage-profile/security/api-tokens';
 
-export async function setupJiraToken() {
+export async function setupJiraToken(context: ExtensionContext) {
   const item = await window.showInformationMessage(
     'Please visit your Atlassian profile page and set up an API Token. Copy it and return here.',
     'Open profile page',
@@ -46,11 +46,12 @@ export async function setupJiraToken() {
     return {};
   }
 
+  const secrets = context.secrets as Secrets;
   const configuration = workspace.getConfiguration('daily-timelog');
   try {
-    await configuration.update('jiraToken', token);
     await configuration.update('jiraDomain', domain);
     await configuration.update('jiraUserEmail', email);
+    await secrets.store('jiraToken', token);
   } catch (e) {
     console.error(e);
   }
@@ -58,12 +59,13 @@ export async function setupJiraToken() {
   return { token, domain, user: email };
 }
 
-export async function setupJiraUser(domain?: string, email?: string, token?: string) {
+export async function setupJiraUser(context: ExtensionContext, domain?: string, email?: string, token?: string) {
+  const secrets = context.secrets as Secrets;
   const configuration = workspace.getConfiguration('daily-timelog');
 
   if (!domain) domain = configuration.get('jiraDomain');
   if (!email) email = configuration.get('jiraUserEmail');
-  if (!token) token = configuration.get('jiraToken');
+  if (!token) token = await secrets.get('jiraToken');
 
   if (!domain || !email || !token) {
     window.showErrorMessage('No Jira token set up. Please run `Daily TimeLog: setup Jira token` first.');
@@ -92,10 +94,10 @@ export async function setupJiraUser(domain?: string, email?: string, token?: str
   return accountIds;
 }
 
-export async function setupJira() {
-  const { domain, user, token } = await setupJiraToken();
+export async function setupJira(context: ExtensionContext) {
+  const { domain, user, token } = await setupJiraToken(context);
   if (!domain || !user || !token) return;
-  await setupJiraUser(domain, user, token);
+  await setupJiraUser(context, domain, user, token);
 }
 
 
