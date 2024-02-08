@@ -621,5 +621,56 @@
     "moment": "^2.30.1",
     "typescript-json-schema": "^0.62.0",
     "yaml": "https://github.com/1nVitr0/yaml/releases/download/v2.0.0-4/yaml.tar.gz"
+  },
+  "release": {
+    "branches": [
+      "main",
+      "develop"
+    ],
+    "plugins": [
+      [
+        "@semantic-release/commit-analyzer",
+        {
+          "preset": "angular",
+          "releaseRules": [
+            {
+              "type": "docs",
+              "release": "patch"
+            },
+            {
+              "type": "l10n",
+              "release": "patch"
+            }
+          ]
+        }
+      ],
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      [
+        "@semantic-release/git",
+        {
+          "message": "chore(release): ${nextRelease.version}\n\n${nextRelease.notes}",
+          "assets": [
+            "package.json",
+            "CHANGELOG.md",
+            "README.md"
+          ]
+        }
+      ],
+      [
+        "semantic-release-vsce",
+        {
+          "packageVsix": true
+        }
+      ],
+      [
+        "@semantic-release/github",
+        {
+          "assets": [
+            "*.vsix"
+          ]
+        }
+      ]
+    ]
   }
 }
