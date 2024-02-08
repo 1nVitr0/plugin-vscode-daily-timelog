@@ -8,6 +8,7 @@ import StructuredLog from './model/StructuredLog/StructuredLog';
 import Summary from './model/StructuredLog/Summary';
 import TaskList from './model/StructuredLog/TaskList';
 import Settings from './model/Settings/Settings';
+import Secrets from './model/Settings/Secrets';
 import BasicTask from './model/Task/BasicTask';
 import Break from './model/Task/Break';
 import Task from './model/Task/Task';
@@ -18,6 +19,7 @@ import JiraApi from './app/JiraApi';
 import JiraUser from './model/Jira/User';
 
 export * from './model/Defaults';
+export * from './model/LanguageServer/CustomRequestType';
 export * from './model/StructuredLog/TaskList';
 export * from './model/StructuredLog/TimeLog';
 export * from './model/Settings/Params';
@@ -40,6 +42,7 @@ export {
   Summary,
   TaskList,
   Settings,
+  Secrets,
   BasicTask,
   Break,
   WorkTask,

@@ -64,7 +64,6 @@ const defaultTaskListSettings: Omit<OverviewSettings, keyof BasicSettings> = {
 export const defaultJiraSettings: JiraSettings = {
   jiraAccountIds: [],
   jiraDomain: '',
-  jiraToken: '',
   jiraUserEmail: '',
   jiraFetchInterval: 30 * 60 * 1000,
   jiraMaxTasks: 50,
