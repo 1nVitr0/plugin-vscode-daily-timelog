@@ -600,6 +600,8 @@
     "schemas": "node scripts/schemas.js"
   },
   "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
     "@types/lodash": "^4.14.202",
     "@types/mocha": "^10.0.6",
     "@types/module-alias": "^2.0.4",
@@ -610,6 +612,7 @@
     "merge-options": "^3.0.4",
     "mocha": "^10.2.0",
     "rimraf": "^5.0.5",
+    "semantic-release": "^22.0.12",
     "ts-loader": "^9.5.1",
     "typescript": "^5.3.3",
     "webpack": "^5.90.1",
