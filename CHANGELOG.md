@@ -1,3 +1,12 @@
+## [0.2.10](https://github.com/1nVitr0/plugin-vscode-daily-timelog/compare/v0.2.9...v0.2.10) (2024-02-09)
+
+
+### Bug Fixes
+
+* add feedback request in README ([6793949](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/67939499f485b00a8fc5f3109f86dae2bc5186fd))
+* move Jira token into secure storage ([04b0ce9](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/04b0ce969a19a3c00aa24825325d51acc80a04cb))
+* update dependencies ([1e775a5](https://github.com/1nVitr0/plugin-vscode-daily-timelog/commit/1e775a5b0ea36b994a9cfe5274bda88b9670fa56))
+
 # Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
